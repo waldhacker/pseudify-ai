@@ -40,7 +40,7 @@ class StringConverterTest extends TestCase
         $this->expectException(MissingNodeTypeException::class);
         $this->expectExceptionCode(1620889720);
 
-        $node = new class() extends Node {
+        $node = new class extends Node {
         };
 
         $this->converter->convert($node);
@@ -362,7 +362,7 @@ class StringConverterTest extends TestCase
         $contentNode->setParent($objectNode);
 
         $this->assertEquals(
-            serialize(new SerializableInterfaceObjectWithArrayData('foo', 'bar', 'baz')),
+            'C:114:"Waldhacker\Pseudify\Core\Tests\Unit\Processor\Encoder\Serialized\Fixtures\SerializableInterfaceObjectWithArrayData":48:{a:3:{i:0;s:3:"foo";i:1;s:3:"bar";i:2;s:3:"baz";}}',
             $this->converter->convert($objectNode)
         );
     }
@@ -406,7 +406,7 @@ class StringConverterTest extends TestCase
         $contentNode->setParent($objectNode);
 
         $this->assertEquals(
-            serialize(new SerializableInterfaceObjectWithScalarData('foo')),
+            'C:115:"Waldhacker\Pseudify\Core\Tests\Unit\Processor\Encoder\Serialized\Fixtures\SerializableInterfaceObjectWithScalarData":10:{s:3:"foo";}',
             $this->converter->convert($objectNode)
         );
     }
@@ -465,7 +465,7 @@ class StringConverterTest extends TestCase
         $contentNode2->setParent($objectNode2);
 
         $this->assertEquals(
-            serialize(new SerializableInterfaceObjectWithScalarData(new SerializableInterfaceObjectWithArrayData('foo', 'bar', 'baz'))),
+            'C:115:"Waldhacker\Pseudify\Core\Tests\Unit\Processor\Encoder\Serialized\Fixtures\SerializableInterfaceObjectWithScalarData":176:{C:114:"Waldhacker\Pseudify\Core\Tests\Unit\Processor\Encoder\Serialized\Fixtures\SerializableInterfaceObjectWithArrayData":48:{a:3:{i:0;s:3:"foo";i:1;s:3:"bar";i:2;s:3:"baz";}}}',
             $this->converter->convert($objectNode2)
         );
     }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -22,6 +22,8 @@ class ProfileCollection
     private array $profiles = [];
 
     /**
+     * @param array<int, mixed> $profiles
+     *
      * @internal
      */
     public function __construct(iterable $profiles = [])
@@ -48,7 +50,7 @@ class ProfileCollection
     public function getProfile(string $identifier): ProfileInterface
     {
         if (!$this->hasProfile($identifier)) {
-            throw new MissingProfileException(sprintf('missing profile "%s"', $identifier), 1621656965);
+            throw new MissingProfileException(sprintf('missing profile "%s"', $identifier), 1_621_656_965);
         }
 
         return $this->profiles[$identifier];

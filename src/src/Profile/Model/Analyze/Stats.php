@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -30,18 +30,18 @@ class Stats
     /** @var array<array-key, int> */
     private array $targetTableColumnCount;
 
-    /*
-     * @param array<string, mixed> $sourceTableRowCount
-     * @param array<string, mixed> $sourceTableColumnCount
-     * @param array<string, mixed> $targetTableRowCount
-     * @param array<string, mixed> $targetTableColumnCount
+    /**
+     * @param array<array-key, mixed> $sourceTableRowCount
+     * @param array<array-key, mixed> $sourceTableColumnCount
+     * @param array<array-key, mixed> $targetTableRowCount
+     * @param array<array-key, mixed> $targetTableColumnCount
      */
     public function __construct(
         array $sourceTableRowCount,
         array $sourceTableColumnCount,
         array $targetTableRowCount,
         array $targetTableColumnCount,
-        private bool $withCustomStringSearch
+        private readonly bool $withCustomStringSearch,
     ) {
         $this->sourceTableRowCount = array_filter($sourceTableRowCount, 'is_int');
         $this->sourceTableColumnCount = array_filter($sourceTableColumnCount, 'is_int');

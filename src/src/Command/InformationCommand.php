@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -25,8 +25,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Waldhacker\Pseudify\Core\Database\ConnectionManager;
-use Waldhacker\Pseudify\Core\Profile\Analyze\ProfileCollection as AnalyzeProfileCollection;
-use Waldhacker\Pseudify\Core\Profile\Pseudonymize\ProfileCollection as PseudonymizeProfileCollection;
+use Waldhacker\Pseudify\Core\Processor\Encoder\AdvancedEncoderCollection;
+use Waldhacker\Pseudify\Core\Processor\Processing\ExpressionLanguage\ConditionExpressionProvider;
+use Waldhacker\Pseudify\Core\Profile\ProfileCollection;
 
 #[AsCommand(
     name: 'pseudify:information',
@@ -35,13 +36,15 @@ use Waldhacker\Pseudify\Core\Profile\Pseudonymize\ProfileCollection as Pseudonym
 class InformationCommand extends Command
 {
     public function __construct(
-        private AnalyzeProfileCollection $analyzeProfileCollection,
-        private PseudonymizeProfileCollection $pseudonymizeProfileCollection,
-        private ConnectionManager $connectionManager,
+        private readonly ProfileCollection $profileCollection,
+        private readonly ConditionExpressionProvider $conditionExpressionProvider,
+        private readonly AdvancedEncoderCollection $encoderCollection,
+        private readonly ConnectionManager $connectionManager,
     ) {
         parent::__construct();
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -49,17 +52,27 @@ class InformationCommand extends Command
         $io->section('Registered analyze profiles');
         $io->table(
             ['Profile name'],
-            array_map(static fn (string $profileName): array => [$profileName], $this->analyzeProfileCollection->getProfileIdentifiers())
+            array_map(static fn (string $profileName): array => [$profileName], $this->profileCollection->getProfileIdentifiers(ProfileCollection::SCOPE_ANALYZE))
         );
         $io->section('Registered pseudonymize profiles');
         $io->table(
             ['Profile name'],
-            array_map(static fn (string $profileName): array => [$profileName], $this->pseudonymizeProfileCollection->getProfileIdentifiers())
+            array_map(static fn (string $profileName): array => [$profileName], $this->profileCollection->getProfileIdentifiers(ProfileCollection::SCOPE_PSEUDONYMIZE))
+        );
+        $io->section('Registered condition expression functions');
+        $io->table(
+            ['Function name', 'Description'],
+            $this->conditionExpressionProvider->getFunctionInformation()
+        );
+        $io->section('Registered encoders');
+        $io->table(
+            ['Encoder name'],
+            array_map(static fn (string $encoderName): array => [$encoderName], array_keys($this->encoderCollection->getEncodersIndexedByShortName()))
         );
         $io->section('Registered doctrine types');
         $io->table(
             ['Doctrine type name', 'Doctrine type implementation'],
-            array_map(static fn (Type $type): array => [$type->getName(), get_class($type)], Type::getTypeRegistry()->getMap())
+            array_map(static fn (Type $type): array => [$type->getName(), $type::class], Type::getTypeRegistry()->getMap())
         );
 
         // https://www.doctrine-project.org/projects/doctrine-dbal/en/current/reference/configuration.html#driver
@@ -100,11 +113,11 @@ class InformationCommand extends Command
 
         foreach ($this->connectionManager->getConnections() as $connectionName => $connection) {
             $platform = $connection->getDatabasePlatform();
-            $configuredBuiltInDriver = str_starts_with(get_class($connection->getDriver()), 'Doctrine\\DBAL') ? ($connection->getParams()['driver'] ?? null) : null;
+            $configuredBuiltInDriver = $connection->getParams()['driver'] ?? null;
             /** @var array<string, string> $doctrineTypeMappings */
             $doctrineTypeMappings = (new \ReflectionClass($platform))->getProperty('doctrineTypeMapping')->getValue($platform);
             $doctrineTypeMappings = array_map(
-                static fn (string $databaseType, string $doctrineTypeName): array => [$databaseType, $doctrineTypeName, get_class(Type::getType($doctrineTypeName))],
+                static fn (string $databaseType, string $doctrineTypeName): array => [$databaseType, $doctrineTypeName, Type::getType($doctrineTypeName)::class],
                 array_keys($doctrineTypeMappings),
                 array_values($doctrineTypeMappings),
             );
@@ -121,9 +134,9 @@ class InformationCommand extends Command
             $io->table(
                 ['Name', 'Value'],
                 [
-                    ['Used connection implementation', get_class($connection)],
-                    ['Used database driver implementation', get_class($connection->getDriver())],
-                    ['Used database platform implementation', get_class($platform)],
+                    ['Used connection implementation', $connection::class],
+                    ['Used database driver implementation', $connection->getDriver()::class],
+                    ['Used database platform implementation', $platform::class],
                     ['Used database platform version', (new \ReflectionMethod($connection, 'getDatabasePlatformVersion'))->invoke($connection) ?? 'N/A'],
                     ['Used built-in database driver', $configuredBuiltInDriver ? sprintf('%s (%s)', $configuredBuiltInDriver, empty(phpversion($configuredBuiltInDriver)) ? 'N/A' : phpversion($configuredBuiltInDriver)) : 'N/A'],
                 ]

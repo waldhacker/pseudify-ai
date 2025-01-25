@@ -1,0 +1,427 @@
+{% extends 'base.html.twig' %}
+{% form_theme columnConfigurationForm _self %}
+
+{% block title %}{{ 'Column configuration'|trans }} - {{ table.identifier }}.{{ column.identifier }}{% endblock %}
+{% block headline %}{{ 'Column configuration'|trans }} - {{ table.identifier }}.{{ column.identifier }}{% endblock %}
+
+{% block header %}
+  {{ header_data_for_dump()|raw }}
+{% endblock %}
+
+{% block headline_links %}
+  <a href="{{ path('app_configuration_table') }}">{{ 'Zurück'|trans }}</a>
+{% endblock %}
+
+{% block body %}
+<div class="row">
+  <div class="col-12">
+    <div class="card card-outline card-info">
+      <div class="card-header">
+        <h3 class="card-title">{{ 'Column data'|trans }}</h3>
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+
+        <div class="row my-2 justify-content-between">
+          <div class="d-md-flex justify-content-between align-items-center col-md-auto me-auto">
+            <div class="btn-group flex-wrap">
+              <button class="btn btn-outline-primary m-2 active" data-toogle-buttom data-index="0" tabindex="0" type="button"><span>{{ 'Original data'|trans }}</span></button>
+              <button class="btn btn-outline-primary m-2 active" data-toogle-buttom data-index="1" tabindex="1" type="button"><span>{{ 'Decoded data'|trans }}</span></button>
+              <button class="btn btn-outline-primary m-2 active" data-toogle-buttom data-index="2" tabindex="2" type="button"><span>{{ 'Data paths'|trans }}</span></button>
+              <button class="btn btn-outline-primary m-2 active" data-toogle-buttom data-index="3" tabindex="3" type="button"><span>{{ 'Meanings'|trans }}</span></button>
+              <button class="btn btn-outline-primary m-2 active" data-toogle-buttom data-index="4" tabindex="4" type="button"><span>{{ 'Context'|trans }}</span></button>
+            </div>
+          </div>
+        </div>
+
+        <table id="data-table" class="table table-sm table-bordered table-hover">
+          <thead>
+            <tr>
+              <th>{{ 'Original data'|trans }}</th>
+              <th>{{ 'Decoded data'|trans }}</th>
+              <th>{{ 'Data paths'|trans }}</th>
+              <th>{{ 'Meanings'|trans }}</th>
+              <th>{{ 'Context'|trans }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for processDatabaseRow in processDatabaseRows %}
+              <tr>
+                <td>
+                  {% if processDatabaseRow.original is empty %}
+                    <button class="btn btn-sm mb-3 border-0" disabled>
+                      <i class="fas fa-empty-set"></i>
+                    </button>
+
+                    <div>
+                      {{ 'no data'|trans }}
+                    </div>
+                  {% else %}
+                    <button data-uri="{{ path('app_configuration_guess_encoding', {tableName: table.identifier, columnName: column.identifier, columnIndex: loop.index0, original: true, page: page}) }}" data-run-guess-encoding-button class="btn btn-sm btn-primary mb-3" title="{{ 'Guess encoding'|trans }}">
+                      <i class="fas fa-magnifying-glass-chart"></i>
+                    </button>
+
+                    <div class="alert alert-light d-none" role="alert" data-possible-encoding-box>
+                      {{ 'Possible encoding'|trans }}: { encoder }
+                    </div>
+
+                    {{ dump(processDatabaseRow.original) }}
+                  {% endif %}
+                </td>
+                <td>
+                  {% if processDatabaseRow.decoded is empty %}
+                    <button class="btn btn-sm mb-3 border-0" disabled>
+                      <i class="fas fa-empty-set"></i>
+                    </button>
+
+                    <div>
+                      {{ 'no data'|trans }}
+                    </div>
+                  {% else %}
+                    <button data-uri="{{ path('app_configuration_guess_encoding', {tableName: table.identifier, columnName: column.identifier, columnIndex: loop.index0, original: false, page: page}) }}" data-run-guess-encoding-button class="btn btn-sm btn-primary mb-3" title="{{ 'Guess encoding'|trans }}">
+                      <i class="fas fa-magnifying-glass-chart"></i>
+                    </button>
+
+                    <div class="alert alert-light d-none" role="alert" data-possible-encoding-box>
+                      {{ 'Possible encoding'|trans }}: { encoder }
+                    </div>
+
+                    {{ dump(processDatabaseRow.decoded) }}
+                  {% endif %}
+                </td>
+                <td>
+                  <button class="btn btn-sm mb-3 border-0" disabled>
+                    <i class="fas fa-empty-set"></i>
+                  </button>
+
+                  {% if processDatabaseRow.paths is not empty %}
+                    {{ dump(processDatabaseRow.paths) }}
+                  {% endif %}
+                </td>
+                <td>
+                  {% if processDatabaseRow.decoded is empty %}
+                    <button class="btn btn-sm mb-3 border-0" disabled>
+                      <i class="fas fa-empty-set"></i>
+                    </button>
+
+                    <div>
+                      {{ 'no data'|trans }}
+                    </div>
+                  {% else %}
+                    <button data-uri="{{ path('app_configuration_guess_meaning', {tableName: table.identifier, columnName: column.identifier, columnIndex: loop.index0, page: page}) }}" data-run-guess-meaning-button class="btn btn-sm btn-primary mb-3" title="{{ 'Guess meaning'|trans }}">
+                      <i class="fas fa-magnifying-glass-chart"></i>
+                    </button>
+
+                    <div class="alert alert-light d-none" role="alert" data-possible-encoding-box>
+                      {{ 'Possible meaning'|trans }}: { meaning }
+                    </div>
+
+                    {% if processDatabaseRow.meanings is empty %}
+                      <div>
+                        {{ 'no data'|trans }}
+                      </div>
+                    {% else %}
+                      {{ dump(processDatabaseRow.meanings) }}
+                    {% endif %}
+                  {% endif %}
+                </td>
+                <td>
+                  <button class="btn btn-sm mb-3 border-0" disabled>
+                    <i class="fas fa-empty-set"></i>
+                  </button>
+
+                  {% if processDatabaseRow.context is empty %}
+                    <div>
+                      {{ 'no data'|trans }}
+                    </div>
+                  {% else %}
+                    {{ dump(processDatabaseRow.context) }}
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <!-- /.card-body -->
+      <div class="card-footer clearfix">
+        <div class="pagination pagination-sm m-0 float-right">
+          {{ knp_pagination_render(pagination) }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="card card-outline card-info">
+      <div class="card-header">
+        <h3 class="card-title">{{ 'Configuration'|trans }}</h3>
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        {{ form(columnConfigurationForm) }}
+      </div>
+      <!-- /.card-body -->
+    </div>
+  </div>  
+</div>
+{% endblock %}
+
+{% block form_row -%}
+  {%- if expanded is defined and expanded -%}
+    {{ block('fieldset_form_row') }}
+  {%- else -%}
+    {%- set widget_attr = {} -%}
+    {%- if help is not empty -%}
+      {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
+    {%- endif -%}
+    {%- set row_class = row_class|default(row_attr.class|default('mb-3')) -%}
+    {%- set is_form_floating = is_form_floating|default('form-floating' in row_class) -%}
+    {%- set is_input_group = is_input_group|default('input-group' in row_class) -%}
+    {#- Remove behavior class from the main container -#}
+    {%- set row_class = row_class|replace({'form-floating': '', 'input-group': ''}) -%}
+
+    {%- if form.parent.vars['attr']['data-index-name'] is defined and form.parent.vars['attr']['data-label'] is defined -%}
+      {%- set card_title = '' -%}
+
+      {%- if form.parent.vars['attr']['data-no-heading-label'] is not defined -%}
+        {%- if form.vars['data']['identifier'] is defined and form.vars['data']['identifier'] is not empty -%}
+          {%- if form.vars['data']['name'] is defined and form.vars['data']['name'] is not empty -%}
+            {%- set card_title = form.parent.vars['attr']['data-label'] ~ ': ' ~ form.vars['data']['identifier'] ~ ' (' ~ form.vars['data']['name'] ~ ')'  -%}
+          {%- else -%}
+            {%- set card_title = form.parent.vars['attr']['data-label'] ~ ': ' ~ form.vars['data']['identifier'] -%}
+          {%- endif -%}
+        {%- else -%}
+          {%- set card_title = form.parent.vars['attr']['data-label'] ~ ': ' ~ 'New'|trans -%}
+        {%- endif -%}
+      {%- endif -%}
+
+      <div class="card card-info">
+        <div class="card-header">
+          <h3 class="card-title">{{ card_title }}</h3>
+          <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+              <i class="fas fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-tool" data-remove-collection-item-button>
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+    {%- endif -%}
+
+          <div{% with {attr: row_attr|merge({class: (row_class ~ ' row' ~ ((not compound or force_error|default(false)) and not valid ? ' is-invalid'))|trim})} %}{{ block('attributes') }}{% endwith %}>
+            {%- if is_form_floating or is_input_group -%}
+              <div class="{{ block('form_label_class') }}"></div>
+              <div class="{{ block('form_group_class') }}">
+                {%- if is_form_floating -%}
+                  <div class="form-floating">
+                    {{- form_widget(form, widget_attr) -}}
+                    {{- form_label(form) -}}
+                  </div>
+                {%- elseif is_input_group -%}
+                  <div class="input-group">
+                    {{- form_label(form) -}}
+                    {{- form_widget(form, widget_attr) -}}
+                    {#- Hack to properly display help with input group -#}
+                    {{- form_help(form) -}}
+                  </div>
+                {%- endif -%}
+                {%- if not is_input_group -%}
+                  {{- form_help(form) -}}
+                {%- endif -%}
+                {{- form_errors(form) -}}
+              </div>
+            {%- else -%}
+              {{- form_label(form) -}}
+              <div class="{{ block('form_group_class') }}">
+                {{- form_widget(form, widget_attr) -}}
+                {{- form_help(form) -}}
+                {{- form_errors(form) -}}
+              </div>
+            {%- endif -%}
+          {##}</div>
+
+    {%- if form.parent.vars['attr']['data-index-name'] is defined -%}
+        </div>
+      </div>
+    {%- endif -%}
+
+    {%- if prototype is defined and prototype -%}
+      <button type="button" class="add_item_link btn btn-secondary btn-sm mb-3" data-collection-holder="{{ id }}">{{ 'Add'|trans }} {{ attr['data-label'] }}</button>
+    {%- endif -%}
+  {%- endif -%}
+{%- endblock form_row %}
+
+{% block form_label_class -%}
+  col-1
+{%- endblock form_label_class %}
+
+{% block form_group_class -%}
+  col-sm-11
+{%- endblock form_group_class %}
+
+{% block footer_javascript %}
+<script type="module">
+  import $ from 'jquery';
+  import 'bootstrap-select';
+
+  function initializeSelectPicker(containerElement) {
+    $('.selectpicker', containerElement).selectpicker();
+    $('.selectpicker').on('change', function() {
+        const $form = $(this).closest('form');
+        $form.attr('novalidate', true);
+        $form.submit();
+    });
+  }
+
+  function addDeleteCollectionItemButton(item, label) {
+    item.querySelector('[data-remove-collection-item-button]').addEventListener('click', (e) => {
+      e.preventDefault();
+      item.remove();
+    });
+  }
+
+  function createCollectionItem(e) {
+    const collectionHolder = document.querySelector('#' + e.currentTarget.dataset.collectionHolder);
+
+    const item = document.createElement('span');
+
+    item.innerHTML = collectionHolder
+      .dataset
+      .prototype
+      .replaceAll(
+        collectionHolder.dataset.indexName,
+        collectionHolder.dataset.index
+      );
+
+    const insertedItem = collectionHolder.appendChild(item.childNodes[0]);
+
+    collectionHolder.dataset.index++;
+
+    addDeleteCollectionItemButton(collectionHolder.lastChild, collectionHolder.dataset.label);
+
+    insertedItem.querySelectorAll('.add_item_link').forEach(btn => {
+      btn.addEventListener('click', createCollectionItem)
+    });
+
+    initializeSelectPicker($(insertedItem));
+  }
+
+  document.addEventListener('DOMContentLoaded', (event) => {
+    initializeSelectPicker();
+
+    document.querySelectorAll('.add_item_link').forEach(btn => {
+      btn.addEventListener('click', createCollectionItem)
+
+      const collectionHolder = document.querySelector('#' + btn.dataset.collectionHolder);
+      for (const item of collectionHolder.children) {
+        addDeleteCollectionItemButton(item, collectionHolder.dataset.label);
+      }
+    });
+
+    document.querySelectorAll('.sf-dump > .sf-dump-toggle').forEach(dumper => {
+      dumper.click();
+    });
+
+    const rows = document.getElementById('data-table').rows;
+    document.querySelectorAll('[data-toogle-buttom]').forEach(btn => {
+      const columnIndex = btn.dataset.index;
+      btn.addEventListener('click', (e) => {
+        const shouldHide = btn.classList.contains('active');
+
+        for (var row = 0; row < rows.length; row++) {
+          const cols = rows[row].cells;
+          if (shouldHide) {
+            cols[columnIndex].style.display = 'none';
+          } else {
+            cols[columnIndex].style.display = null;
+          }
+        }
+
+        if (shouldHide) {
+          btn.classList.remove('active');
+        } else {
+          btn.classList.add('active');
+        }
+      });
+    });
+
+    document.querySelectorAll('[data-toogle-buttom][data-index="0"],[data-toogle-buttom][data-index="4"]').forEach(btn => {
+      btn.click();
+    });
+  });
+
+  document.querySelectorAll('[data-run-guess-encoding-button]').forEach(btn => {
+    const uri = btn.dataset.uri;
+    const infobox = btn.nextElementSibling;
+
+    btn.addEventListener('click', async (e) => {
+      btn.disabled = true;
+      infobox.classList.remove('d-none');
+      infobox.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i>';
+
+      fetch(uri)
+        .then((response) => response.json())
+        .then((data) => {
+          btn.disabled = false;
+
+          let infoBoxContent = '';
+          (data.data || []).forEach((meaning) => {
+            const encodingName = (meaning.name || "{{ 'Unknown'|trans }}");
+
+            infoBoxContent += '<tr><td>' + encodingName + '</td></tr>';
+          });
+
+          infobox.innerHTML = infoBoxContent
+                              ? "<div class=\"mb-3\">{{ 'Possible encodings'|trans }}:</div>" + '<table class="table table-sm"><thead><tr><th scope="col">{{ 'Encoding'|trans }}</th></tr></thead>' + infoBoxContent + '</table>'
+                              : "<div class=\"mb-3\">{{ 'Possible encodings'|trans }}:</div> {{ 'None'|trans }}"
+          ;
+        }).catch((error) => {
+          btn.disabled = false;
+          infobox.classList.add('d-none');
+          console.error('Error making API request:', error);
+        });
+    });
+  });
+
+  document.querySelectorAll('[data-run-guess-meaning-button]').forEach(btn => {
+    const uri = btn.dataset.uri;
+    const infobox = btn.nextElementSibling;
+
+    btn.addEventListener('click', async (e) => {
+      btn.disabled = true;
+      infobox.classList.remove('d-none');
+      infobox.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i>';
+
+      fetch(uri)
+        .then((response) => response.json())
+        .then((data) => {
+          btn.disabled = false;
+
+          let infoBoxContent = '';
+          (data.data || []).forEach((meaning) => {
+            const meaningType = (meaning.type || "{{ 'Unknown'|trans }}");
+            const meaningPath = (meaning.path || null);
+
+            if (meaningPath) {
+              infoBoxContent += '<tr><td>' + meaningPath + '</td><td>' + meaningType + '</td></tr>';
+            } else {
+              infoBoxContent += '<tr><td></td><td>' + meaningType + '</td></tr>';
+            }
+          });
+
+          infobox.innerHTML = infoBoxContent
+                              ? "<div class=\"mb-3\">{{ 'Possible meanings'|trans }}:</div>" + '<table class="table table-sm"><thead><tr><th scope="col">{{ 'Path'|trans }}</th><th scope="col">{{ 'Meaning'|trans }}</th></tr></thead>' + infoBoxContent + '</table>'
+                              : "<div class=\"mb-3\">{{ 'Possible meanings'|trans }}:</div> {{ 'None'|trans }}"
+          ;
+        }).catch((error) => {
+          btn.disabled = false;
+          infobox.classList.add('d-none');
+          console.error('Error making API request:', error);
+        });
+    });
+  });
+</script>
+{% endblock %}

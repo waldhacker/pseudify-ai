@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -16,13 +16,19 @@ declare(strict_types=1);
 
 namespace Waldhacker\Pseudify\Core\Processor;
 
+use Doctrine\DBAL\Exception\RetryableException;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Schema\Column as DoctrineColumn;
-use Symfony\Component\Console\Style\SymfonyStyle;
+use Psr\Log\LoggerInterface;
 use Waldhacker\Pseudify\Core\Database\ConnectionManager;
+use Waldhacker\Pseudify\Core\Database\Repository;
 use Waldhacker\Pseudify\Core\Database\Schema;
 use Waldhacker\Pseudify\Core\Faker\Faker;
+use Waldhacker\Pseudify\Core\Processor\Encoder\ConditionalEncoder;
+use Waldhacker\Pseudify\Core\Processor\Processing\ExpressionLanguage\ConditionExpressionContextFactory;
+use Waldhacker\Pseudify\Core\Processor\Processing\ExpressionLanguage\ConditionExpressionProvider;
 use Waldhacker\Pseudify\Core\Processor\Processing\Pseudonymize\DataManipulator;
 use Waldhacker\Pseudify\Core\Processor\Processing\Pseudonymize\DataManipulatorContext;
 use Waldhacker\Pseudify\Core\Profile\Model\Pseudonymize\Column;
@@ -37,107 +43,219 @@ class PseudonymizeProcessor
 {
     /** @var array<string, array<string, DoctrineColumn>> */
     private array $columnInfo = [];
+    /** @var array<string, array<string, array<int, string>>> */
+    private array $tableInfo = [];
 
     public function __construct(
-        private TableDefinitionAutoConfiguration $tableDefinitionAutoConfiguration,
-        private ConnectionManager $connectionManager,
-        private Schema $schema,
-        private DataManipulator $dataManipulator,
-        private Faker $faker,
-        private ?SymfonyStyle $io = null
+        private readonly TableDefinitionAutoConfiguration $tableDefinitionAutoConfiguration,
+        private readonly ConnectionManager $connectionManager,
+        private readonly Schema $schema,
+        private readonly Repository $repository,
+        private readonly DataManipulator $dataManipulator,
+        private readonly ConditionExpressionProvider $conditionExpressionProvider,
+        private readonly Faker $faker,
+        private readonly LoggerInterface $pseudifyDryRunLogger,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
-    public function setIo(SymfonyStyle $io): PseudonymizeProcessor
-    {
-        $this->io = $io;
-
-        return $this;
-    }
-
-    public function process(ProfileInterface $profile, bool $dryRun): ProfileInterface
-    {
+    public function process(
+        ProfileInterface $profile,
+        bool $dryRun = false,
+        ?string $tableName = null,
+        ?int $page = null,
+        ?int $itemsPerPage = null,
+        ?callable $onBeforeTables = null,
+        ?callable $onBeforeTable = null,
+        ?callable $onAfterTable = null,
+        ?callable $onTick = null,
+    ): ProfileInterface {
         $tableDefinition = $this->tableDefinitionAutoConfiguration->configure($profile->getTableDefinition());
         $connection = $this->connectionManager->getConnection();
-        try {
-            $connection->beginTransaction();
 
-            foreach ($tableDefinition->getTables() as $table) {
-                foreach ($table->getColumns() as $column) {
-                    $this->setupColumnInfo($table, $column);
-                }
+        foreach ($tableDefinition->getTables() as $table) {
+            $this->setupTableInfo($table);
+            foreach ($table->getColumns() as $column) {
+                $this->setupColumnInfo($table, $column);
+            }
+        }
+
+        if ($onBeforeTables) {
+            $onBeforeTables($tableDefinition);
+        }
+
+        $isInTestMode = ($_SERVER['APP_ENV'] ?? null) === 'test';
+
+        $tickInterval = 0.250000;
+        $nextTick = microtime(true) + $tickInterval;
+        foreach ($tableDefinition->getTables() as $table) {
+            if ($onBeforeTable) {
+                $onBeforeTable($table);
             }
 
-            foreach ($tableDefinition->getTables() as $table) {
-                $result = $this->queryData($table);
-                while ($row = $result->fetchAssociative()) {
-                    foreach ($table->getColumns() as $column) {
-                        /** @var mixed $originalData */
-                        $originalData = $row[$column->getIdentifier()] ?? null;
-                        if (is_resource($originalData)) {
-                            $originalData = stream_get_contents($originalData);
-                            $row[$column->getIdentifier()] = $originalData;
-                        }
+            if ($tableName && $table->getIdentifier() !== $tableName) {
+                continue;
+            }
 
-                        /** @var mixed $processedData */
-                        $processedData = $this->processData($column, $row);
-
-                        if ($originalData === $processedData) {
+            $primaryKeyColumnNames = null;
+            $updatedDataFromTablesWithoutPrimaryKeys = [];
+            $result = $this->queryData($table, $page, $itemsPerPage);
+            while ($row = $result->fetchAssociative()) {
+                if (null === $primaryKeyColumnNames) {
+                    $primaryKeyColumnNames = [];
+                    foreach ($this->tableInfo[$table->getIdentifier()]['primaryKeyColumnNames'] ?? [] as $primaryKeyColumnName) {
+                        if (!isset($row[$primaryKeyColumnName])) {
                             continue;
                         }
 
-                        $updatedRows = $this->updateData($table, $column, $originalData, $processedData, $row, $dryRun);
-                        if (!$dryRun && ($this->io && 0 === $updatedRows)) {
-                            // $this->io->warning(sprintf('table "%s" column "%s" could not be updated!', $table->getIdentifier(), $column->getIdentifier()));
+                        $primaryKeyColumnNames[] = $primaryKeyColumnName;
+                        $primaryKeyColumn = Column::create($primaryKeyColumnName);
+                        $this->setupColumnInfo($table, $primaryKeyColumn);
+                    }
+                }
+
+                foreach ($table->getColumns() as $column) {
+                    $originalData = $row[$column->getIdentifier()] ?? null;
+
+                    if (empty($primaryKeyColumnNames) && in_array(md5((string) $originalData), $updatedDataFromTablesWithoutPrimaryKeys)) {
+                        continue;
+                    }
+
+                    if (is_resource($originalData)) {
+                        $originalData = stream_get_contents($originalData);
+                        $row[$column->getIdentifier()] = $originalData;
+                    }
+
+                    $processedData = $this->processData($column, $row);
+
+                    if ($originalData === $processedData) {
+                        continue;
+                    }
+
+                    $updatedRows = 0;
+                    $retries = 0;
+                    $maxRetries = 10;
+                    while ($retries < $maxRetries) {
+                        if (!$isInTestMode) {
+                            $connection->beginTransaction();
+                        }
+
+                        try {
+                            $updatedRows = $this->updateData($table, $column, $originalData, $processedData, $row, $dryRun, $primaryKeyColumnNames);
+                            if (!$isInTestMode) {
+                                $connection->commit();
+                            }
+
+                            if (empty($primaryKeyColumnNames)) {
+                                $updatedDataFromTablesWithoutPrimaryKeys[] = md5((string) $originalData);
+                            }
+
+                            break;
+                        } catch (RetryableException $e) {
+                            ++$retries;
+                            if ($retries >= $maxRetries) {
+                                $this->logger->error($e->getMessage());
+                            } else {
+                                $this->logger->debug($e->getMessage());
+                            }
+
+                            if (!$isInTestMode) {
+                                $connection->rollBack();
+                            }
+
+                            if ($retries < $maxRetries) {
+                                usleep(250000);
+                            }
                         }
                     }
+
+                    if (!$dryRun && 0 === $updatedRows) {
+                        // $this->logger->warning(sprintf('table "%s" column "%s" could not be updated!', $table->getIdentifier(), $column->getIdentifier()));
+                    }
+
+                    if ($onTick && microtime(true) >= $nextTick) {
+                        $onTick();
+                        $nextTick = microtime(true) + $tickInterval;
+                    }
+                }
+
+                if ($onTick && microtime(true) >= $nextTick) {
+                    $onTick();
+                    $nextTick = microtime(true) + $tickInterval;
                 }
             }
 
-            $connection->commit();
-            // @codeCoverageIgnoreStart
-        } catch (\Exception $e) {
-            $connection->rollBack();
-            throw $e;
-        }
+            if ($onTick && microtime(true) >= $nextTick) {
+                $onTick();
+                $nextTick = microtime(true) + $tickInterval;
+            }
 
-        if (!$dryRun && $this->io) {
-            $this->io->writeln('done');
+            if ($onAfterTable) {
+                $onAfterTable($table);
+            }
         }
-        // @codeCoverageIgnoreEnd
 
         return $profile;
     }
 
-    private function queryData(Table $table): Result
+    private function queryData(Table $table, ?int $page = null, ?int $itemsPerPage = null): Result
     {
-        $connection = $this->connectionManager->getConnection();
-        $queryBuilder = $connection->createQueryBuilder();
-        $queryBuilder->select('*')->from($connection->quoteIdentifier($table->getIdentifier()));
+        $queryBuilder = $this->repository->getFindAllQueryBuilder(
+            $table->getIdentifier(),
+            $this->tableInfo[$table->getIdentifier()]['primaryKeyColumnNames'] ?? null
+        );
+
+        if ($page && $itemsPerPage) {
+            $queryBuilder
+                ->setFirstResult($itemsPerPage * ($page - 1))
+                ->setMaxResults($itemsPerPage)
+            ;
+        }
 
         return $queryBuilder->executeQuery();
     }
 
+    /**
+     * @param array<array-key, mixed> $row
+     */
     private function processData(Column $column, array $row): mixed
     {
-        /** @var mixed $originalData */
         $originalData = $row[$column->getIdentifier()] ?? null;
         if (empty($originalData)) {
             return $originalData;
         }
 
-        /** @var mixed $decodedData */
-        $decodedData = $column->getEncoder()->decode($originalData);
+        $encoder = $column->getEncoder();
+        $encoderContext = [];
+        if ($encoder instanceof ConditionalEncoder) {
+            $encoderContext = [
+                ConditionalEncoder::EXPRESSION_FUNCTION_PROVIDERS => [$this->conditionExpressionProvider],
+                ConditionalEncoder::EXPRESSION_FUNCTION_CONTEXT => ConditionExpressionContextFactory::fromProcessorData($originalData, $row),
+            ];
+        }
+
+        $decodedData = $encoder->decode($originalData, $encoderContext);
 
         $context = new DataManipulatorContext($this->faker, $originalData, $decodedData, $row);
-        /** @var mixed $processedData */
-        $processedData = $this->dataManipulator->process($context, ...$column->getDataProcessings());
 
-        return (string) $column->getEncoder()->encode($processedData);
+        $processedData = $this->dataManipulator->process($context, $column->getDataProcessings());
+
+        return (string) $encoder->encode($processedData, $encoderContext);
     }
 
-    private function updateData(Table $table, Column $column, mixed $originalData, mixed $processedData, array $row, bool $dryRun): int
-    {
+    /**
+     * @param array<array-key, mixed>  $row
+     * @param array<array-key, string> $primaryKeyColumnNames
+     */
+    private function updateData(
+        Table $table,
+        Column $column,
+        mixed $originalData,
+        mixed $processedData,
+        array $row,
+        bool $dryRun,
+        array $primaryKeyColumnNames,
+    ): int {
         $connection = $this->connectionManager->getConnection();
         $queryBuilder = $connection->createQueryBuilder();
         $queryBuilder
@@ -146,12 +264,31 @@ class PseudonymizeProcessor
                 $connection->quoteIdentifier($column->getIdentifier()),
                 $queryBuilder->createNamedParameter($processedData, $this->getBindingType($table, $column))
             )
-            ->where(
+        ;
+
+        if (empty($primaryKeyColumnNames)) {
+            $queryBuilder->andWhere(
                 $queryBuilder->expr()->eq(
                     $connection->quoteIdentifier($column->getIdentifier()),
                     $queryBuilder->createNamedParameter($originalData, $this->getBindingType($table, $column))
                 )
             );
+        } else {
+            foreach ($primaryKeyColumnNames as $primaryKeyColumnName) {
+                $primaryKeyValue = $row[$primaryKeyColumnName];
+                $bindingType = $this->getBindingType($table, Column::create($primaryKeyColumnName));
+                if (ParameterType::INTEGER === $bindingType && ctype_digit((string) $primaryKeyValue)) {
+                    $primaryKeyValue = (int) $primaryKeyValue;
+                }
+
+                $queryBuilder->andWhere(
+                    $queryBuilder->expr()->eq(
+                        $connection->quoteIdentifier($primaryKeyColumnName),
+                        $queryBuilder->createNamedParameter($primaryKeyValue, $bindingType)
+                    )
+                );
+            }
+        }
 
         call_user_func(
             $column->getBeforeUpdateDataCallback(),
@@ -173,16 +310,23 @@ class PseudonymizeProcessor
         return $queryBuilder->executeStatement();
     }
 
-    private function getBindingType(Table $table, Column $column): int
+    private function getBindingType(Table $table, Column $column): ?int
     {
-        $columnInfo = $this->columnInfo[$table->getIdentifier()][$column->getIdentifier()];
+        $columnInfo = $this->columnInfo[$table->getIdentifier()][$column->getIdentifier()] ?? null;
 
-        return $column->getBindingType() ?? $columnInfo->getType()->getBindingType();
+        return null === $columnInfo ? null : ($column->getBindingType() ?? $columnInfo->getType()->getBindingType());
+    }
+
+    private function setupTableInfo(Table $table): void
+    {
+        $this->tableInfo[$table->getIdentifier()] = [
+            'primaryKeyColumnNames' => $this->schema->getPrimaryKeyColumnNames($table->getIdentifier()) ?? [],
+        ];
     }
 
     private function setupColumnInfo(Table $table, Column $column): void
     {
-        $this->columnInfo[$table->getIdentifier()] = $this->columnInfo[$table->getIdentifier()] ?? [];
+        $this->columnInfo[$table->getIdentifier()] ??= [];
         if (null === ($this->columnInfo[$table->getIdentifier()][$column->getIdentifier()] ?? null)) {
             $columnInfo = $this->schema->getColumn($table->getIdentifier(), $column->getIdentifier());
             $this->columnInfo[$table->getIdentifier()][$column->getIdentifier()] = $columnInfo['column'];
@@ -202,8 +346,6 @@ class PseudonymizeProcessor
             );
         }
 
-        if (null !== $this->io) {
-            $this->io->text($sql);
-        }
+        $this->pseudifyDryRunLogger->info($sql);
     }
 }

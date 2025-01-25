@@ -10,23 +10,62 @@ parameters:
   env(PSEUDIFY_DATABASE_SSL_INSECURE): '0'
   env(PSEUDIFY_FAKER_LOCALE): en_US
 
+  env(OLLAMA_API_URL):
+  env(OLLAMA_MODEL):
+  env(OLLAMA_MODEL_CONTEXT_LENGTH):
+
+  env(BUILD_TAG): N/A
+
+  env(APP_HOME): /opt/pseudify/core
+
   db_driver: '%env(PSEUDIFY_DATABASE_DRIVER)%'
   db_host: '%env(PSEUDIFY_DATABASE_HOST)%'
   db_port: '%env(PSEUDIFY_DATABASE_PORT)%'
   db_user: '%env(PSEUDIFY_DATABASE_USER)%'
   db_password: '%env(PSEUDIFY_DATABASE_PASSWORD)%'
   db_dbname: '%env(PSEUDIFY_DATABASE_SCHEMA)%'
-  db_path: '%env(PSEUDIFY_DATABASE_SCHEMA)%'
   db_charset: '%env(PSEUDIFY_DATABASE_CHARSET)%'
   db_version: '%env(PSEUDIFY_DATABASE_VERSION)%'
   db_ssl_insecure: '%env(PSEUDIFY_DATABASE_SSL_INSECURE)%'
 
   faker_locale: '%env(PSEUDIFY_FAKER_LOCALE)%'
 
+  ollama_api_url: '%env(OLLAMA_API_URL)%'
+  ollama_model: '%env(OLLAMA_MODEL)%'
+  ollama_model_context_length: '%env(OLLAMA_MODEL_CONTEXT_LENGTH)%'
+
+  build_tag: '%env(BUILD_TAG)%'
+  app_home: '%env(APP_HOME)%'
+
 services:
   _defaults:
     autowire: true
     autoconfigure: true
+
+  Waldhacker\Pseudify\Core\:
+    resource: '../src'
+    exclude:
+      - '../src/DependencyInjection'
+      - '../src/Kernel.php'
+      - '../src/Processor/Analyze/FindingDumper/ConsoleDumper.php'
+      - '../src/Profile/Yaml/Profile/Model/AnalyzerProfile.php'
+      - '../src/Profile/Yaml/Profile/Model/PseudonymizeProfile.php'
+
+  app.menu_builder:
+    class: Waldhacker\Pseudify\Core\Gui\Menu\MenuBuilder
+    arguments:
+      $factory: '@knp_menu.factory'
+    tags:
+      -
+        name: knp_menu.menu_builder
+        method: createMainMenu
+        alias: main
+
+  knp_paginator.subscriber.paginate:
+    class: Waldhacker\Pseudify\Core\Gui\Menu\PaginationSubscriber
+
+  var_dumper.html_dumper:
+    class: Waldhacker\Pseudify\Core\Gui\VarDumper\HtmlDumper
 
   Faker\Factory: ~
 
@@ -35,18 +74,65 @@ services:
     arguments:
       $locale: '%faker_locale%'
 
-  Waldhacker\Pseudify\Core\:
-    resource: '../src'
-    exclude:
-      - '../src/DependencyInjection'
-      - '../src/Kernel.php'
-
-  Waldhacker\Pseudify\Core\Configuration\Configuration:
+  LLPhant\Chat\OllamaChat:
+    factory: '@Waldhacker\Pseudify\Core\LLPhant\ChatFactory'
     arguments:
-      $secret: '%kernel.secret%'
+      $apiUrl: '%ollama_api_url%'
+      $model: '%ollama_model%'
+      $modelContextLength: '%ollama_model_context_length%'
+
+  Waldhacker\Pseudify\Core\LLPhant\ChatFactory: ~
+
+  Waldhacker\Pseudify\Core\LLPhant\Chat:
+    arguments:
+      $apiUrl: '%ollama_api_url%'
+      $modelContextLength: '%ollama_model_context_length%'
 
   Waldhacker\Pseudify\Core\Faker\Faker:
     arguments:
       $source: ~
       $scope: ~
       $faker: '@Faker\Generator'
+
+  Waldhacker\Pseudify\Core\Faker\FormatterInformation:
+    arguments:
+      $locale: '%faker_locale%'
+
+  Waldhacker\Pseudify\Core\Profile\Yaml\ProfileDefinition\Loader\ProfileDefinitionLoader:
+    arguments:
+      $locator: '@file_locator'
+      $env: '%kernel.environment%'
+
+  Waldhacker\Pseudify\Core\Profile\Yaml\ProfileDefinition\Writer\ProfileDefinitionWriter:
+    arguments:
+      $dataDirectory: '%pseudify.data_dir%/src/Profiles/Yaml'
+
+  Waldhacker\Pseudify\Core\Profile\Yaml\ProfileDefinition\ProfileDefinitionCollection:
+    arguments:
+      $dataDirectory: '%pseudify.data_dir%/src/Profiles/Yaml'
+
+  Waldhacker\Pseudify\Core\Profile\Yaml\ProfileDefinition\ProfileDefinitionSerializerFactory:
+    arguments:
+      $classMetaDataDefinitionFiles:
+        - '%kernel.project_dir%/config/serializer/mapping.yaml'
+        - '%pseudify.data_dir%/config/serializer/mapping.yaml'
+
+  Waldhacker\Pseudify\Core\Processor\Encoder\AdvancedEncoderCollection:
+    arguments:
+      $classMetaDataDefinitionFiles:
+        - '%kernel.project_dir%/config/serializer/mapping.yaml'
+        - '%pseudify.data_dir%/config/serializer/mapping.yaml'
+
+  Waldhacker\Pseudify\Core\Processor\AnalyzeProcessor:
+    arguments:
+      $cacheDirectory: '%pseudify.data_dir%/var/cache/pseudify/database'
+
+  Waldhacker\Pseudify\Core\Controller\PseudonymizeController:
+    arguments:
+      $logDirectory: '%pseudify.data_dir%/var/log'
+      $appHome: '%app_home%'
+
+  Waldhacker\Pseudify\Core\Controller\ConfigurationController:
+    arguments:
+      $logDirectory: '%pseudify.data_dir%/var/log'
+      $appHome: '%app_home%'

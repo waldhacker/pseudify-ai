@@ -10,6 +10,7 @@ use Waldhacker\Pseudify\Core\Processor\Processing\AmbiguousDataProcessingExcepti
 use Waldhacker\Pseudify\Core\Processor\Processing\Analyze\SourceDataCollector;
 use Waldhacker\Pseudify\Core\Processor\Processing\Analyze\SourceDataCollectorContext;
 use Waldhacker\Pseudify\Core\Processor\Processing\DataProcessingInterface;
+use Waldhacker\Pseudify\Core\Processor\Processing\ExpressionLanguage\ConditionExpressionProvider;
 use Waldhacker\Pseudify\Core\Tests\Unit\Processor\Processing\Fixtures\InvalidDataProcessing;
 
 class SourceDataCollectorTest extends TestCase
@@ -33,12 +34,17 @@ class SourceDataCollectorTest extends TestCase
         $dataProcessing3Prophecy->getIdentifier()->shouldNotBeCalled()->willReturn('id-3');
         $dataProcessing3Prophecy->getProcessor()->shouldNotBeCalled()->willReturn(function () { return; });
 
-        $sourceDataCollector = new SourceDataCollector();
+        $conditionExpressionProviderProphecy = $this->prophesize(ConditionExpressionProvider::class);
+        $conditionExpressionProviderProphecy->getFunctions()->shouldBeCalled()->willReturn([]);
+
+        $sourceDataCollector = new SourceDataCollector($conditionExpressionProviderProphecy->reveal());
         $sourceDataCollector->process(
             $sourceDataCollectorContextProphecy->reveal(),
-            $dataProcessing1Prophecy->reveal(),
-            $dataProcessing2Prophecy->reveal(),
-            $dataProcessing3Prophecy->reveal()
+            [
+                $dataProcessing1Prophecy->reveal(),
+                $dataProcessing2Prophecy->reveal(),
+                $dataProcessing3Prophecy->reveal(),
+            ]
         );
     }
 
@@ -58,11 +64,16 @@ class SourceDataCollectorTest extends TestCase
         $this->expectException(AmbiguousDataProcessingException::class);
         $this->expectExceptionCode(1619712131);
 
-        $sourceDataCollector = new SourceDataCollector();
+        $conditionExpressionProviderProphecy = $this->prophesize(ConditionExpressionProvider::class);
+        $conditionExpressionProviderProphecy->getFunctions()->shouldBeCalled()->willReturn([]);
+
+        $sourceDataCollector = new SourceDataCollector($conditionExpressionProviderProphecy->reveal());
         $sourceDataCollector->process(
             $sourceDataCollectorContextProphecy->reveal(),
-            $dataProcessing1Prophecy->reveal(),
-            $dataProcessing2Prophecy->reveal()
+            [
+                $dataProcessing1Prophecy->reveal(),
+                $dataProcessing2Prophecy->reveal(),
+            ]
         );
     }
 
@@ -124,7 +135,10 @@ class SourceDataCollectorTest extends TestCase
             $sourceDataCollectorContext->addCollectedData('baz');
         });
 
-        $sourceDataCollector = new SourceDataCollector();
+        $conditionExpressionProviderProphecy = $this->prophesize(ConditionExpressionProvider::class);
+        $conditionExpressionProviderProphecy->getFunctions()->shouldBeCalled()->willReturn([]);
+
+        $sourceDataCollector = new SourceDataCollector($conditionExpressionProviderProphecy->reveal());
 
         $this->assertEquals(
             [
@@ -139,14 +153,16 @@ class SourceDataCollectorTest extends TestCase
             ],
             $sourceDataCollector->process(
                 $sourceDataCollectorContext,
-                $dataProcessing1Prophecy->reveal(),
-                $dataProcessing2Prophecy->reveal(),
-                $dataProcessing3Prophecy->reveal(),
-                $dataProcessing4Prophecy->reveal(),
-                $dataProcessing5Prophecy->reveal(),
-                $dataProcessing6Prophecy->reveal(),
-                $dataProcessing7Prophecy->reveal(),
-                $dataProcessing8Prophecy->reveal()
+                [
+                    $dataProcessing1Prophecy->reveal(),
+                    $dataProcessing2Prophecy->reveal(),
+                    $dataProcessing3Prophecy->reveal(),
+                    $dataProcessing4Prophecy->reveal(),
+                    $dataProcessing5Prophecy->reveal(),
+                    $dataProcessing6Prophecy->reveal(),
+                    $dataProcessing7Prophecy->reveal(),
+                    $dataProcessing8Prophecy->reveal(),
+                ]
             )
         );
     }

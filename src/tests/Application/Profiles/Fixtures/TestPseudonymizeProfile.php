@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Waldhacker\Pseudify\Core\Tests\Application\Profiles\Fixtures;
 
-use Doctrine\DBAL\Platforms\SQLServer2012Platform;
-use Doctrine\DBAL\Query\QueryBuilder;
-use Doctrine\DBAL\Schema\Column as DoctrineColumn;
 use Faker\Provider\Person;
 use Waldhacker\Pseudify\Core\Faker\Faker;
 use Waldhacker\Pseudify\Core\Processor\Encoder\Base64Encoder;
@@ -197,17 +194,6 @@ class TestPseudonymizeProfile implements ProfileInterface
                         },
                         uniqid()
                     ))
-                    ->onBeforeUpdateData(function (QueryBuilder $queryBuilder, Table $table, Column $column, DoctrineColumn $columnInfo, $originalData, $processedData, array $databaseRow) {
-                        if ($queryBuilder->getConnection()->getDatabasePlatform() instanceof SQLServer2012Platform) {
-                            $bindingType = $column->getBindingType() ?? $columnInfo->getType()->getBindingType();
-                            $queryBuilder->where(
-                                $queryBuilder->expr()->eq(
-                                    sprintf('CONVERT(VARCHAR(MAX), %s)', $queryBuilder->getConnection()->quoteIdentifier($column->getIdentifier())),
-                                    $queryBuilder->createNamedParameter($originalData, $bindingType, ':dcValue2')
-                                )
-                            );
-                        }
-                    })
                 )
                 ->addColumn(Column::create('ip')
                     ->addDataProcessing(DataManipulatorPreset::ip())

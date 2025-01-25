@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Waldhacker\Pseudify\Core\Database;
 
 use Doctrine\DBAL\Schema\Column;
+use Doctrine\DBAL\Schema\Index;
 
 /**
  * @internal
@@ -24,8 +25,8 @@ use Doctrine\DBAL\Schema\Column;
 class Schema
 {
     public function __construct(
-        private ConnectionManager $connectionManager,
-        private Query $query
+        private readonly ConnectionManager $connectionManager,
+        private readonly Query $query,
     ) {
     }
 
@@ -75,9 +76,22 @@ class Schema
         ))[0] ?? null;
 
         if (empty($column)) {
-            throw new MissingColumnException(sprintf('missing column "%s" for table "%s"', $identifier, $table), 1621654988);
+            throw new MissingColumnException(sprintf('missing column "%s" for table "%s"', $identifier, $table), 1_621_654_988);
         }
 
         return $column;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getPrimaryKeyColumnNames(string $table): ?array
+    {
+        $connection = $this->connectionManager->getConnection();
+
+        return (array_values(array_filter(
+            $connection->createSchemaManager()->listTableIndexes($table),
+            fn (Index $index): bool => $index->isPrimary()
+        ))[0] ?? null)?->getUnquotedColumns();
     }
 }

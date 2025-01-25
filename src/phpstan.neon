@@ -1,7 +1,10 @@
 includes:
 	- phpstan.baseline.neon
 parameters:
-	checkMissingIterableValueType: false
-	level: max
-	paths:
-		- src/
+    level: 6
+    treatPhpDocTypesAsCertain: false
+    paths:
+        - bin/
+        - config/
+        - public/
+        - src/

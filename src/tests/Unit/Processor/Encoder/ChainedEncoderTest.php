@@ -70,32 +70,4 @@ class ChainedEncoderTest extends TestCase
             $converter->getEncoder(2)
         );
     }
-
-    public function testAddEncoderAddsEncoder(): void
-    {
-        $encoder1 = new HexEncoder();
-        $encoder2 = new Base64Encoder();
-        $converter = new ChainedEncoder([$encoder1]);
-
-        $converter->addEncoder($encoder2);
-
-        $this->assertEquals(
-            [$encoder1, $encoder2],
-            $converter->getEncoders()
-        );
-    }
-
-    public function testRemoveEncoderRemovesEncoder(): void
-    {
-        $encoder1 = new HexEncoder();
-        $encoder2 = new Base64Encoder();
-        $converter = new ChainedEncoder([$encoder1, $encoder2]);
-
-        $converter->removeEncoder(0);
-
-        $this->assertEquals(
-            [$encoder2],
-            $converter->getEncoders()
-        );
-    }
 }

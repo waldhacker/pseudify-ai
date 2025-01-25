@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Save profile'|trans }}{% endblock %}
+{% block headline %}{{ 'Save profile'|trans }}{% endblock %}
+
+{% block body %}
+<div class="row">
+  <div class="col-6">
+    {% if context.activeProfile %}
+      <div class="small-box bg-gradient-info">
+        <div class="inner">
+          <h5 class="mb-3">{{ 'Active profile'|trans }}</h5>
+          <p class="mb-0">{{ context.activeProfile.identifier }}</p>
+          <p><small>{{ context.activeProfile.description }}</small></p>
+          <p class="mb-0"><small>{{ 'Path'|trans }}: {{ path }}</small></p>
+        </div>
+        <div class="icon">
+          <i class="fas fa-download"></i>
+        </div>
+        <a href="{{ path('app_profile_save_perform') }}" class="small-box-footer">
+          {{ 'Save profile'|trans }}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+  </div>
+{% endblock %}

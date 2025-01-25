@@ -4,16 +4,16 @@ set -e
 OLD_USER_UID=`id -u pseudify`
 OLD_USER_GID=`getent group pseudify | awk -F: '{printf "%d", $3}'`
 
-# if: HOSTUSER_UID is not set and /data is a directory
-# then: determine HOSTUSER_UID by the user of /data (the host user id)
-if [ -z ${HOSTUSER_UID+x} ] && [ -d /data ]; then
-    HOSTUSER_UID=`stat -c "%u" /data`
+# if: HOSTUSER_UID is not set and /opt/pseudify/userdata is a directory
+# then: determine HOSTUSER_UID by the user of /opt/pseudify/userdata (the host user id)
+if [ -z ${HOSTUSER_UID+x} ] && [ -d /opt/pseudify/userdata ]; then
+    HOSTUSER_UID=`stat -c "%u" /opt/pseudify/userdata`
 fi
 
-# if: HOSTUSER_GID is not set and /data is a directory
-# then: determine HOSTUSER_GID by the group of /data (the host user group id)
-if [ -z ${HOSTUSER_GID+x} ] && [ -d /data ]; then
-    HOSTUSER_GID=`stat -c "%g" /data`
+# if: HOSTUSER_GID is not set and /opt/pseudify/userdata is a directory
+# then: determine HOSTUSER_GID by the group of /opt/pseudify/userdata (the host user group id)
+if [ -z ${HOSTUSER_GID+x} ] && [ -d /opt/pseudify/userdata ]; then
+    HOSTUSER_GID=`stat -c "%g" /opt/pseudify/userdata`
 fi
 
 # note: if HOSTUSER_UID / HOSTUSER_GID is 0, it is probably a windows user
@@ -43,17 +43,11 @@ if [ "$HOSTUSER_UID" -gt "0" ]; then
         usermod -u $HOSTUSER_UID pseudify > /dev/null \
         && groupmod -g $HOSTUSER_GID pseudify > /dev/null \
         && usermod -g $HOSTUSER_GID pseudify > /dev/null \
-        && find /home/pseudify \( -not -user $HOSTUSER_UID -o -not -group $HOSTUSER_GID \) -print0 | sudo xargs -0 -n1 -I{} chown -h $HOSTUSER_UID:$HOSTUSER_GID {} || true \
-        && if [[ \"$ARGUMENTS\" =~ '--data' ]]; then \
-            exec sudo -E -H -u pseudify php /opt/pseudify/pseudify $ARGUMENTS; \
-        else \
-            exec sudo -E -H -u pseudify php /opt/pseudify/pseudify $ARGUMENTS --data /data; \
-        fi \
+        && if [ -z \"\$( ls -A /opt/pseudify/userdata/ )\" ]; then sudo -E -H -u pseudify rsync -raq /opt/pseudify/userdata_template/ /opt/pseudify/userdata/; else rm -rf /opt/pseudify/userdata/var/; fi \
+        && cd /opt/pseudify/core/ \
+        && sudo -E -H -u pseudify composer install --no-dev --optimize-autoloader --classmap-authoritative --no-progress --no-interaction --quiet > /dev/null \
+        && exec sudo -E -H -u pseudify php /opt/pseudify/core/bin/pseudify $ARGUMENTS; \
     "
 else
-    if [[ "$@" =~ '--data' ]]; then
-        exec php /opt/pseudify/pseudify "$@"
-    else
-        exec php /opt/pseudify/pseudify "$@" --data /data
-    fi
+    exec php /opt/pseudify/core/bin/pseudify "$@"
 fi

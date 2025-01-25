@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Waldhacker\Pseudify\Core\Tests\Unit\Processor\Encoder\Serialized\Fixtures;
 
-class SerializableInterfaceObjectWithScalarData implements \Serializable
+class SerializableInterfaceObjectWithScalarData
 {
     private $privateMember;
 

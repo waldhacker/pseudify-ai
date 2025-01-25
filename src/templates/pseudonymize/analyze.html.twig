@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Analyze database'|trans }}{% endblock %}
+{% block headline %}{{ 'Analyze database'|trans }}{% endblock %}
+
+{% block body %}
+<div class="row row-cols-1 mb-3">
+  <div class="col">
+    <button data-uri="{{ path('app_pseudonymize_analyze_run') }}" data-poll-uri="{{ path('app_pseudonymize_analyze_fetch_log') }}" data-run-analyze-button class="btn btn-primary" title="{{ 'Analyze database'|trans }}">
+      <i class="fas fa-magnifying-glass-chart"></i> {{ 'Analyze database'|trans }}
+    </button>
+  </div>
+</div>
+
+<div class="row row-cols-1">
+  <div class="col">
+    <div id="terminal"></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block footer_javascript %}
+<script type="module">
+  import Xterm from '@xterm/xterm';
+
+  const runButton = document.querySelector('[data-run-analyze-button]');
+  const uri = runButton.dataset.uri;
+  const pollUri = runButton.dataset.pollUri;
+
+  const term = new Xterm.Terminal({cols: 150, rows: 50, convertEol: true});
+  term.open(document.getElementById('terminal'));
+
+  const run = async () => {
+    fetch(uri)
+      .then((response) => response.json())
+      .then((data) => {
+        runButton.disabled = false;
+
+        term.clear();
+        term.writeln(data.message);
+        term.writeln('Done');
+      }).catch((error) => {
+        runButton.disabled = false;
+
+        console.error('Error making API request:', error);
+        term.clear();
+        term.writeln(error);
+      });
+  };
+
+  const fetchLogs = async () => {
+    fetch(pollUri)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === 'stream') {
+          term.clear();
+          term.writeln(data.message);
+        }
+
+        setTimeout(fetchLogs, 1000);
+      }).catch((error) => {
+        console.error('Error making API request:', error);
+        setTimeout(fetchLogs, 1000);
+      });
+  };
+
+  fetchLogs();
+
+  runButton.addEventListener('click', async (e) => {
+    term.reset();
+    runButton.disabled = true;
+    run();
+  });
+</script>
+{% endblock %}

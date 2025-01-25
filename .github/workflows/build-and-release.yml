@@ -1,15 +1,17 @@
+# If you change something here, you will probably want to change it there too: `../../build/dev/build-docker.sh`
+
 name: Build and release
 
 on: [ create ]
 
 env:
-  PHP_VERSION: 8.1
-  MSODBC_SQL_APK_URI: https://download.microsoft.com/download/b/9/f/b9f3cce4-3925-46d4-9f46-da08869c6486/msodbcsql18_18.1.1.1-1_amd64.apk
-  MSSQL_TOOLS_APK_URI: https://download.microsoft.com/download/b/9/f/b9f3cce4-3925-46d4-9f46-da08869c6486/mssql-tools18_18.1.1.1-1_amd64.apk
-  MSODBC_SQL_SIG_URI: https://download.microsoft.com/download/b/9/f/b9f3cce4-3925-46d4-9f46-da08869c6486/msodbcsql18_18.1.1.1-1_amd64.sig
-  MSSQL_TOOLS_SIG_URI: https://download.microsoft.com/download/b/9/f/b9f3cce4-3925-46d4-9f46-da08869c6486/mssql-tools18_18.1.1.1-1_amd64.sig
+  PHP_VERSION: 8.3
+  MSODBC_SQL_APK_URI: https://download.microsoft.com/download/7/6/d/76de322a-d860-4894-9945-f0cc5d6a45f8/msodbcsql18_18.4.1.1-1_amd64.apk
+  MSSQL_TOOLS_APK_URI: https://download.microsoft.com/download/7/6/d/76de322a-d860-4894-9945-f0cc5d6a45f8/mssql-tools18_18.4.1.1-1_amd64.apk
+  MSODBC_SQL_SIG_URI: https://download.microsoft.com/download/7/6/d/76de322a-d860-4894-9945-f0cc5d6a45f8/msodbcsql18_18.4.1.1-1_amd64.sig
+  MSSQL_TOOLS_SIG_URI: https://download.microsoft.com/download/7/6/d/76de322a-d860-4894-9945-f0cc5d6a45f8/mssql-tools18_18.4.1.1-1_amd64.sig
   REGISTRY: ghcr.io
-  IMAGE_NAME: waldhacker/pseudify
+  IMAGE_NAME: waldhacker/pseudify-ai
 
 jobs:
   code-quality:
@@ -19,7 +21,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup PHP version ${{ env.PHP_VERSION }}
         uses: shivammathur/setup-php@v2
@@ -32,7 +34,7 @@ jobs:
         working-directory: ./src
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: ${{ steps.composer_cache.outputs.dir }}
           key: ${{ runner.os }}-${{ env.PHP_VERSION }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -45,7 +47,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./src
-        run: composer install --no-progress --no-suggest --optimize-autoloader
+        run: composer install --optimize-autoloader --classmap-authoritative --no-progress --no-interaction
 
       - name: Composer normalize
         working-directory: ./src
@@ -63,81 +65,32 @@ jobs:
         working-directory: ./src
         run: composer run stan
 
-  tests:
-    name: Application tests
-
-    runs-on: ubuntu-20.04
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Prepare test environment
-        run: |
-          rm -f ./.ddev/docker-compose.docker-container.yaml
-
-      - name: Install ddev
-        uses: jonaseberle/github-action-setup-ddev@v1
-
-      - name: Run tests
-        run: |
-          ddev exec composer install
-          ddev exec composer test:prepare
-          ddev exec composer test:coverage
-
-      - name: Upload coverage xml
-        uses: actions/upload-artifact@v3
-        with:
-          name: pseudify-coverage
-          path: ./.build/coverage/coverage.xml
-
-  build-phar-binary:
-    name: Build phar binary
+  build-install-package:
+    name: Build install package
 
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
+    needs: [code-quality]
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup PHP version ${{ env.PHP_VERSION }}
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ env.PHP_VERSION }}
-          tools: composer:v2
-
-      - name: Get composer cache directory
-        working-directory: ./src
-        id: composer_cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-
-      - uses: actions/cache@v3
-        with:
-          path: ${{ steps.composer_cache.outputs.dir }}
-          key: ${{ runner.os }}-${{ env.PHP_VERSION }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-${{ env.PHP_VERSION }}-composer-
-
-      - name: Environment check
-        run: |
-          php --version
-          composer --version
+        uses: actions/checkout@v4
 
       - name: Build
-        run: ./build/build-phar.sh
+        run: ./build/build-install-package.sh
 
-      - name: Upload phar binary
-        uses: actions/upload-artifact@v3
+      - name: Upload install package
+        uses: actions/upload-artifact@v4
         with:
-          name: pseudify-phar
-          path: ./.build/phar/dist/pseudify
+          name: install-package
+          path: ./.build/install-package.tar.gz
 
   build-and-push-docker-image:
     name: Build and push docker image
 
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
-    needs: [tests, code-quality, build-phar-binary]
+    needs: [code-quality]
 
     permissions:
       contents: read
@@ -145,33 +98,40 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install deps
         run: DEBIAN_FRONTEND=noninteractive sudo apt-get install -y -o Dpkg::Options::="--force-confnew" --no-install-recommends rsync
 
       - name: Copy files
         run: |
-          mkdir -p ./.build/docker/context/
-          rsync -ravq ./build/docker/ ./.build/docker/context/
-
-      - name: Download phar binary
-        uses: actions/download-artifact@v3
-        with:
-          name: pseudify-phar
-          path: ./.build/docker/context
-
-      - name: Show build context
-        run: ls -la ./.build/docker/context/
+          mkdir -p ./.build/docker/context/userdata/
+          mkdir -p ./.build/docker/context/core/src/bin/
+          rsync -raq ./build/docker/         ./.build/docker/context/
+          rsync -raq ./src/assets/           ./.build/docker/context/core/src/assets/
+          rsync -raq ./src/bin/pseudify      ./.build/docker/context/core/src/bin/pseudify
+          rsync -raq ./src/config/           ./.build/docker/context/core/src/config/
+          rsync -raq ./src/public/           ./.build/docker/context/core/src/public/
+          rsync -raq ./src/src/              ./.build/docker/context/core/src/src/
+          rsync -raq ./src/templates/        ./.build/docker/context/core/src/templates/
+          rsync -raq ./src/translations/     ./.build/docker/context/core/src/translations/
+          rsync -raq ./src/composer.json     ./.build/docker/context/core/src/composer.json
+          rsync -raq ./src/composer.lock     ./.build/docker/context/core/src/composer.lock
+          rsync -raq ./src/importmap.php     ./.build/docker/context/core/src/importmap.php
+          rsync -raq ./src/symfony.lock      ./.build/docker/context/core/src/symfony.lock
+          rsync -raq ./userdata/config/      ./.build/docker/context/userdata/config/
+          rsync -raq ./userdata/src/         ./.build/docker/context/userdata/src/
+          rsync -raq ./userdata/.env.example ./.build/docker/context/userdata/.env.example
+          rsync -raq ./userdata/.env.example ./.build/docker/context/userdata/.env
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
 
       - name: Set up docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
       - name: Log in to the container registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -179,15 +139,16 @@ jobs:
 
       - name: Extract metadata (tags) for docker
         id: docker_metadata
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v6
         with:
           file: ./build/Dockerfile
           context: ./.build/docker/context
@@ -207,34 +168,17 @@ jobs:
 
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
-    needs: [tests, code-quality, build-phar-binary]
+    needs: [code-quality, build-install-package, build-and-push-docker-image]
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Download phar binary
-        uses: actions/download-artifact@v3
+      - name: Download install package
+        uses: actions/download-artifact@v4
         with:
-          name: pseudify-phar
+          name: install-package
           path: ./.build/artifacts/
-
-      - name: Download coverage
-        uses: actions/download-artifact@v3
-        with:
-          name: pseudify-coverage
-          path: ./.build/artifacts/
-
-      - name: Show artifacts
-        run: ls -la ./.build/artifacts/
-
-      - name: Get test coverage
-        id: test_coverage
-        run: |
-          ALL_STATEMENTS=$(cat ./.build/artifacts/coverage.xml | grep -E '<metrics files="' | grep -Eo 'statements="[0-9]+" co' | grep -Eo -w '[0-9]+')
-          COVERED_STATEMENTS=$(cat ./.build/artifacts/coverage.xml | grep -E '<metrics files="' | grep -Eo 'coveredstatements="[0-9]+" el' | grep -Eo -w '[0-9]+')
-          COVERAGE=$(awk "BEGIN {printf \"%.2f\", 100 / $ALL_STATEMENTS * $COVERED_STATEMENTS}")
-          echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
 
       - name: Create release
         id: create_release
@@ -244,17 +188,16 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
-          body: |
-            Code coverage: ${{ steps.test_coverage.outputs.coverage }}%
+          body: ''
           draft: false
           prerelease: false   
 
-      - name: Upload phar binary
+      - name: Upload install package
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./.build/artifacts/pseudify
-          asset_name: pseudify.phar
-          asset_content_type: application/octet-stream
+          asset_path: ./.build/artifacts/install-package.tar.gz
+          asset_name: install-package.tar.gz
+          asset_content_type: application/gzip

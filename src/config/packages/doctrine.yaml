@@ -15,3 +15,4 @@ doctrine:
           TrustServerCertificate: '%db_ssl_insecure%'
         mapping_types:
           _text: text
+        use_savepoints: true

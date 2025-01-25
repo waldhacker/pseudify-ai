@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -19,6 +19,7 @@ namespace Waldhacker\Pseudify\Core\Profile\Model\Pseudonymize;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Schema\Column as DoctrineColumn;
 use Waldhacker\Pseudify\Core\Processor\Encoder\Base64Encoder;
+use Waldhacker\Pseudify\Core\Processor\Encoder\ConditionalEncoder;
 use Waldhacker\Pseudify\Core\Processor\Encoder\CsvEncoder;
 use Waldhacker\Pseudify\Core\Processor\Encoder\EncoderInterface;
 use Waldhacker\Pseudify\Core\Processor\Encoder\GzCompressEncoder;
@@ -33,22 +34,24 @@ use Waldhacker\Pseudify\Core\Processor\Encoder\XmlEncoder;
 use Waldhacker\Pseudify\Core\Processor\Encoder\YamlEncoder;
 use Waldhacker\Pseudify\Core\Processor\Encoder\ZlibEncodeEncoder;
 use Waldhacker\Pseudify\Core\Processor\Processing\DataProcessingInterface;
+use Waldhacker\Pseudify\Core\Processor\Processing\GenericDataProcessingInterface;
 
 class Column
 {
-    public const DATA_TYPE_BASE64 = 'base64';
-    public const DATA_TYPE_CSV = 'csv';
-    public const DATA_TYPE_GZCOMPRESS = 'gzcompress';
-    public const DATA_TYPE_GZDEFLATE = 'gzdeflate';
-    public const DATA_TYPE_GZENCODE = 'gzencode';
-    public const DATA_TYPE_HEX = 'hex';
-    public const DATA_TYPE_JSON = 'json';
-    public const DATA_TYPE_SCALAR = 'scalar';
-    public const DATA_TYPE_SERIALIZED = 'serialized';
-    public const DATA_TYPE_TYPO3_FLEXFORM = 'typo3_flexform';
-    public const DATA_TYPE_XML = 'xml';
-    public const DATA_TYPE_YAML = 'yaml';
-    public const DATA_TYPE_ZLIBENCODE = 'zlib_encode';
+    final public const string DATA_TYPE_BASE64 = 'base64';
+    final public const string DATA_TYPE_CONDITIONAL = 'conditional';
+    final public const string DATA_TYPE_CSV = 'csv';
+    final public const string DATA_TYPE_GZCOMPRESS = 'gzcompress';
+    final public const string DATA_TYPE_GZDEFLATE = 'gzdeflate';
+    final public const string DATA_TYPE_GZENCODE = 'gzencode';
+    final public const string DATA_TYPE_HEX = 'hex';
+    final public const string DATA_TYPE_JSON = 'json';
+    final public const string DATA_TYPE_SCALAR = 'scalar';
+    final public const string DATA_TYPE_SERIALIZED = 'serialized';
+    final public const string DATA_TYPE_TYPO3_FLEXFORM = 'typo3_flexform';
+    final public const string DATA_TYPE_XML = 'xml';
+    final public const string DATA_TYPE_YAML = 'yaml';
+    final public const string DATA_TYPE_ZLIBENCODE = 'zlib_encode';
 
     private ?int $bindingType = null;
     private ?EncoderInterface $encoder = null;
@@ -58,13 +61,18 @@ class Column
     private $onBeforeUpdateData;
 
     /**
+     * @param array<string, mixed> $encoderContext
+     *
      * @internal
      */
-    public function __construct(private string $identifier, string $dataType = self::DATA_TYPE_SCALAR, array $encoderContext = [])
+    public function __construct(private readonly string $identifier, string $dataType = self::DATA_TYPE_SCALAR, array $encoderContext = [])
     {
         switch ($dataType) {
             case static::DATA_TYPE_BASE64:
                 $this->setEncoder(new Base64Encoder($encoderContext));
+                break;
+            case static::DATA_TYPE_CONDITIONAL:
+                $this->setEncoder(new ConditionalEncoder($encoderContext));
                 break;
             case static::DATA_TYPE_CSV:
                 $this->setEncoder(new CsvEncoder($encoderContext));
@@ -107,6 +115,8 @@ class Column
     }
 
     /**
+     * @param array<string, mixed> $encoderContext
+     *
      * @api
      */
     public static function create(string $identifier, string $dataType = self::DATA_TYPE_SCALAR, array $encoderContext = []): Column
@@ -172,7 +182,7 @@ class Column
     public function getDataProcessing(string $identifier): DataProcessingInterface
     {
         if (!$this->hasDataProcessing($identifier)) {
-            throw new MissingDataProcessingException(sprintf('missing dataProcessing "%s" for column "%s"', $identifier, $this->identifier), 1621654992);
+            throw new MissingDataProcessingException(sprintf('missing dataProcessing "%s" for column "%s"', $identifier, $this->identifier), 1_621_654_992);
         }
 
         return $this->dataProcessings[$identifier];
@@ -219,6 +229,23 @@ class Column
     }
 
     /**
+     * @return array<array-key, string>
+     *
+     * @internal
+     */
+    public function getDataProcessingIdentifiersWithConditions(): array
+    {
+        return array_map(
+            fn (DataProcessingInterface $dataProcessing): string => sprintf(
+                '%s %s',
+                $dataProcessing->getIdentifier(),
+                $dataProcessing instanceof GenericDataProcessingInterface && $dataProcessing->getCondition() ? sprintf('[ %s ]', $dataProcessing->getCondition()) : ''
+            ),
+            $this->dataProcessings
+        );
+    }
+
+    /**
      * @api
      */
     public function onBeforeUpdateData(callable $onBeforeUpdateData): Column
@@ -244,7 +271,7 @@ class Column
                 DoctrineColumn $columnInfo,
                 mixed $originalData,
                 mixed $processedData,
-                array $databaseRow
+                array $databaseRow,
             ): void {
             };
     }

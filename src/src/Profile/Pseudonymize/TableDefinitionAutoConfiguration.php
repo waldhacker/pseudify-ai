@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -25,7 +25,7 @@ use Waldhacker\Pseudify\Core\Profile\Model\Pseudonymize\TableDefinition;
  */
 class TableDefinitionAutoConfiguration
 {
-    public function __construct(private Schema $schema)
+    public function __construct(private readonly Schema $schema)
     {
     }
 

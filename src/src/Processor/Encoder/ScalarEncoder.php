@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -16,39 +16,52 @@ declare(strict_types=1);
 
 namespace Waldhacker\Pseudify\Core\Processor\Encoder;
 
-class ScalarEncoder implements EncoderInterface
+class ScalarEncoder extends AbstractEncoder implements EncoderInterface
 {
-    private array $defaultContext = [];
+    /** @var array<string, mixed> */
+    protected array $defaultContext = [];
 
     /**
-     * @api
-     */
-    public function __construct(array $defaultContext = [])
-    {
-        $this->defaultContext = array_merge($this->defaultContext, $defaultContext);
-    }
-
-    /**
-     * @param string $data
+     * @param array<string, mixed> $context
      *
      * @return string
      *
      * @api
      */
-    public function decode($data, array $context = [])
+    #[\Override]
+    public function decode(mixed $data, array $context = []): mixed
     {
         return $data;
     }
 
     /**
-     * @param string|int|float|bool $data
-     *
-     * @return mixed
+     * @param array<string, mixed> $context
      *
      * @api
      */
-    public function encode($data, array $context = [])
+    #[\Override]
+    public function encode(mixed $data, array $context = []): mixed
     {
         return $data;
+    }
+
+    /**
+     * @param array<string, mixed> $context
+     *
+     * @api
+     */
+    #[\Override]
+    public function canDecode(mixed $data, array $context = []): bool
+    {
+        return true;
+    }
+
+    /**
+     * @api
+     */
+    #[\Override]
+    public function decodesToScalarDataOnly(): bool
+    {
+        return true;
     }
 }

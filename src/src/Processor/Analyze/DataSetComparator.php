@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -40,7 +40,7 @@ class DataSetComparator
         TargetTable $targetTable,
         TargetColumn $targetColumn,
         bool $withTargetDataFrames,
-        int $targetDataFrameCuttingLength = 10
+        int $targetDataFrameCuttingLength = 10,
     ): array {
         $normalizedSourceData = $this->normalizeStrings($collectedSourceData);
         $normalizedTargetData = $this->normalizeStrings($collectedTargetData);
@@ -141,7 +141,7 @@ class DataSetComparator
         if (is_string($input)) {
             try {
                 $result = new UnicodeString($input);
-            } catch (InvalidArgumentException $e) {
+            } catch (InvalidArgumentException) {
                 $normalized = preg_replace('/[^[:print:]]/', '', $input);
                 $result = new UnicodeString($normalized ?? $input);
             }
@@ -158,7 +158,7 @@ class DataSetComparator
     private function extractTargetDataFrames(
         UnicodeString $sourceData,
         UnicodeString $targetData,
-        int $targetDataFrameCuttingLength
+        int $targetDataFrameCuttingLength,
     ): array {
         $targetDataFrames = [];
         $sourceData = (string) $sourceData;

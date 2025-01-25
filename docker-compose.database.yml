@@ -1,0 +1,12 @@
+# This file is an example of how a database server can be started.
+# Store a database dump in `./database-data/`. This database dump is then imported at startup.
+
+# Run it like: `docker compose -f docker-compose.yml -f docker-compose.llm-addon.yml -f docker-compose.database.yml up -d`
+
+services:
+  mariadb_10_5:
+    image: mariadb:10.5
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './database-data/:/docker-entrypoint-initdb.d/'

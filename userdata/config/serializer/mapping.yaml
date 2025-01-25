@@ -1,0 +1,4 @@
+Waldhacker\Pseudify\Core\Processor\Encoder\EncoderInterface:
+  discriminator_map:
+    mapping:
+      rot13_encoder: 'Waldhacker\Pseudify\Encoder\Rot13Encoder'

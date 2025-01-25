@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -16,7 +16,7 @@ declare(strict_types=1);
 
 namespace Waldhacker\Pseudify\Core\Profile\Analyze;
 
-use Waldhacker\Pseudify\Core\Database\ConnectionManager;
+use Waldhacker\Pseudify\Core\Database\Repository;
 use Waldhacker\Pseudify\Core\Profile\Model\Analyze\Stats;
 use Waldhacker\Pseudify\Core\Profile\Model\Analyze\TableDefinition;
 
@@ -25,7 +25,7 @@ use Waldhacker\Pseudify\Core\Profile\Model\Analyze\TableDefinition;
  */
 class Statistics
 {
-    public function __construct(private ConnectionManager $connectionManager)
+    public function __construct(private readonly Repository $repository)
     {
     }
 
@@ -36,11 +36,11 @@ class Statistics
         $sourceTableColumnCount = [];
         $targetTableColumnCount = [];
         foreach ($tableDefinition->getSourceTables() as $table) {
-            $sourceTableRowCount[$table->getIdentifier()] = $this->getRowCount($table->getIdentifier());
+            $sourceTableRowCount[$table->getIdentifier()] = $this->repository->count($table->getIdentifier());
             $sourceTableColumnCount[$table->getIdentifier()] = count($table->getColumns());
         }
         foreach ($tableDefinition->getTargetTables() as $table) {
-            $targetTableRowCount[$table->getIdentifier()] = $this->getRowCount($table->getIdentifier());
+            $targetTableRowCount[$table->getIdentifier()] = $this->repository->count($table->getIdentifier());
             $targetTableColumnCount[$table->getIdentifier()] = count($table->getColumns());
         }
 
@@ -53,17 +53,5 @@ class Statistics
         );
 
         return $stats;
-    }
-
-    private function getRowCount(string $tableName): int
-    {
-        $connection = $this->connectionManager->getConnection();
-        $row = $connection->createQueryBuilder()
-            ->select('COUNT(*) AS count')
-            ->from($connection->quoteIdentifier($tableName))
-            ->executeQuery()
-            ->fetchAssociative();
-
-        return false === $row ? 0 : (int) (is_int($row['count']) || is_string($row['count']) ? $row['count'] : 0);
     }
 }

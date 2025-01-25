@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -16,8 +16,6 @@ declare(strict_types=1);
 
 namespace Waldhacker\Pseudify\Core\Command;
 
-use Doctrine\DBAL\Platforms\PostgreSQL94Platform;
-use Doctrine\DBAL\Platforms\SQLServer2012Platform;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -25,6 +23,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Waldhacker\Pseudify\Core\Database\ConnectionManager;
+use Waldhacker\Pseudify\Core\Database\Repository;
 use Waldhacker\Pseudify\Core\Database\Schema;
 
 #[AsCommand(
@@ -34,12 +33,14 @@ use Waldhacker\Pseudify\Core\Database\Schema;
 class DebugTableSchemaInfoCommand extends Command
 {
     public function __construct(
-        private Schema $schema,
-        private ConnectionManager $connectionManager,
+        private readonly Schema $schema,
+        private readonly ConnectionManager $connectionManager,
+        private readonly Repository $repository,
     ) {
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this
@@ -52,10 +53,10 @@ class DebugTableSchemaInfoCommand extends Command
             );
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->initializeConnection($input);
-        $connection = $this->connectionManager->getConnection();
 
         $schema = array_map(
             fn (string $table): array => [
@@ -76,40 +77,16 @@ class DebugTableSchemaInfoCommand extends Command
 
         $io = new SymfonyStyle($input, $output);
 
-        $platform = $connection->getDatabasePlatform();
         foreach ($schema as $data) {
             $io->section($data['table']);
             $tableData = [];
             foreach ($data['columns'] as $column) {
-                $queryBuilder = $connection->createQueryBuilder();
-                $queryBuilder->select($connection->quoteIdentifier($column['name']))
-                  ->from($connection->quoteIdentifier($data['table']))
-                  ->where($queryBuilder->expr()->isNotNull($connection->quoteIdentifier($column['name'])))
-                  ->setMaxResults(1);
-
-                if ($platform instanceof SQLServer2012Platform) {
-                    $queryBuilder->orderBy(sprintf('DATALENGTH(%s)', $connection->quoteIdentifier($column['name'])), 'DESC')
-                        ->addOrderBy(sprintf('CONVERT(VARCHAR(MAX), %s)', $connection->quoteIdentifier($column['name'])), 'DESC');
-                } elseif ($platform instanceof PostgreSQL94Platform) {
-                    $queryBuilder->orderBy(sprintf('LENGTH(CAST(%s AS TEXT))', $connection->quoteIdentifier($column['name'])), 'DESC')
-                        ->addOrderBy($connection->quoteIdentifier($column['name']), 'DESC');
-                } else {
-                    $queryBuilder->orderBy(sprintf('LENGTH(%s)', $connection->quoteIdentifier($column['name'])), 'DESC')
-                        ->addOrderBy($connection->quoteIdentifier($column['name']), 'DESC');
-                }
-
-                $row = $queryBuilder->executeQuery()->fetchAssociative();
-
+                $columnsData = $this->repository->findColumnData($data['table'], $column['name']);
                 $exampleData = null;
-                if (false !== $row) {
-                    /** @var mixed $rowData */
-                    $rowData = $row[$column['name']] ?? null;
-                    if (is_resource($rowData)) {
-                        $rowData = stream_get_contents($rowData);
-                    }
-
-                    $exampleData = null === $rowData ? '_NULL' : (is_string($rowData) ? $rowData : var_export($rowData, true));
+                foreach ($columnsData as $columnData) {
+                    $exampleData = null === $columnData ? '_NULL' : (is_string($columnData) ? $columnData : var_export($columnData, true));
                     $exampleData = strlen($exampleData) > 100 ? substr($exampleData, 0, 100).'...' : $exampleData;
+                    break;
                 }
 
                 $tableData[] = [$column['name'], $column['column']->getType()->getName(), $exampleData];
@@ -120,13 +97,17 @@ class DebugTableSchemaInfoCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function initializeConnection(InputInterface $input): void
+    private function initializeConnection(InputInterface $input): ?string
     {
+        $connectionName = null;
         if ($input->hasOption('connection')) {
             /** @var array<int, string|int>|string|null $connectionName */
             $connectionName = $input->getOption('connection') ?? null;
             $connectionName = is_array($connectionName) ? $connectionName[0] : $connectionName;
-            $this->connectionManager->setConnectionName(is_string($connectionName) ? $connectionName : null);
+            $connectionName = is_string($connectionName) ? $connectionName : null;
+            $this->connectionManager->setConnectionName($connectionName);
         }
+
+        return $connectionName;
     }
 }

@@ -1,51 +1,495 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.30.0@d0bc6e25d89f649e4f36a534f330f8bb4643dd69">
+<files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
   <file src="src/Command/DebugAnalyzeProfileCommand.php">
-    <DeprecatedMethod occurrences="2">
-      <code>getName</code>
-      <code>getName</code>
+    <DeprecatedMethod>
+      <code><![CDATA[getName]]></code>
+      <code><![CDATA[getName]]></code>
     </DeprecatedMethod>
   </file>
   <file src="src/Command/DebugPseudonymizeProfileCommand.php">
-    <DeprecatedMethod occurrences="1">
-      <code>getName</code>
+    <DeprecatedMethod>
+      <code><![CDATA[getName]]></code>
     </DeprecatedMethod>
   </file>
   <file src="src/Command/DebugTableSchemaInfoCommand.php">
-    <DeprecatedMethod occurrences="1">
-      <code>getName</code>
+    <DeprecatedMethod>
+      <code><![CDATA[getName]]></code>
     </DeprecatedMethod>
   </file>
   <file src="src/Command/InformationCommand.php">
-    <DeprecatedMethod occurrences="1">
-      <code>getName</code>
+    <DeprecatedMethod>
+      <code><![CDATA[getName]]></code>
     </DeprecatedMethod>
-    <InternalMethod occurrences="2">
-      <code>getMap</code>
-      <code>getParams</code>
+    <InternalMethod>
+      <code><![CDATA[getMap]]></code>
+      <code><![CDATA[getParams]]></code>
     </InternalMethod>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty(phpversion($configuredBuiltInDriver))]]></code>
+      <code><![CDATA[empty(phpversion('ibm_db2'))]]></code>
+      <code><![CDATA[empty(phpversion('mysqli'))]]></code>
+      <code><![CDATA[empty(phpversion('oci8'))]]></code>
+      <code><![CDATA[empty(phpversion('pdo_ibm'))]]></code>
+      <code><![CDATA[empty(phpversion('pdo_mysql'))]]></code>
+      <code><![CDATA[empty(phpversion('pdo_oci'))]]></code>
+      <code><![CDATA[empty(phpversion('pdo_pgsql'))]]></code>
+      <code><![CDATA[empty(phpversion('pdo_sqlite'))]]></code>
+      <code><![CDATA[empty(phpversion('pdo_sqlsrv'))]]></code>
+      <code><![CDATA[empty(phpversion('sqlite3'))]]></code>
+      <code><![CDATA[empty(phpversion('sqlsrv'))]]></code>
+    </RiskyTruthyFalsyComparison>
   </file>
-  <file src="src/Database/ConnectionManager.php">
-    <LessSpecificReturnStatement occurrences="2">
-      <code>$this-&gt;doctrine-&gt;getConnection($this-&gt;connectionName)</code>
-      <code>$this-&gt;doctrine-&gt;getConnections()</code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType occurrences="2">
-      <code>Connection</code>
-      <code>Connection[]</code>
+  <file src="src/Controller/AppContextTrait.php">
+    <MoreSpecificReturnType>
+      <code><![CDATA[array{app: array{version: string}, current_year: numeric-string, activeProfile: ProfileDefinition|null, activeProfileHasUpdates : bool, activeConnectionName: string}]]></code>
     </MoreSpecificReturnType>
   </file>
-  <file src="src/Processor/Processing/DataProcessing.php">
-    <InvalidNullableReturnType occurrences="1">
-      <code>string</code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement occurrences="1">
-      <code>$this-&gt;identifier</code>
-    </NullableReturnStatement>
+  <file src="src/Controller/ConfigurationController.php">
+    <InvalidArgument>
+      <code><![CDATA[$pagination->getItems()]]></code>
+    </InvalidArgument>
+    <InvalidArrayAccess>
+      <code><![CDATA[$pagination->getItems()[$columnIndex]]]></code>
+      <code><![CDATA[$pagination->getItems()[$columnIndex]]]></code>
+    </InvalidArrayAccess>
+    <PossiblyNullArgument>
+      <code><![CDATA[$column]]></code>
+      <code><![CDATA[$column]]></code>
+      <code><![CDATA[$column]]></code>
+    </PossiblyNullArgument>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[ConfigurationController]]></code>
+    </PropertyNotSetInConstructor>
+  </file>
+  <file src="src/Controller/InformationController.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getName]]></code>
+    </DeprecatedMethod>
+    <InternalMethod>
+      <code><![CDATA[getMap]]></code>
+    </InternalMethod>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[InformationController]]></code>
+    </PropertyNotSetInConstructor>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($this->params->get('db_password'))]]></code>
+      <code><![CDATA[empty(phpversion('ibm_db2'))]]></code>
+      <code><![CDATA[empty(phpversion('mysqli'))]]></code>
+      <code><![CDATA[empty(phpversion('oci8'))]]></code>
+      <code><![CDATA[empty(phpversion('pdo_ibm'))]]></code>
+      <code><![CDATA[empty(phpversion('pdo_mysql'))]]></code>
+      <code><![CDATA[empty(phpversion('pdo_oci'))]]></code>
+      <code><![CDATA[empty(phpversion('pdo_pgsql'))]]></code>
+      <code><![CDATA[empty(phpversion('pdo_sqlite'))]]></code>
+      <code><![CDATA[empty(phpversion('pdo_sqlsrv'))]]></code>
+      <code><![CDATA[empty(phpversion('sqlite3'))]]></code>
+      <code><![CDATA[empty(phpversion('sqlsrv'))]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Controller/ProfileController.php">
+    <PossiblyNullReference>
+      <code><![CDATA[getPath]]></code>
+    </PossiblyNullReference>
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[ProfileController]]></code>
+    </PropertyNotSetInConstructor>
+  </file>
+  <file src="src/Controller/PseudonymizeController.php">
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[PseudonymizeController]]></code>
+    </PropertyNotSetInConstructor>
+  </file>
+  <file src="src/Database/ConnectionManager.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[$this->doctrine->getConnection($this->connectionName)]]></code>
+      <code><![CDATA[$this->doctrine->getConnections()]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[Connection]]></code>
+      <code><![CDATA[Connection[]]]></code>
+    </MoreSpecificReturnType>
+  </file>
+  <file src="src/Database/Query.php">
+    <RedundantCastGivenDocblockType>
+      <code><![CDATA[(string) $fieldName]]></code>
+      <code><![CDATA[(string) $fieldName]]></code>
+    </RedundantCastGivenDocblockType>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($alias)]]></code>
+      <code><![CDATA[empty($suffix)]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Faker/FormatterInformation.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$docComment = $methodReflection->getDocComment()]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Gui/Form/ProfileDefinition/BasicConfigurationType.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getName]]></code>
+    </DeprecatedMethod>
+    <InternalMethod>
+      <code><![CDATA[getMap]]></code>
+    </InternalMethod>
+  </file>
+  <file src="src/Gui/Form/ProfileDefinition/Column/Dto/ColumnConfigurationDtoFactory.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[[
+            'identifier' => $encoder->getIdentifier(),
+            'encoder' => $this->encoderCollection->getEncoderIdentifier($encoder->getEncoder()),
+            'context' => [$context],
+        ]]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[array{identifier: string, encoder: string, context: array<int, array<string, mixed>>}]]></code>
+    </MoreSpecificReturnType>
+    <PossiblyNullReference>
+      <code><![CDATA[getContext]]></code>
+    </PossiblyNullReference>
+    <RedundantCastGivenDocblockType>
+      <code><![CDATA[(int) ($meaning['property']['minimumGraphemeLength'] ?? 3)]]></code>
+    </RedundantCastGivenDocblockType>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$conditionReference]]></code>
+      <code><![CDATA[empty($condition['condition'])]]></code>
+      <code><![CDATA[empty($condition['condition'])]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Gui/Form/ProfileDefinition/Column/EncoderType.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$encoder]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code><![CDATA[add]]></code>
+    </PossiblyNullReference>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[!$contextFormTypeClassName]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Gui/Form/ProfileDefinition/Column/EncodingType.php">
+    <PossiblyNullReference>
+      <code><![CDATA[add]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="src/Gui/Form/ProfileDefinition/Column/Meaning/ContextType.php">
+    <PossiblyNullReference>
+      <code><![CDATA[get]]></code>
+      <code><![CDATA[getParent]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="src/Gui/Form/ProfileDefinition/Column/Meaning/PropertyType.php">
+    <PossiblyNullReference>
+      <code><![CDATA[add]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="src/Gui/Form/ProfileDefinition/Column/MeaningType.php">
+    <PossiblyNullReference>
+      <code><![CDATA[add]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="src/Gui/Form/ProfileDefinition/ColumnConfigurationType.php">
+    <PossiblyNullReference>
+      <code><![CDATA[add]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="src/Gui/Processing/ColumnProcessor.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[[
+            'original' => $originalData,
+            'decoded' => $decodedData,
+            'paths' => is_array($decodedData) || $decodedData instanceof \ArrayAccess ? $this->flattenArray($decodedData) : [],
+            'meanings' => $meanings,
+            'context' => $databaseRow,
+        ]]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[array{original: array<string, mixed>, decoded: mixed, paths: array<string, mixed>, meanings: array<int, array{identifier: string, name: string, originalValue: mixed, fakedValue: mixed}>, context: array<string, mixed>}]]></code>
+    </MoreSpecificReturnType>
+    <PossibleRawObjectIteration>
+      <code><![CDATA[$array]]></code>
+    </PossibleRawObjectIteration>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$condition]]></code>
+      <code><![CDATA[empty($dataPath)]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Gui/Validator/UniqueProfileDefinition.php">
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[UniqueProfileDefinition]]></code>
+    </PropertyNotSetInConstructor>
+  </file>
+  <file src="src/Gui/Validator/UniqueProfileDefinitionValidator.php">
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[UniqueProfileDefinitionValidator]]></code>
+    </PropertyNotSetInConstructor>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$constraint->allowedIdentifier]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/LLPhant/Chat.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($this->apiUrl)]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Processor/AnalyzeProcessor.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[!$sourceColumnIdentifier]]></code>
+      <code><![CDATA[!$sourceTableIdentifier]]></code>
+      <code><![CDATA[!$targetColumnIdentifier]]></code>
+      <code><![CDATA[!$targetTableIdentifier]]></code>
+      <code><![CDATA[!($matches[1] ?? null)]]></code>
+      <code><![CDATA[!($matches[1] ?? null)]]></code>
+      <code><![CDATA[!($matches[2] ?? null)]]></code>
+      <code><![CDATA[!($matches[2] ?? null)]]></code>
+      <code><![CDATA[!($matches[3] ?? null)]]></code>
+      <code><![CDATA[empty($originalData)]]></code>
+      <code><![CDATA[empty($originalData)]]></code>
+      <code><![CDATA[empty($sourceData)]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Processor/Encoder/AdvancedEncoderCollection.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[!$identifier]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Processor/Encoder/ChainedEncoder.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$this->dataPickerStack]]></code>
+    </PropertyTypeCoercion>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$dataPickerPath]]></code>
+      <code><![CDATA[empty($dataPickerPath)]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Processor/Encoder/Serialized/Node/ArrayElementNode.php">
+    <UndefinedMethod>
+      <code><![CDATA[getContent]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Processor/Encoder/Serialized/Node/ArrayNode.php">
+    <MissingTemplateParam>
+      <code><![CDATA[\ArrayAccess]]></code>
+      <code><![CDATA[\Iterator]]></code>
+    </MissingTemplateParam>
+  </file>
+  <file src="src/Processor/Encoder/Serialized/Node/AttributeNode.php">
+    <UndefinedMethod>
+      <code><![CDATA[getContent]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Processor/Encoder/Serialized/Node/ObjectNode.php">
+    <MissingTemplateParam>
+      <code><![CDATA[\ArrayAccess]]></code>
+      <code><![CDATA[\Iterator]]></code>
+    </MissingTemplateParam>
+  </file>
+  <file src="src/Processor/Processing/Analyze/SourceDataCollector.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$processing->getCondition()]]></code>
+    </PossiblyNullArgument>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$processing->getCondition()]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Processor/Processing/Analyze/SourceDataCollectorPreset.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[Helper::buildPropertyAccessorPath($decodedData, $collectFromPath)]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="src/Processor/Processing/Analyze/TargetDataDecoder.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$processing->getCondition()]]></code>
+    </PossiblyNullArgument>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$processing->getCondition()]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Processor/Processing/AutoConfiguration/Guesser/ApplicationGuesser.php">
+    <PossiblyInvalidArgument>
+      <code><![CDATA[str_replace(["\r\n", "\r", "\n"], '', $response['application'])]]></code>
+      <code><![CDATA[str_replace(["\r\n", "\r", "\n"], '', $response['description'])]]></code>
+    </PossiblyInvalidArgument>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($response['application'] ?? null)]]></code>
+      <code><![CDATA[empty($response['description'] ?? null)]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Processor/Processing/AutoConfiguration/Guesser/ColumnGuesser.php">
+    <PossiblyInvalidArgument>
+      <code><![CDATA[str_replace(["\r\n", "\r", "\n"], '', $response['column_description'])]]></code>
+    </PossiblyInvalidArgument>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($response['column_description'] ?? null)]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Processor/Processing/AutoConfiguration/Guesser/TableGuesser.php">
+    <PossiblyInvalidArgument>
+      <code><![CDATA[str_replace(["\r\n", "\r", "\n"], '', $response['table_description'])]]></code>
+    </PossiblyInvalidArgument>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($response['table_description'] ?? null)]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Processor/Processing/ExpressionLanguage/ConditionExpressionProvider.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[Helper::buildPropertyAccessorPath($data, $path)]]></code>
+    </PossiblyNullArgument>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($path)]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Processor/Processing/GenericDataProcessing.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($this->conditions)]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Processor/Processing/Pseudonymize/DataManipulator.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$processing->getCondition()]]></code>
+    </PossiblyNullArgument>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$processing->getCondition()]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Processor/Processing/Pseudonymize/DataManipulatorPreset.php">
+    <PossiblyUndefinedVariable>
+      <code><![CDATA[$propertyAccessor]]></code>
+      <code><![CDATA[$propertyAccessor]]></code>
+      <code><![CDATA[$propertyAccessor]]></code>
+      <code><![CDATA[$propertyAccessor]]></code>
+    </PossiblyUndefinedVariable>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($writeToPath)]]></code>
+      <code><![CDATA[empty($writeToPath)]]></code>
+      <code><![CDATA[empty($writeToPath)]]></code>
+      <code><![CDATA[empty($writeToPath)]]></code>
+      <code><![CDATA[empty($writeToPath)]]></code>
+      <code><![CDATA[empty($writeToPath)]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Processor/PseudonymizeProcessor.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$itemsPerPage]]></code>
+      <code><![CDATA[$onAfterTable]]></code>
+      <code><![CDATA[$onBeforeTable]]></code>
+      <code><![CDATA[$onBeforeTables]]></code>
+      <code><![CDATA[$onTick]]></code>
+      <code><![CDATA[$onTick]]></code>
+      <code><![CDATA[$onTick]]></code>
+      <code><![CDATA[$page]]></code>
+      <code><![CDATA[$tableName]]></code>
+      <code><![CDATA[empty($originalData)]]></code>
+    </RiskyTruthyFalsyComparison>
   </file>
   <file src="src/Profile/Analyze/TableDefinitionAutoConfiguration.php">
-    <DeprecatedMethod occurrences="1">
-      <code>getName</code>
+    <DeprecatedMethod>
+      <code><![CDATA[getName]]></code>
     </DeprecatedMethod>
+  </file>
+  <file src="src/Profile/Model/Analyze/SourceColumn.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$dataProcessing->getCondition()]]></code>
+    </PossiblyNullArgument>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$dataProcessing->getCondition()]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Profile/Model/Analyze/TargetColumn.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$dataProcessing->getCondition()]]></code>
+    </PossiblyNullArgument>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$dataProcessing->getCondition()]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Profile/Model/Pseudonymize/Column.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$dataProcessing->getCondition()]]></code>
+    </PossiblyNullArgument>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$dataProcessing->getCondition()]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Profile/Yaml/ProfileDefinition/Loader/ProfileDefinitionLoader.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[!$type]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Profile/Yaml/ProfileDefinition/Loader/Serializer/Mapping/YamlFilesLoader.php">
+    <InternalMethod>
+      <code><![CDATA[addAttributeMetadata]]></code>
+      <code><![CDATA[addGroup]]></code>
+      <code><![CDATA[getAttributesMetadata]]></code>
+      <code><![CDATA[getName]]></code>
+      <code><![CDATA[getName]]></code>
+      <code><![CDATA[getName]]></code>
+      <code><![CDATA[getName]]></code>
+      <code><![CDATA[getName]]></code>
+      <code><![CDATA[getName]]></code>
+      <code><![CDATA[getName]]></code>
+      <code><![CDATA[getName]]></code>
+      <code><![CDATA[getName]]></code>
+      <code><![CDATA[getName]]></code>
+      <code><![CDATA[setClassDiscriminatorMapping]]></code>
+      <code><![CDATA[setDenormalizationContextForGroups]]></code>
+      <code><![CDATA[setDenormalizationContextForGroups]]></code>
+      <code><![CDATA[setIgnore]]></code>
+      <code><![CDATA[setMaxDepth]]></code>
+      <code><![CDATA[setNormalizationContextForGroups]]></code>
+      <code><![CDATA[setNormalizationContextForGroups]]></code>
+      <code><![CDATA[setSerializedName]]></code>
+      <code><![CDATA[setSerializedPath]]></code>
+    </InternalMethod>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$context = $line['context'] ?? false]]></code>
+      <code><![CDATA[$context = $line['denormalization_context'] ?? false]]></code>
+      <code><![CDATA[$context = $line['normalization_context'] ?? false]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Profile/Yaml/ProfileDefinition/Model/ProfileDefinition/AbstractEntity.php">
+    <PossiblyUndefinedMethod>
+      <code><![CDATA[merge]]></code>
+    </PossiblyUndefinedMethod>
+  </file>
+  <file src="src/Profile/Yaml/ProfileDefinition/Model/ProfileDefinition/Column.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$this->encodings]]></code>
+      <code><![CDATA[$this->encodings]]></code>
+      <code><![CDATA[$this->encodings]]></code>
+      <code><![CDATA[$this->meanings]]></code>
+      <code><![CDATA[$this->meanings]]></code>
+      <code><![CDATA[$this->meanings]]></code>
+    </PropertyTypeCoercion>
+  </file>
+  <file src="src/Profile/Yaml/ProfileDefinition/Model/ProfileDefinition/Encoding.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$this->encoders]]></code>
+      <code><![CDATA[$this->encoders]]></code>
+      <code><![CDATA[$this->encoders]]></code>
+    </PropertyTypeCoercion>
+  </file>
+  <file src="src/Profile/Yaml/ProfileDefinition/Model/ProfileDefinition/Schema.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$this->tables]]></code>
+      <code><![CDATA[$this->tables]]></code>
+      <code><![CDATA[$this->tables]]></code>
+    </PropertyTypeCoercion>
+  </file>
+  <file src="src/Profile/Yaml/ProfileDefinition/Model/ProfileDefinition/Table.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$this->columns]]></code>
+      <code><![CDATA[$this->columns]]></code>
+      <code><![CDATA[$this->columns]]></code>
+    </PropertyTypeCoercion>
+  </file>
+  <file src="src/Profile/Yaml/ProfileDefinition/ProfileDefinitionFactory.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getName]]></code>
+    </DeprecatedMethod>
+  </file>
+  <file src="src/Profile/Yaml/ProfileDefinition/Writer/ProfileDefinitionWriter.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($path)]]></code>
+    </RiskyTruthyFalsyComparison>
   </file>
 </files>

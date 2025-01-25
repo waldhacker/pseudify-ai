@@ -1,0 +1,19 @@
+# This file starts pseudify with the GUI.
+# You can access the GUI in your browser with the url `http://127.0.0.1:9669`.
+
+# The GUI is designed as as a single user app and intended for local usage on a development machine.
+# This is important for security reasons.
+# NEVER EVER host the GUI on a publicly accessible server.
+
+# Run it (AI support) like: `docker compose -f docker-compose.yml -f docker-compose.llm-addon.yml up -d`
+# Run it (no AI support) like: `docker compose up -d`
+
+services:
+  pseudify:
+    container_name: pseudify
+    image: 'ghcr.io/waldhacker/pseudify-ai:2.0'
+    entrypoint: entrypoint_gui
+    ports:
+      - '9669:80'
+    volumes:
+      - './userdata/:/opt/pseudify/userdata/'

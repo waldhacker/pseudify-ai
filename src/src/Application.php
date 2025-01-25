@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -21,6 +21,7 @@ use Symfony\Component\Console\Command\Command;
 
 class Application extends BaseApplication
 {
+    /** @var array<int, string> */
     private array $commandIncludeList = [
         'pseudify:analyze',
         'pseudify:debug:analyze',
@@ -37,6 +38,7 @@ class Application extends BaseApplication
         'debug:event-dispatcher',
     ];
 
+    #[\Override]
     public function add(Command $command): ?Command
     {
         $this->registerCommands();

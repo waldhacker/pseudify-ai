@@ -1,0 +1,3 @@
+# use it like `bin/pseudify --data /var/www/html/src make:controller`
+maker:
+    root_namespace: 'Waldhacker\Pseudify\Core'

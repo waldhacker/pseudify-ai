@@ -12,6 +12,7 @@ use Waldhacker\Pseudify\Core\Processor\Processing\Analyze\TargetDataDecoder;
 use Waldhacker\Pseudify\Core\Processor\Processing\Analyze\TargetDataDecoderContext;
 use Waldhacker\Pseudify\Core\Processor\Processing\DataProcessing;
 use Waldhacker\Pseudify\Core\Processor\Processing\DataProcessingInterface;
+use Waldhacker\Pseudify\Core\Processor\Processing\ExpressionLanguage\ConditionExpressionProvider;
 use Waldhacker\Pseudify\Core\Tests\Unit\Processor\Processing\Fixtures\InvalidDataProcessing;
 
 class TargetDataDecoderTest extends TestCase
@@ -36,12 +37,17 @@ class TargetDataDecoderTest extends TestCase
         $dataProcessing3Prophecy->getIdentifier()->shouldNotBeCalled()->willReturn('id-3');
         $dataProcessing3Prophecy->getProcessor()->shouldNotBeCalled()->willReturn(function () { return; });
 
-        $targetDataDecoder = new TargetDataDecoder();
+        $conditionExpressionProviderProphecy = $this->prophesize(ConditionExpressionProvider::class);
+        $conditionExpressionProviderProphecy->getFunctions()->shouldBeCalled()->willReturn([]);
+
+        $targetDataDecoder = new TargetDataDecoder($conditionExpressionProviderProphecy->reveal());
         $targetDataDecoder->process(
             $targetDataDecoderContextProphecy->reveal(),
-            $dataProcessing1Prophecy->reveal(),
-            $dataProcessing2Prophecy->reveal(),
-            $dataProcessing3Prophecy->reveal()
+            [
+                $dataProcessing1Prophecy->reveal(),
+                $dataProcessing2Prophecy->reveal(),
+                $dataProcessing3Prophecy->reveal(),
+            ]
         );
     }
 
@@ -62,11 +68,16 @@ class TargetDataDecoderTest extends TestCase
         $this->expectException(AmbiguousDataProcessingException::class);
         $this->expectExceptionCode(1621683731);
 
-        $targetDataDecoder = new TargetDataDecoder();
+        $conditionExpressionProviderProphecy = $this->prophesize(ConditionExpressionProvider::class);
+        $conditionExpressionProviderProphecy->getFunctions()->shouldBeCalled()->willReturn([]);
+
+        $targetDataDecoder = new TargetDataDecoder($conditionExpressionProviderProphecy->reveal());
         $targetDataDecoder->process(
             $targetDataDecoderContextProphecy->reveal(),
-            $dataProcessing1Prophecy->reveal(),
-            $dataProcessing2Prophecy->reveal()
+            [
+                $dataProcessing1Prophecy->reveal(),
+                $dataProcessing2Prophecy->reveal(),
+            ]
         );
     }
 
@@ -82,13 +93,18 @@ class TargetDataDecoderTest extends TestCase
             $context->setDecodedData('foo');
         }, 'id-2');
 
-        $targetDataDecoder = new TargetDataDecoder();
+        $conditionExpressionProviderProphecy = $this->prophesize(ConditionExpressionProvider::class);
+        $conditionExpressionProviderProphecy->getFunctions()->shouldBeCalled()->willReturn([]);
+
+        $targetDataDecoder = new TargetDataDecoder($conditionExpressionProviderProphecy->reveal());
         $this->assertEquals(
             ['foo'],
             $targetDataDecoder->process(
                 $targetDataDecoderContext,
-                $dataProcessing1,
-                $dataProcessing2
+                [
+                    $dataProcessing1,
+                    $dataProcessing2,
+                ]
             )
         );
     }

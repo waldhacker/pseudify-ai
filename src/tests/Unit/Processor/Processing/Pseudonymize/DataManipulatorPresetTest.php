@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Waldhacker\Pseudify\Core\Tests\Unit\Processing\Pseudonymize;
+namespace Waldhacker\Pseudify\Core\Tests\Unit\Processor\Processing\Pseudonymize;
 
 use PHPUnit\Framework\TestCase;
 use Waldhacker\Pseudify\Core\Faker\Faker;

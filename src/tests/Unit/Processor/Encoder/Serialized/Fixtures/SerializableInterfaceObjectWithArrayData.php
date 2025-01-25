@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Waldhacker\Pseudify\Core\Tests\Unit\Processor\Encoder\Serialized\Fixtures;
 
-class SerializableInterfaceObjectWithArrayData implements \Serializable
+class SerializableInterfaceObjectWithArrayData
 {
     private $privateMember;
     protected $protectedMember;
@@ -31,7 +31,7 @@ class SerializableInterfaceObjectWithArrayData implements \Serializable
         [
             $this->privateMember,
             $this->protectedMember,
-            $this->publicMember
+            $this->publicMember,
         ] = unserialize($data);
     }
 }

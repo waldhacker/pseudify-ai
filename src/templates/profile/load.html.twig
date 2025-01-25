@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Load profile'|trans }}{% endblock %}
+{% block headline %}{{ 'Load / Create profile'|trans }}{% endblock %}
+
+{% block body %}
+<div class="row row-cols-2">
+  <div class="col-6">
+    {% if context.activeProfile %}
+      <div class="small-box bg-gradient-info">
+        <div class="inner">
+          <h5 class="mb-3">{{ 'Active profile'|trans }}</h5>
+          <p class="mb-0">{{ context.activeProfile.identifier }}</p>
+          <p><small>{{ context.activeProfile.description }}</small></p>
+          <p class="mb-3"><small>{{ 'Path'|trans }}: {{ path }}</small></p>
+          <hr>
+          <h5 class="mb-3">{{ 'Active connection'|trans }}</h5>
+          <p class="mb-0">{{ context.activeConnectionName }}</p>
+        </div>
+        <div class="icon">
+          <i class="fas fa-rectangle-list"></i>
+        </div>
+        <a href="{{ path('app_profile_unload') }}" class="small-box-footer"{% if context.activeProfileHasUpdates %} onclick="return confirm('{{ 'The current profile contains unsaved changes. Are you sure you want to discard these?'|trans }}')"{% endif %}>
+          {{ 'Unload profile'|trans }}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="col-6">
+  </div>
+
+  <div class="col">
+    <div class="card card-info">
+      <div class="card-header">
+        <h3 class="card-title"><i class="nav-icon fas fa-upload me-2"></i> {{ 'Load profile'|trans }}</h3>
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        {% if hasProfiles %}
+          {{ form(profileSelectForm) }}
+        {% else %}
+          <div class="alert alert-info" role="alert">
+            {{ 'There are no profiles available yet. Please create your first profile.'|trans }}
+          </div>
+        {% endif %}
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+
+  <div class="col">
+    <div class="card card-info">
+      <div class="card-header">
+        <h3 class="card-title"><i class="nav-icon fas fa-circle-plus me-2"></i> {{ 'Create new profile'|trans }}</h3>
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+          {{ form(profileCreateForm) }}        
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+</div>
+{% endblock %}

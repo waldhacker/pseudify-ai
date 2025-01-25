@@ -15,6 +15,7 @@
         <server name="SHELL_VERBOSITY" value="-1" />
         <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
         <server name="SYMFONY_PHPUNIT_VERSION" value="9.5" />
+        <server name="DOCTRINE_DEPRECATIONS" value="" />
     </php>
 
     <testsuites>
@@ -25,20 +26,6 @@
             <directory>tests/Application</directory>
         </testsuite>
     </testsuites>
-
-    <coverage processUncoveredFiles="true">
-        <include>
-            <directory suffix=".php">src</directory>
-        </include>
-        <exclude>
-            <file>src/Application.php</file>
-            <file>src/Kernel.php</file>
-            <file>src/Command/DebugAnalyzeProfileCommand.php</file>
-            <file>src/Command/DebugPseudonymizeProfileCommand.php</file>
-            <file>src/Command/InformationCommand.php</file>
-            <directory>src/DependencyInjection</directory>
-        </exclude>
-    </coverage>
 
     <listeners>
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />

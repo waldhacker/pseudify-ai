@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -16,16 +16,29 @@ declare(strict_types=1);
 
 namespace Waldhacker\Pseudify\Core\Processor\Encoder;
 
-class ChainedEncoder implements EncoderInterface
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Waldhacker\Pseudify\Core\Processor\Processing\Helper;
+
+class ChainedEncoder extends AbstractEncoder implements EncoderInterface
 {
     /** @var array<int, EncoderInterface> */
-    private array $encoders = [];
+    protected array $encoders = [];
+    /** @var array<string, mixed> */
+    protected array $defaultContext = [];
+    /** @var array<array-key, array{data: mixed, dataPickerPath: string}> */
+    protected array $dataPickerStack = [];
+    protected PropertyAccessorInterface $propertyAccessor;
 
     /**
+     * @param array<array-key, mixed> $encoders
+     *
      * @api
      */
     public function __construct(array $encoders = [])
     {
+        $this->propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()->getPropertyAccessor();
+
         foreach ($encoders as $encoder) {
             if (!$encoder instanceof EncoderInterface) {
                 continue;
@@ -35,16 +48,20 @@ class ChainedEncoder implements EncoderInterface
     }
 
     /**
-     * @param mixed $data
-     *
-     * @return mixed
+     * @param array<string, mixed> $context
      *
      * @api
      */
-    public function decode($data, array $context = [])
+    #[\Override]
+    public function decode(mixed $data, array $context = []): mixed
     {
-        foreach ($this->encoders as $encoder) {
-            /** @var mixed $data */
+        foreach ($this->encoders as $index => $encoder) {
+            $dataPickerPath = Helper::buildPropertyAccessorPath($data, $encoder->getContext()[self::DATA_PICKER_PATH] ?? null);
+            array_push($this->dataPickerStack, ['data' => $data, 'dataPickerPath' => $dataPickerPath]);
+            if (!empty($dataPickerPath)) {
+                $data = $this->propertyAccessor->getValue($data, $dataPickerPath);
+            }
+
             $data = $encoder->decode($data, $context);
         }
 
@@ -52,20 +69,46 @@ class ChainedEncoder implements EncoderInterface
     }
 
     /**
-     * @param mixed $data
-     *
-     * @return mixed
+     * @param array<string, mixed> $context
      *
      * @api
      */
-    public function encode($data, array $context = [])
+    #[\Override]
+    public function encode(mixed $data, array $context = []): mixed
     {
         foreach (array_reverse($this->encoders) as $encoder) {
-            /** @var mixed $data */
             $data = $encoder->encode($data, $context);
+
+            $dataPickerStackItem = array_pop($this->dataPickerStack);
+            $dataPickerPath = $dataPickerStackItem['dataPickerPath'] ?? null;
+            $dataPickerData = $dataPickerStackItem['data'] ?? null;
+            if ($dataPickerPath && (is_array($dataPickerData) || $dataPickerData instanceof \ArrayAccess || is_object($dataPickerData))) {
+                $this->propertyAccessor->setValue($dataPickerData, $dataPickerPath, $data);
+                $data = $dataPickerData;
+            }
         }
 
         return $data;
+    }
+
+    /**
+     * @param array<string, mixed> $context
+     *
+     * @api
+     */
+    #[\Override]
+    public function canDecode(mixed $data, array $context = []): bool
+    {
+        return true;
+    }
+
+    /**
+     * @api
+     */
+    #[\Override]
+    public function decodesToScalarDataOnly(): bool
+    {
+        return false;
     }
 
     /**
@@ -82,31 +125,10 @@ class ChainedEncoder implements EncoderInterface
     public function getEncoder(int $index): EncoderInterface
     {
         if (!$this->hasEncoder($index)) {
-            throw new MissingEncoderException(sprintf('missing encoder "%s"', $index), 1621656967);
+            throw new MissingEncoderException(sprintf('missing encoder "%s"', $index), 1_621_656_967);
         }
 
         return $this->encoders[$index];
-    }
-
-    /**
-     * @api
-     */
-    public function addEncoder(EncoderInterface $encoder): ChainedEncoder
-    {
-        $this->encoders[] = $encoder;
-
-        return $this;
-    }
-
-    /**
-     * @api
-     */
-    public function removeEncoder(int $index): ChainedEncoder
-    {
-        unset($this->encoders[$index]);
-        $this->encoders = array_values($this->encoders);
-
-        return $this;
     }
 
     /**

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -25,10 +25,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Waldhacker\Pseudify\Core\Database\ConnectionManager;
 use Waldhacker\Pseudify\Core\Database\Schema;
+use Waldhacker\Pseudify\Core\Processor\Encoder\AdvancedEncoderCollection;
 use Waldhacker\Pseudify\Core\Processor\Encoder\ChainedEncoder;
+use Waldhacker\Pseudify\Core\Processor\Encoder\ConditionalEncoder;
 use Waldhacker\Pseudify\Core\Processor\Encoder\EncoderInterface;
-use Waldhacker\Pseudify\Core\Profile\Analyze\ProfileCollection;
+use Waldhacker\Pseudify\Core\Profile\Analyze\ProfileInterface;
 use Waldhacker\Pseudify\Core\Profile\Analyze\TableDefinitionAutoConfiguration;
+use Waldhacker\Pseudify\Core\Profile\ProfileCollection;
 
 #[AsCommand(
     name: 'pseudify:debug:analyze',
@@ -37,14 +40,16 @@ use Waldhacker\Pseudify\Core\Profile\Analyze\TableDefinitionAutoConfiguration;
 class DebugAnalyzeProfileCommand extends Command
 {
     public function __construct(
-        private ProfileCollection $profileCollection,
-        private TableDefinitionAutoConfiguration $tableDefinitionAutoConfiguration,
-        private ConnectionManager $connectionManager,
-        private Schema $schema
+        private readonly ProfileCollection $profileCollection,
+        private readonly TableDefinitionAutoConfiguration $tableDefinitionAutoConfiguration,
+        private readonly AdvancedEncoderCollection $encoderCollection,
+        private readonly ConnectionManager $connectionManager,
+        private readonly Schema $schema,
     ) {
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this
@@ -62,20 +67,22 @@ class DebugAnalyzeProfileCommand extends Command
             );
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $this->initializeConnection($input);
+        $connectionName = $this->initializeConnection($input);
 
         /** @var array<int, string|int>|string|null $profile */
         $profile = $input->getArgument('profile') ?? '';
-        $profile = is_array($profile) ? (string) $profile[0] : (string) $profile;
+        $profile = is_array($profile) ? (string) (null == $profile[0]) : (string) $profile;
 
-        if (!$this->profileCollection->hasProfile($profile)) {
-            throw new InvalidArgumentException(sprintf('invalid profile "%s". allowed profiles: "%s"', $profile, implode(',', $this->profileCollection->getProfileIdentifiers())), 1668974691);
+        if (!$this->profileCollection->hasProfile(ProfileCollection::SCOPE_ANALYZE, $profile, $connectionName)) {
+            throw new InvalidArgumentException(sprintf('invalid profile "%s". allowed profiles: "%s"', $profile, implode(',', $this->profileCollection->getProfileIdentifiers(ProfileCollection::SCOPE_ANALYZE, $connectionName))), 1_668_974_691);
         }
 
-        $profile = $this->profileCollection->getProfile($profile);
+        /** @var ProfileInterface $profile */
+        $profile = $this->profileCollection->getProfile(ProfileCollection::SCOPE_ANALYZE, $profile, $connectionName);
 
         $tableDefinition = $this->tableDefinitionAutoConfiguration->configure($profile->getTableDefinition());
 
@@ -103,7 +110,7 @@ class DebugAnalyzeProfileCommand extends Command
                         $this->schema->getColumn($table->getIdentifier(), $column->getIdentifier())['column']->getType()->getName()
                     ),
                     implode('>', $this->buildEncoderList($column->getEncoder())),
-                    implode('>', $column->getDataProcessingIdentifiers()),
+                    implode(PHP_EOL, $column->getDataProcessingIdentifiersWithConditions()),
                 ];
 
                 $tableData[] = $data;
@@ -121,7 +128,7 @@ class DebugAnalyzeProfileCommand extends Command
         $tableData = [];
         foreach ($tableDefinition->getTargetTables() as $table) {
             foreach ($table->getColumns() as $column) {
-                $dataProcessingIdentifiers = $column->getDataProcessingIdentifiers();
+                $dataProcessingIdentifiers = $column->getDataProcessingIdentifiersWithConditions();
                 $data = [
                     $table->getIdentifier(),
                     sprintf(
@@ -130,7 +137,7 @@ class DebugAnalyzeProfileCommand extends Command
                         $this->schema->getColumn($table->getIdentifier(), $column->getIdentifier())['column']->getType()->getName()
                     ),
                     implode('>', $this->buildEncoderList($column->getEncoder())),
-                    implode('>', empty($dataProcessingIdentifiers) ? ['no further processing'] : $dataProcessingIdentifiers),
+                    implode(PHP_EOL, empty($dataProcessingIdentifiers) ? ['no further processing'] : $dataProcessingIdentifiers),
                 ];
 
                 $tableData[] = $data;
@@ -141,14 +148,18 @@ class DebugAnalyzeProfileCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function initializeConnection(InputInterface $input): void
+    private function initializeConnection(InputInterface $input): ?string
     {
+        $connectionName = null;
         if ($input->hasOption('connection')) {
             /** @var array<int, string|int>|string|null $connectionName */
             $connectionName = $input->getOption('connection') ?? null;
             $connectionName = is_array($connectionName) ? $connectionName[0] : $connectionName;
-            $this->connectionManager->setConnectionName(is_string($connectionName) ? $connectionName : null);
+            $connectionName = is_string($connectionName) ? $connectionName : null;
+            $this->connectionManager->setConnectionName($connectionName);
         }
+
+        return $connectionName;
     }
 
     /**
@@ -157,14 +168,21 @@ class DebugAnalyzeProfileCommand extends Command
     private function buildEncoderList(EncoderInterface $encoder): array
     {
         $encoders = [];
-        if ($encoder instanceof ChainedEncoder) {
+        if ($encoder instanceof ConditionalEncoder) {
+            $conditionalEncoders = [];
+            foreach ($encoder->getConditions() as $condition) {
+                $expression = $condition[ConditionalEncoder::CONDITIONS_CONDITION];
+                $conditionalEncoder = $condition[ConditionalEncoder::CONDITIONS_ENCODER];
+                $conditionalEncoders[] = sprintf('%s [ %s ]', implode('>', $this->buildEncoderList($conditionalEncoder)), $expression);
+            }
+
+            $encoders[] = implode(PHP_EOL, $conditionalEncoders);
+        } elseif ($encoder instanceof ChainedEncoder) {
             foreach ($encoder->getEncoders() as $subEncoder) {
                 $encoders = array_merge($encoders, $this->buildEncoderList($subEncoder));
             }
         } else {
-            $shortName = (new \ReflectionClass($encoder))->getShortName();
-            $convenientShortName = preg_replace('/(.*)Encoder$/', '$1', $shortName);
-            $encoders[] = $convenientShortName ?: $shortName;
+            $encoders[] = $this->encoderCollection->getEncoderShortName($encoder);
         }
 
         return $encoders;

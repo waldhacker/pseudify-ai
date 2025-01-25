@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -23,7 +23,7 @@ use Doctrine\DBAL\Platforms\SQLServer2012Platform;
  */
 class Query
 {
-    public function __construct(private ConnectionManager $connectionManager)
+    public function __construct(private readonly ConnectionManager $connectionManager)
     {
     }
 
@@ -66,11 +66,11 @@ class Query
             );
 
             if (!empty($suffix) || null === $fieldName) {
-                throw new InvalidStatementException(sprintf('could not parse the select statement "%s"', $select), 1619594365);
+                throw new InvalidStatementException(sprintf('could not parse the select statement "%s"', $select), 1_619_594_365);
             }
 
-            if ('.*' === substr($fieldName, -2)) {
-                $select = $connection->quoteIdentifier(substr($fieldName, 0, -2)).'.*';
+            if (str_ends_with((string) $fieldName, '.*')) {
+                $select = $connection->quoteIdentifier(substr((string) $fieldName, 0, -2)).'.*';
             } elseif ('*' !== $fieldName) {
                 $select = $connection->quoteIdentifier($fieldName);
             }
@@ -84,11 +84,13 @@ class Query
     }
 
     /**
+     * @param non-empty-string $delim
+     *
      * @return array<int, string>
      */
     private function trimExplode(string $delim, string $string): array
     {
-        $result = explode($delim, $string) ?: [];
+        $result = explode($delim, $string);
 
         $temp = [];
         foreach ($result as $value) {

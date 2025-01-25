@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -20,42 +20,11 @@ use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Dotenv\Dotenv;
 use Waldhacker\Pseudify\Core\Kernel;
 
-set_time_limit(0);
+require_once __DIR__ . '/../vendor/autoload.php';
 
-function getCurrentDirectory(): string
-{
-    $fullPathToTheRunningPharArchive = Phar::running(false);
-    return empty($fullPathToTheRunningPharArchive)
-           ? __DIR__ . '/../../build/development/userdata/pseudify-profile-templates'
-           : dirname($fullPathToTheRunningPharArchive);
+if (!file_exists(Kernel::USER_DATA_PATH . '/.env')) {
+    throw new \RuntimeException('The userdata directory does not contain an .env file. Please create it first.', 1737031938);
 }
 
-require __DIR__ . '/../vendor/autoload.php';
-
-$input = new ArgvInput();
-if ($input->getParameterOption('--data', null, true) === null) {
-    $dataDirectory = getCurrentDirectory();
-} else {
-    $dataDirectory = realpath($input->getParameterOption('--data', '', true));
-    if ($dataDirectory === false) {
-        $dataDirectory = getCurrentDirectory();
-    } else {
-        $arguments = array_values($_SERVER['argv']);
-        $argumentIndex = array_search('--data', $arguments, true);
-        if ($argumentIndex) {
-            unset($arguments[$argumentIndex], $arguments[++$argumentIndex]);
-        }
-        $input = new ArgvInput($arguments);
-    }
-}
-
-if (file_exists($dataDirectory . '/vendor/autoload.php')) {
-    require $dataDirectory . '/vendor/autoload.php';
-} else {
-    throw new RuntimeException($dataDirectory . '/vendor/autoload.php could not be found.');
-}
-
-$dotenv = new Dotenv();
-$dotenv->loadEnv($dataDirectory . '/.env');
-
-(new Application(new Kernel(empty(Phar::running(false)) ? 'dev' : 'prod', false, $dataDirectory)))->run($input);
+(new Dotenv())->loadEnv(path: Kernel::USER_DATA_PATH . '/.env', defaultEnv: 'prod');
+(new Application(new Kernel($_SERVER['APP_ENV'], (bool) ($_SERVER['APP_DEBUG'] ?? false))))->run(new ArgvInput());

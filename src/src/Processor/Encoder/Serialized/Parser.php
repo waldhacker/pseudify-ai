@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -35,16 +35,16 @@ use Waldhacker\Pseudify\Core\Processor\Encoder\Serialized\Node\StringNode;
  */
 class Parser
 {
-    public const TOKEN_NULL = 'N';
-    public const TOKEN_BOOLEAN = 'b';
-    public const TOKEN_INTEGER = 'i';
-    public const TOKEN_FLOAT = 'd';
-    public const TOKEN_STRING = 's';
-    public const TOKEN_ARRAY = 'a';
-    public const TOKEN_OBJECT = 'O';
-    public const TOKEN_SERIALIZABLE_OBJECT = 'C';
-    public const TOKEN_RECURSION = 'r';
-    public const TOKEN_RECURSION_BY_REFERENCE = 'R';
+    final public const string TOKEN_NULL = 'N';
+    final public const string TOKEN_BOOLEAN = 'b';
+    final public const string TOKEN_INTEGER = 'i';
+    final public const string TOKEN_FLOAT = 'd';
+    final public const string TOKEN_STRING = 's';
+    final public const string TOKEN_ARRAY = 'a';
+    final public const string TOKEN_OBJECT = 'O';
+    final public const string TOKEN_SERIALIZABLE_OBJECT = 'C';
+    final public const string TOKEN_RECURSION = 'r';
+    final public const string TOKEN_RECURSION_BY_REFERENCE = 'R';
 
     protected int $currentIndex = 0;
     private int $dataLength = 0;
@@ -67,34 +67,22 @@ class Parser
         while ($this->currentIndex < $this->dataLength) {
             $dataType = $this->serializedData[$this->currentIndex];
 
-            switch ($dataType) {
-                case self::TOKEN_INTEGER:
-                    return $this->parseInt();
-                case self::TOKEN_STRING:
-                    return $this->parseString();
-                case self::TOKEN_ARRAY:
-                    return $this->parseArray();
-                case self::TOKEN_OBJECT:
-                    return $this->parseObject();
-                case self::TOKEN_FLOAT:
-                    return $this->parseFloat();
-                case self::TOKEN_NULL:
-                    return $this->parseNull();
-                case self::TOKEN_BOOLEAN:
-                    return $this->parseBoolean();
-                case self::TOKEN_RECURSION:
-                    return $this->parseRecursion();
-                case self::TOKEN_RECURSION_BY_REFERENCE:
-                    return $this->parseRecursionByReference();
-                case self::TOKEN_SERIALIZABLE_OBJECT:
-                    return $this->parseSerializableObject();
-
-                default:
-                    throw new MissingDataTypeException($this->errorMessage('unknown data type "%s"', $dataType), 1620887372);
-            }
+            return match ($dataType) {
+                self::TOKEN_INTEGER => $this->parseInt(),
+                self::TOKEN_STRING => $this->parseString(),
+                self::TOKEN_ARRAY => $this->parseArray(),
+                self::TOKEN_OBJECT => $this->parseObject(),
+                self::TOKEN_FLOAT => $this->parseFloat(),
+                self::TOKEN_NULL => $this->parseNull(),
+                self::TOKEN_BOOLEAN => $this->parseBoolean(),
+                self::TOKEN_RECURSION => $this->parseRecursion(),
+                self::TOKEN_RECURSION_BY_REFERENCE => $this->parseRecursionByReference(),
+                self::TOKEN_SERIALIZABLE_OBJECT => $this->parseSerializableObject(),
+                default => throw new MissingDataTypeException($this->errorMessage('unknown data type "%s"', $dataType), 1_620_887_372),
+            };
         }
 
-        throw new InvalidDataException($this->errorMessage('unparsable data "%s"', $this->serializedData), 1620887373);
+        throw new InvalidDataException($this->errorMessage('unparsable data "%s"', $this->serializedData), 1_620_887_373);
     }
 
     /**
@@ -141,6 +129,11 @@ class Parser
     private function parseRawInt(): int
     {
         $integer = $this->current();
+
+        if (!ctype_digit($integer)) {
+            throw new InvalidDataException($this->errorMessage('unparsable data "%s"', $this->serializedData), 1735911979);
+        }
+
         while (ctype_digit($this->peek())) {
             $this->advance();
             $integer .= $this->current();
@@ -160,7 +153,7 @@ class Parser
         do {
             $float .= $this->current();
             $this->advance();
-        } while (';' != $this->current());
+        } while (';' !== $this->current());
 
         return new FloatNode((float) $float);
     }
@@ -261,7 +254,7 @@ class Parser
         for ($i = 0; $i < $numAttributes; ++$i) {
             $rawAttributeName = $this->parseInternal();
             if (!$rawAttributeName instanceof StringNode) {
-                throw new InvalidDataTypeException($this->errorMessage('invalid attribute type "%s"', get_class($rawAttributeName)), 1620887374);
+                throw new InvalidDataTypeException($this->errorMessage('invalid attribute type "%s"', $rawAttributeName::class), 1_620_887_374);
             }
             [$class, $name, $scope] = $this->parseAttributeName($rawAttributeName);
 
@@ -289,7 +282,7 @@ class Parser
     }
 
     /**
-     * @return array{null|string, string, "private"|"protected"|"public"}
+     * @return array{string|null, string, "private"|"protected"|"public"}
      */
     private function parseAttributeName(StringNode $stringNode): array
     {
@@ -359,14 +352,11 @@ class Parser
     private function assertInBounds(int $offset): void
     {
         if ($this->currentIndex + $offset >= $this->dataLength) {
-            throw new OutOfBoundsException($this->errorMessage('offset: %s, max: %s', $offset, $this->dataLength), 1620887375);
+            throw new OutOfBoundsException($this->errorMessage('offset: %s, max: %s', $offset, $this->dataLength), 1_620_887_375);
         }
     }
 
-    /**
-     * @param array $arguments
-     */
-    private function errorMessage(string $message, ...$arguments): string
+    private function errorMessage(string $message, mixed ...$arguments): string
     {
         /** @var string $errorMessage */
         $errorMessage = vsprintf($message, $arguments);

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -40,11 +40,30 @@ class StringNode extends Node
     }
 
     /*
+     * @api
+     */
+    public function setContent(string $content): StringNode
+    {
+        $this->content = $content;
+
+        return $this;
+    }
+
+    /*
      * semantic alias
      * @api
      */
     public function getValue(): string
     {
         return $this->getContent();
+    }
+
+    /*
+     * semantic alias
+     * @api
+     */
+    public function setValue(string $content): StringNode
+    {
+        return $this->setContent($content);
     }
 }

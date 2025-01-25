@@ -1,0 +1,8 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  profile_template_classes:
+    namespace: Waldhacker\Pseudify\
+    resource: '../src/'

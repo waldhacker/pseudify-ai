@@ -1,0 +1,293 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Information'|trans }}{% endblock %}
+{% block headline %}{{ 'Information'|trans }}{% endblock %}
+
+{% block body %}
+<div class="row row-cols-2">
+  <div class="col">
+    <div class="card card-info">
+      <div class="card-header">
+        <h3 class="card-title">{{ 'Available profiles (YAML)'|trans }}</h3>
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        <table data-table-type="minimal" class="table table-sm table-bordered table-hover">
+          <thead>
+            <tr>
+              <th>{{ 'Identifier'|trans }}</th>
+              <th>{{ 'Path'|trans }}</th>
+              <th>{{ 'Description'|trans }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for profileDefinition in information.profileDefinitions %}
+              <tr {% if profileDefinition.active %}class="table-info"{% endif %}>
+                <td>{{ profileDefinition.identifier }}</td>
+                <td>{{ profileDefinition.path }}</td>
+                <td>{{ profileDefinition.description }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+
+  <div class="col">
+    <div class="card card-info">
+      <div class="card-header">
+        <h3 class="card-title">{{ '.env configuration'|trans }}</h3>
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        <table class="table table-sm table-bordered table-hover">
+          <thead>
+            <tr>
+              <th>{{ 'Name'|trans }}</th>
+              <th>{{ 'Value'|trans }}</th>
+              <th>{{ 'Description'|trans }}</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr>
+                <td>db_driver</td>
+                <td>{{ information.envConfiguration.db_driver }}</td>
+                <td>{{ 'Database driver'|trans }}</td>
+              </tr>
+              <tr>
+                <td>db_host</td>
+                <td>{{ information.envConfiguration.db_host }}</td>
+                <td>{{ 'Database host'|trans }}</td>
+              </tr>
+              <tr>
+                <td>db_port</td>
+                <td>{{ information.envConfiguration.db_port }}</td>
+                <td>{{ 'Database port'|trans }}</td>
+              </tr>
+              <tr>
+                <td>db_user</td>
+                <td>{{ information.envConfiguration.db_user }}</td>
+                <td>{{ 'Database user'|trans }}</td>
+              </tr>
+              <tr>
+                <td>db_password</td>
+                <td>{{ information.envConfiguration.db_password }}</td>
+                <td>{{ 'Database password'|trans }}</td>
+              </tr>
+              <tr>
+                <td>db_dbname</td>
+                <td>{{ information.envConfiguration.db_dbname }}</td>
+                <td>{{ 'Database name'|trans }}</td>
+              </tr>
+              <tr>
+                <td>db_charset</td>
+                <td>{{ information.envConfiguration.db_charset }}</td>
+                <td>{{ 'Database charset'|trans }}</td>
+              </tr>
+              <tr>
+                <td>db_version</td>
+                <td>{{ information.envConfiguration.db_version }}</td>
+                <td>{{ 'Database version'|trans }}</td>
+              </tr>
+              <tr>
+                <td>db_ssl_insecure</td>
+                <td>{{ information.envConfiguration.db_ssl_insecure }}</td>
+                <td>{{ 'Use insecure ssl connection (SQL Server)'|trans }}</td>
+              </tr>
+              <tr>
+                <td>faker_locale</td>
+                <td>{{ information.envConfiguration.faker_locale }}</td>
+                <td>{{ 'Create pseudonyms with this locale'|trans }}</td>
+              </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+
+  <div class="col">
+    <div class="card card-info">
+      <div class="card-header">
+        <h3 class="card-title">{{ 'Registered condition expression functions'|trans }}</h3>
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        <table data-table-type="minimal" class="table table-sm table-bordered table-hover">
+          <thead>
+            <tr>
+              <th>{{ 'Name'|trans }}</th>
+              <th>{{ 'Description'|trans }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for dataProcessingFunction in information.dataProcessingFunctions %}
+              <tr>
+                <td>{{ dataProcessingFunction.0 }}</td>
+                <td>{{ dataProcessingFunction.1|trans }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+
+  <div class="col">
+    <div class="card card-info">
+      <div class="card-header">
+        <h3 class="card-title">{{ 'Registered encoders'|trans }}</h3>
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        <table data-table-type="minimal" class="table table-sm table-bordered table-hover">
+          <thead>
+            <tr>
+              <th>{{ 'Name'|trans }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for encoderName in information.encoders %}
+              <tr>
+                <td>{{ encoderName|trans }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+
+  <div class="col">
+    <div class="card card-info">
+      <div class="card-header">
+        <h3 class="card-title">{{ 'Registered doctrine type implementations'|trans }}</h3>
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        <table data-table-type="minimal" class="table table-sm table-bordered table-hover">
+          <thead>
+            <tr>
+              <th>{{ 'Type name'|trans }}</th>
+              <th>{{ 'Implementation'|trans }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for doctrineTypeImplementation in information.doctrineTypeImplementations %}
+              <tr>
+                <td>{{ doctrineTypeImplementation.0 }}</td>
+                <td>{{ doctrineTypeImplementation.1 }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+
+  {% for connectionInformation in information.connectionInformation %}
+    <div class="col">
+      <div class="card card-info">
+        <div class="card-header">
+          <h3 class="card-title">{{ 'Connection details for connection'|trans }} "{{ connectionInformation.connectionName }}"</h3>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+          <h6>{{ 'Implementations'|trans }}</h6>
+
+          <table class="table table-sm table-bordered table-hover mb-3">
+            <thead>
+              <tr>
+                <th>{{ 'Name'|trans }}</th>
+                <th>{{ 'Implementation'|trans }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{ 'Connection implementation'|trans }}</td>
+                <td>{{ connectionInformation.implementations.connectionImplementation }}</td>
+              </tr>
+              <tr>
+                <td>{{ 'Driver implementation'|trans }}</td>
+                <td>{{ connectionInformation.implementations.driverImplementation }}</td>
+              </tr>
+              <tr>
+                <td>{{ 'Platform implementation'|trans }}</td>
+                <td>{{ connectionInformation.implementations.databasePlatformImplementation }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h6>{{ 'Registered doctrine database data type mappings'|trans }}</h6>
+
+          <table data-table-type="minimal" class="table table-sm table-bordered table-hover mb-3">
+            <thead>
+              <tr>
+                <th>{{ 'Database type'|trans }}</th>
+                <th>{{ 'Doctrine type name'|trans }}</th>
+                <th>{{ 'Doctrine type implementation'|trans }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for doctrineTypeMapping in connectionInformation.doctrineTypeMappings %}
+                <tr>
+                  <td>{{ doctrineTypeMapping.databaseType }}</td>
+                  <td>{{ doctrineTypeMapping.doctrineTypeName }}</td>
+                  <td>{{ doctrineTypeMapping.doctrineTypeImplementation }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+    </div>
+  {% endfor %}
+
+  <div class="col">
+    <div class="card card-info">
+      <div class="card-header">
+        <h3 class="card-title">{{ 'Available built-in database drivers'|trans }}</h3>
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        {% for databasePlatformName, databaseDrivers in information.databaseDrivers %}
+          <h6>{{ databasePlatformName|trans }}</h6>
+
+          <table class="table table-sm table-bordered table-hover mb-3">
+            <thead>
+              <tr>
+                <th>{{ 'Driver name'|trans }}</th>
+                <th>{{ 'Version'|trans }}</th>
+                <th>{{ 'Description'|trans }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for databaseDriverName, databaseDriver in databaseDrivers %}
+                <tr>
+                  <td>{{ databaseDriverName }}</td>
+                  <td>{{ databaseDriver.1 }}</td>
+                  <td>{{ databaseDriver.0|trans }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endfor %}
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+</div>
+{% endblock %}

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -17,20 +17,22 @@ declare(strict_types=1);
 namespace Waldhacker\Pseudify\Core\Processor\Encoder;
 
 use Symfony\Component\Serializer\Encoder\CsvEncoder as SymfonyEncoder;
+use Waldhacker\Pseudify\Core\Gui\Form\ProfileDefinition\Column\Encoder\CsvEncoderType;
 
-class CsvEncoder implements EncoderInterface
+class CsvEncoder extends AbstractEncoder implements EncoderInterface
 {
-    public const AS_COLLECTION_KEY = SymfonyEncoder::AS_COLLECTION_KEY;
-    public const DELIMITER_KEY = SymfonyEncoder::DELIMITER_KEY;
-    public const ENCLOSURE_KEY = SymfonyEncoder::ENCLOSURE_KEY;
-    public const ESCAPE_CHAR_KEY = SymfonyEncoder::ESCAPE_CHAR_KEY;
-    public const ESCAPE_FORMULAS_KEY = SymfonyEncoder::ESCAPE_FORMULAS_KEY;
-    public const HEADERS_KEY = SymfonyEncoder::HEADERS_KEY;
-    public const KEY_SEPARATOR_KEY = SymfonyEncoder::KEY_SEPARATOR_KEY;
-    public const NO_HEADERS_KEY = SymfonyEncoder::NO_HEADERS_KEY;
-    public const OUTPUT_UTF8_BOM_KEY = SymfonyEncoder::OUTPUT_UTF8_BOM_KEY;
+    final public const string AS_COLLECTION_KEY = SymfonyEncoder::AS_COLLECTION_KEY;
+    final public const string DELIMITER_KEY = SymfonyEncoder::DELIMITER_KEY;
+    final public const string ENCLOSURE_KEY = SymfonyEncoder::ENCLOSURE_KEY;
+    final public const string ESCAPE_CHAR_KEY = SymfonyEncoder::ESCAPE_CHAR_KEY;
+    final public const string ESCAPE_FORMULAS_KEY = SymfonyEncoder::ESCAPE_FORMULAS_KEY;
+    final public const string HEADERS_KEY = SymfonyEncoder::HEADERS_KEY;
+    final public const string KEY_SEPARATOR_KEY = SymfonyEncoder::KEY_SEPARATOR_KEY;
+    final public const string NO_HEADERS_KEY = SymfonyEncoder::NO_HEADERS_KEY;
+    final public const string OUTPUT_UTF8_BOM_KEY = SymfonyEncoder::OUTPUT_UTF8_BOM_KEY;
 
-    private array $defaultContext = [
+    /** @var array<string, mixed> */
+    protected array $defaultContext = [
         self::AS_COLLECTION_KEY => true,
         self::DELIMITER_KEY => ',',
         self::ENCLOSURE_KEY => '"',
@@ -38,48 +40,110 @@ class CsvEncoder implements EncoderInterface
         self::ESCAPE_FORMULAS_KEY => false,
         self::HEADERS_KEY => [],
         self::KEY_SEPARATOR_KEY => '.',
-        self::NO_HEADERS_KEY => false,
+        self::NO_HEADERS_KEY => true,
         self::OUTPUT_UTF8_BOM_KEY => false,
+        self::DATA_PICKER_PATH => null,
     ];
 
-    private SymfonyEncoder $concreteEncoder;
+    protected SymfonyEncoder $concreteEncoder;
 
     /**
+     * @param array<string, mixed> $defaultContext
+     *
      * @api
      */
     public function __construct(array $defaultContext = [])
     {
-        $this->defaultContext = array_merge($this->defaultContext, $defaultContext);
-        \PHP_VERSION_ID < 70400 && '' === $this->defaultContext[self::ESCAPE_CHAR_KEY] ? $this->defaultContext[self::ESCAPE_CHAR_KEY] = '\\' : null;
-
+        parent::__construct($defaultContext);
         $this->concreteEncoder = new SymfonyEncoder($this->defaultContext);
     }
 
     /**
-     * @param string $data
-     *
-     * @return mixed
+     * @param array<string, mixed> $context
      *
      * @api
      */
-    public function decode($data, array $context = [])
+    #[\Override]
+    public function setContext(array $context): EncoderInterface
     {
+        $this->defaultContext = array_merge($this->defaultContext, $context);
+        $this->concreteEncoder = new SymfonyEncoder($this->defaultContext);
+
+        return $this;
+    }
+
+    /**
+     * @param array<string, mixed> $context
+     *
+     * @return array<array-key, mixed>|null
+     *
+     * @api
+     */
+    #[\Override]
+    public function decode(mixed $data, array $context = []): mixed
+    {
+        if (!is_string($data)) {
+            return null;
+        }
+
         $context = array_merge($this->defaultContext, $context);
 
         return $this->concreteEncoder->decode($data, SymfonyEncoder::FORMAT, $context);
     }
 
     /**
-     * @param array $data
+     * @param array<string, mixed> $context
      *
-     * @return string
+     * @return string|null
      *
      * @api
      */
-    public function encode($data, array $context = [])
+    #[\Override]
+    public function encode(mixed $data, array $context = []): mixed
     {
+        if (!is_array($data)) {
+            return null;
+        }
+
         $context = array_merge($this->defaultContext, $context);
 
         return $this->concreteEncoder->encode($data, SymfonyEncoder::FORMAT, $context);
+    }
+
+    /**
+     * @param array<string, mixed> $context
+     *
+     * @api
+     */
+    #[\Override]
+    public function canDecode(mixed $data, array $context = []): bool
+    {
+        try {
+            $decodedData = $this->decode($data, $context);
+            if (is_array($decodedData) && count($decodedData[0] ?? []) > 1) {
+                return true;
+            }
+        } catch (\Throwable) {
+        }
+
+        return false;
+    }
+
+    /**
+     * @api
+     */
+    #[\Override]
+    public function decodesToScalarDataOnly(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @api
+     */
+    #[\Override]
+    public function getContextFormTypeClassName(): ?string
+    {
+        return CsvEncoderType::class;
     }
 }

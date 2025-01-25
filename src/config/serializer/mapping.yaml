@@ -1,0 +1,17 @@
+Waldhacker\Pseudify\Core\Processor\Encoder\EncoderInterface:
+  discriminator_map:
+    type_property: identifier
+    mapping:
+      base64_encoder: 'Waldhacker\Pseudify\Core\Processor\Encoder\Base64Encoder'
+      csv_encoder: 'Waldhacker\Pseudify\Core\Processor\Encoder\CsvEncoder'
+      gzcompress_encoder: 'Waldhacker\Pseudify\Core\Processor\Encoder\GzCompressEncoder'
+      gzdeflate_encoder: 'Waldhacker\Pseudify\Core\Processor\Encoder\GzDeflateEncoder'
+      gzencode_encoder: 'Waldhacker\Pseudify\Core\Processor\Encoder\GzEncodeEncoder'
+      hex_encoder: 'Waldhacker\Pseudify\Core\Processor\Encoder\HexEncoder'
+      json_encoder: 'Waldhacker\Pseudify\Core\Processor\Encoder\JsonEncoder'
+      scalar_encoder: 'Waldhacker\Pseudify\Core\Processor\Encoder\ScalarEncoder'
+      serialized_encoder: 'Waldhacker\Pseudify\Core\Processor\Encoder\SerializedEncoder'
+      typo3_flexform_encoder: 'Waldhacker\Pseudify\Core\Processor\Encoder\TYPO3\FlexformEncoder'
+      xml_encoder: 'Waldhacker\Pseudify\Core\Processor\Encoder\XmlEncoder'
+      yaml_encoder: 'Waldhacker\Pseudify\Core\Processor\Encoder\YamlEncoder'
+      zlib_encode_encoder: 'Waldhacker\Pseudify\Core\Processor\Encoder\ZlibEncodeEncoder'

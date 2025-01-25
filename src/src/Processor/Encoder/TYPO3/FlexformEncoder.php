@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -16,10 +16,12 @@ declare(strict_types=1);
 
 namespace Waldhacker\Pseudify\Core\Processor\Encoder\TYPO3;
 
+use Waldhacker\Pseudify\Core\Gui\Form\ProfileDefinition\Column\Encoder\FlexformEncoderType;
 use Waldhacker\Pseudify\Core\Processor\Encoder\XmlEncoder;
 
 class FlexformEncoder extends XmlEncoder
 {
+    /** @var array<string, mixed> */
     protected array $defaultContext = [
         self::ENCODING => 'utf-8',
         self::AS_COLLECTION => false,
@@ -32,4 +34,13 @@ class FlexformEncoder extends XmlEncoder
         self::STANDALONE => true,
         self::TYPE_CAST_ATTRIBUTES => true,
     ];
+
+    /**
+     * @api
+     */
+    #[\Override]
+    public function getContextFormTypeClassName(): ?string
+    {
+        return FlexformEncoderType::class;
+    }
 }

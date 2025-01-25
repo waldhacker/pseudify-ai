@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -18,19 +18,22 @@ namespace Waldhacker\Pseudify\Core\Processor\Processing\Analyze;
 
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Waldhacker\Pseudify\Core\Processor\Encoder\JsonEncoder;
-use Waldhacker\Pseudify\Core\Processor\Processing\DataProcessing;
-use Waldhacker\Pseudify\Core\Processor\Processing\DataProcessingInterface;
+use Waldhacker\Pseudify\Core\Processor\Processing\GenericDataProcessing;
+use Waldhacker\Pseudify\Core\Processor\Processing\GenericDataProcessingInterface;
 
 class TargetDataDecoderPreset
 {
     /**
+     * @param string[]|null $conditions
+     *
      * @api
      */
-    public static function normalizedJsonString(?string $processingIdentifier = null): DataProcessingInterface
-    {
-        return new DataProcessing(
+    public static function normalizedJsonString(
+        ?string $processingIdentifier = null,
+        ?array $conditions = null,
+    ): GenericDataProcessingInterface {
+        return new GenericDataProcessing(
             static function (TargetDataDecoderContext $context): void {
-                /** @var mixed $rawData */
                 $rawData = $context->getRawData();
                 if (!is_string($rawData)) {
                     return;
@@ -40,7 +43,7 @@ class TargetDataDecoderPreset
                     $decodedData = (new JsonEncoder(
                         [JsonEncoder::DECODE_OPTIONS => \JSON_INVALID_UTF8_IGNORE | \JSON_INVALID_UTF8_SUBSTITUTE]
                     ))->decode($rawData);
-                } catch (NotEncodableValueException $e) {
+                } catch (NotEncodableValueException) {
                     $decodedData = null;
                 }
 
@@ -54,7 +57,8 @@ class TargetDataDecoderPreset
 
                 $context->setDecodedData($normalizedData);
             },
-            $processingIdentifier ?? 'normalizedJsonString-'.uniqid()
+            $processingIdentifier ?? 'normalizedJsonString-'.uniqid(),
+            $conditions
         );
     }
 }

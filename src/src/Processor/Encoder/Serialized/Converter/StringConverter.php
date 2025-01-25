@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -37,7 +37,7 @@ class StringConverter
      */
     public function convert(Node $node): string
     {
-        switch (get_class($node)) {
+        switch ($node::class) {
             case ArrayNode::class:
                 return $this->convertArray($node);
 
@@ -75,7 +75,7 @@ class StringConverter
                 return $this->convertString($node);
 
             default:
-                throw new MissingNodeTypeException(sprintf('unknown node type "%s"', get_class($node)), 1620889720);
+                throw new MissingNodeTypeException(sprintf('unknown node type "%s"', $node::class), 1_620_889_720);
         }
     }
 

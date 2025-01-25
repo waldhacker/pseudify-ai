@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Waldhacker\Pseudify\Core\Tests\Unit\Processor\Encoder\Serialized\Node;
 
 use PHPUnit\Framework\TestCase;
+use Waldhacker\Pseudify\Core\Processor\Encoder\Serialized\InvalidDataException;
 use Waldhacker\Pseudify\Core\Processor\Encoder\Serialized\Node\AttributeNode;
 use Waldhacker\Pseudify\Core\Processor\Encoder\Serialized\Node\MissingPropertyException;
 use Waldhacker\Pseudify\Core\Processor\Encoder\Serialized\Node\ObjectNode;
@@ -325,10 +326,10 @@ class ObjectNodeTest extends TestCase
         );
     }
 
-    public function testReplacePropertyThrowsExceptionIfPropertyDoesNotExists(): void
+    public function testReplacePropertyAddPropertyIfPropertyDoesNotExists(): void
     {
-        $this->expectException(MissingPropertyException::class);
-        $this->expectExceptionCode(1621657000);
+        $this->expectException(InvalidDataException::class);
+        $this->expectExceptionCode(1706562198);
 
         $member1ValueNode = new StringNode('foo');
         $member2ValueNode = new StringNode('bar');

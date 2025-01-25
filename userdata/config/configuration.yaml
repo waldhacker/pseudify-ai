@@ -1,0 +1,12 @@
+doctrine:
+  dbal:
+    # https://symfony.com/doc/6.4/doctrine/dbal.html#registering-custom-mapping-types
+    types:
+      enum: Waldhacker\Pseudify\Types\TYPO3\EnumType
+      set: Waldhacker\Pseudify\Types\TYPO3\SetType
+    connections:
+      default:
+        # https://symfony.com/doc/6.4/doctrine/dbal.html#registering-custom-mapping-types
+        mapping_types:
+          enum: enum
+          set: set

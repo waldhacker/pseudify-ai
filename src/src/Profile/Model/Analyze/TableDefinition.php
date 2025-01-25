@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -20,7 +20,7 @@ use Doctrine\DBAL\Types\Types;
 
 class TableDefinition
 {
-    public const COMMON_EXCLUED_TARGET_COLUMN_TYPES = [
+    final public const array COMMON_EXCLUED_TARGET_COLUMN_TYPES = [
         Types::BIGINT,
         Types::BOOLEAN,
         Types::DATE_MUTABLE,
@@ -55,7 +55,7 @@ class TableDefinition
     /**
      * @internal
      */
-    public function __construct(private string $identifier)
+    public function __construct(private readonly string $identifier)
     {
     }
 
@@ -89,7 +89,7 @@ class TableDefinition
     public function getSourceTable(string $identifier): SourceTable
     {
         if (!$this->hasSourceTable($identifier)) {
-            throw new MissingSourceTableException(sprintf('missing source table "%s" for definition "%s"', $identifier, $this->identifier), 1621654993);
+            throw new MissingSourceTableException(sprintf('missing source table "%s" for definition "%s"', $identifier, $this->identifier), 1_621_654_993);
         }
 
         return $this->sourceTables[$identifier];
@@ -153,7 +153,7 @@ class TableDefinition
     public function getTargetTable(string $identifier): TargetTable
     {
         if (!$this->hasTargetTable($identifier)) {
-            throw new MissingTargetTableException(sprintf('missing target table "%s" for definition "%s"', $identifier, $this->identifier), 1621654994);
+            throw new MissingTargetTableException(sprintf('missing target table "%s" for definition "%s"', $identifier, $this->identifier), 1_621_654_994);
         }
 
         return $this->targetTables[$identifier];
@@ -221,7 +221,7 @@ class TableDefinition
     public function getExcludedTargetTable(string $identifier): TargetTable
     {
         if (!$this->isTargetTableExcluded($identifier)) {
-            throw new MissingExcludedTableException(sprintf('missing excluded table "%s" for definition "%s"', $identifier, $this->identifier), 1621654995);
+            throw new MissingExcludedTableException(sprintf('missing excluded table "%s" for definition "%s"', $identifier, $this->identifier), 1_621_654_995);
         }
 
         return $this->excludedTargetTables[$identifier];

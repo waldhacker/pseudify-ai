@@ -1,0 +1,329 @@
+# This file is used for development and testing.
+# You don't need this.
+
+# Import data with `tests/import.sh`
+
+services:
+  mariadb_10_2:
+    container_name: pseudify_mariadb_10_2
+    image: mariadb:10.2
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mariadb/10.2/:/data/'
+
+  mariadb_10_3:
+    container_name: pseudify_mariadb_10_3
+    image: mariadb:10.3
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mariadb/10.3/:/data/'
+
+  mariadb_10_4:
+    container_name: pseudify_mariadb_10_4
+    image: mariadb:10.4
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mariadb/10.4/:/data/'
+
+  mariadb_10_5:
+    container_name: pseudify_mariadb_10_5
+    image: 'mariadb:10.5'
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mariadb/10.5/:/data/'
+
+  mariadb_10_6:
+    container_name: pseudify_mariadb_10_6
+    image: mariadb:10.6
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mariadb/10.6/:/data/'
+
+  mariadb_10_7:
+    container_name: pseudify_mariadb_10_7
+    image: mariadb:10.7
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mariadb/10.7/:/data/'
+
+  mariadb_10_8:
+    container_name: pseudify_mariadb_10_8
+    image: mariadb:10.8
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mariadb/10.8/:/data/'
+
+  mariadb_10_9:
+    container_name: pseudify_mariadb_10_9
+    image: mariadb:10.9
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mariadb/10.9/:/data/'
+
+  mariadb_10_10:
+    container_name: pseudify_mariadb_10_10
+    image: mariadb:10.10
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mariadb/10.10/:/data/'
+
+  mariadb_10_11:
+    container_name: pseudify_mariadb_10_11
+    image: mariadb:10.11
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mariadb/10.11/:/data/'
+
+  mariadb_11_0:
+    container_name: pseudify_mariadb_11_0
+    image: mariadb:11.0
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mariadb/11.0/:/data/'
+
+  mariadb_11_1:
+    container_name: pseudify_mariadb_11_1
+    image: mariadb:11.1
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mariadb/11.1/:/data/'
+
+  mariadb_11_2:
+    container_name: pseudify_mariadb_11_2
+    image: mariadb:11.2
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mariadb/11.2/:/data/'
+
+  mariadb_11_3:
+    container_name: pseudify_mariadb_11_3
+    image: mariadb:11.3
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mariadb/11.3/:/data/'
+
+  mariadb_11_4:
+    container_name: pseudify_mariadb_11_4
+    image: mariadb:11.4
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mariadb/11.4/:/data/'
+
+  mariadb_11_5:
+    container_name: pseudify_mariadb_11_5
+    image: mariadb:11.5
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mariadb/11.5/:/data/'
+
+  mariadb_11_6:
+    container_name: pseudify_mariadb_11_6
+    image: mariadb:11.6
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mariadb/11.6/:/data/'
+
+  mariadb_11_7:
+    container_name: pseudify_mariadb_11_7
+    image: mariadb:11.7-rc
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mariadb/11.7/:/data/'
+
+  # disabled until https://github.com/microsoft/mssql-docker/issues/868 is fixed
+  # mssql_2017:
+  #  container_name: pseudify_mssql_2017
+  #  image: mcr.microsoft.com/mssql/server:2017-latest
+  #  environment:
+  #    ACCEPT_EULA: Y
+  #    SA_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+  #  volumes:
+  #    - './tests/mssql/2017/:/data/'
+
+  mssql_2019:
+    container_name: pseudify_mssql_2019
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mssql/2019/:/data/'
+
+  mssql_2022:
+    container_name: pseudify_mssql_2022
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mssql/2022/:/data/'
+
+  mysql_5_5:
+    container_name: pseudify_mysql_5_5
+    image: mysql:5.5
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mysql/5.5/:/data/'
+
+  mysql_5_6:
+    container_name: pseudify_mysql_5_6
+    image: mysql:5.6
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mysql/5.6/:/data/'
+
+  mysql_5_7:
+    container_name: pseudify_mysql_5_7
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mysql/5.7/:/data/'
+
+  mysql_8_0:
+    container_name: pseudify_mysql_8_0
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mysql/8.0/:/data/'
+
+  mysql_8_1:
+    container_name: pseudify_mysql_8_1
+    image: mysql:8.1
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mysql/8.1/:/data/'
+
+  mysql_8_2:
+    container_name: pseudify_mysql_8_2
+    image: mysql:8.2
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mysql/8.2/:/data/'
+
+  mysql_8_3:
+    container_name: pseudify_mysql_8_3
+    image: mysql:8.3
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mysql/8.3/:/data/'
+
+  mysql_8_4:
+    container_name: pseudify_mysql_8_4
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mysql/8.4/:/data/'
+
+  mysql_9_0:
+    container_name: pseudify_mysql_9_0
+    image: mysql:9.0
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mysql/9.0/:/data/'
+
+  mysql_9_1:
+    container_name: pseudify_mysql_9_1
+    image: mysql:9.1
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mysql/9.1/:/data/'
+
+  postgres_9:
+    container_name: pseudify_postgres_9
+    image: postgres:9
+    environment:
+      POSTGRES_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/postgres/9/:/data/'
+
+  postgres_10:
+    container_name: pseudify_postgres_10
+    image: postgres:10
+    environment:
+      POSTGRES_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/postgres/10/:/data/'
+
+  postgres_11:
+    container_name: pseudify_postgres_11
+    image: postgres:11
+    environment:
+      POSTGRES_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/postgres/11/:/data/'
+
+  postgres_12:
+    container_name: pseudify_postgres_12
+    image: postgres:12
+    environment:
+      POSTGRES_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/postgres/12/:/data/'
+
+  postgres_13:
+    container_name: pseudify_postgres_13
+    image: postgres:13
+    environment:
+      POSTGRES_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/postgres/13/:/data/'
+
+  postgres_14:
+    container_name: pseudify_postgres_14
+    image: postgres:14
+    environment:
+      POSTGRES_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/postgres/14/:/data/'
+
+  postgres_15:
+    container_name: pseudify_postgres_15
+    image: postgres:15
+    environment:
+      POSTGRES_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/postgres/15/:/data/'
+
+  postgres_16:
+    container_name: pseudify_postgres_16
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/postgres/16/:/data/'
+
+  postgres_17:
+    container_name: pseudify_postgres_17
+    image: postgres:17
+    environment:
+      POSTGRES_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/postgres/17/:/data/'

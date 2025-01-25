@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -22,18 +22,47 @@ namespace Waldhacker\Pseudify\Core\Processor\Encoder;
 interface EncoderInterface
 {
     /**
-     * @psalm-suppress MissingParamType
-     * @psalm-suppress MissingReturnType
+     * @param array<string, mixed> $context
      *
      * @api
      */
-    public function decode($data, array $context = []);
+    public function decode(mixed $data, array $context = []): mixed;
 
     /**
-     * @psalm-suppress MissingParamType
-     * @psalm-suppress MissingReturnType
+     * @param array<string, mixed> $context
      *
      * @api
      */
-    public function encode($data, array $context = []);
+    public function encode(mixed $data, array $context = []): mixed;
+
+    /**
+     * @param array<string, mixed> $context
+     *
+     * @api
+     */
+    public function canDecode(mixed $data, array $context = []): bool;
+
+    /**
+     * @api
+     */
+    public function decodesToScalarDataOnly(): bool;
+
+    /**
+     * @param array<string, mixed> $context
+     *
+     * @api
+     */
+    public function setContext(array $context): EncoderInterface;
+
+    /**
+     * @return array<string, mixed>
+     *
+     * @api
+     */
+    public function getContext(): array;
+
+    /**
+     * @api
+     */
+    public function getContextFormTypeClassName(): ?string;
 }

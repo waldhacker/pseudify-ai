@@ -1,44 +1,139 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Method Waldhacker\\\\Pseudify\\\\Core\\\\Database\\\\ConnectionManager\\:\\:getConnection\\(\\) should return Doctrine\\\\DBAL\\\\Connection but returns object\\.$#"
+			message: "#^Call to an undefined method Waldhacker\\\\Pseudify\\\\Core\\\\Processor\\\\Encoder\\\\Serialized\\\\Node\\:\\:getContent\\(\\)\\.$#"
 			count: 1
-			path: src/Database/ConnectionManager.php
+			path: src/Processor/Encoder/Serialized/Node/ArrayElementNode.php
 
 		-
-			message: "#^Method Waldhacker\\\\Pseudify\\\\Core\\\\Database\\\\ConnectionManager\\:\\:getConnections\\(\\) should return array\\<Doctrine\\\\DBAL\\\\Connection\\> but returns array\\<string, object\\>\\.$#"
+			message: "#^Class Waldhacker\\\\Pseudify\\\\Core\\\\Processor\\\\Encoder\\\\Serialized\\\\Node\\\\ArrayNode implements generic interface ArrayAccess but does not specify its types\\: TKey, TValue$#"
 			count: 1
-			path: src/Database/ConnectionManager.php
+			path: src/Processor/Encoder/Serialized/Node/ArrayNode.php
 
 		-
-			message: "#^Parameter \\#1 \\$separator of function explode expects non\\-empty\\-string, string given\\.$#"
+			message: "#^Class Waldhacker\\\\Pseudify\\\\Core\\\\Processor\\\\Encoder\\\\Serialized\\\\Node\\\\ArrayNode implements generic interface Iterator but does not specify its types\\: TKey, TValue$#"
 			count: 1
-			path: src/Database/Query.php
+			path: src/Processor/Encoder/Serialized/Node/ArrayNode.php
 
 		-
-			message: "#^Method Waldhacker\\\\Pseudify\\\\Core\\\\Processor\\\\Encoder\\\\EncoderInterface\\:\\:decode\\(\\) has no return type specified\\.$#"
+			message: "#^Method Waldhacker\\\\Pseudify\\\\Core\\\\Processor\\\\Encoder\\\\Serialized\\\\Node\\\\ArrayNode\\:\\:getProperties\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Processor/Encoder/EncoderInterface.php
+			path: src/Processor/Encoder/Serialized/Node/ArrayNode.php
 
 		-
-			message: "#^Method Waldhacker\\\\Pseudify\\\\Core\\\\Processor\\\\Encoder\\\\EncoderInterface\\:\\:decode\\(\\) has parameter \\$data with no type specified\\.$#"
+			message: "#^Call to an undefined method Waldhacker\\\\Pseudify\\\\Core\\\\Processor\\\\Encoder\\\\Serialized\\\\Node\\:\\:getContent\\(\\)\\.$#"
 			count: 1
-			path: src/Processor/Encoder/EncoderInterface.php
+			path: src/Processor/Encoder/Serialized/Node/AttributeNode.php
 
 		-
-			message: "#^Method Waldhacker\\\\Pseudify\\\\Core\\\\Processor\\\\Encoder\\\\EncoderInterface\\:\\:encode\\(\\) has no return type specified\\.$#"
+			message: "#^Class Waldhacker\\\\Pseudify\\\\Core\\\\Processor\\\\Encoder\\\\Serialized\\\\Node\\\\ObjectNode implements generic interface ArrayAccess but does not specify its types\\: TKey, TValue$#"
 			count: 1
-			path: src/Processor/Encoder/EncoderInterface.php
+			path: src/Processor/Encoder/Serialized/Node/ObjectNode.php
 
 		-
-			message: "#^Method Waldhacker\\\\Pseudify\\\\Core\\\\Processor\\\\Encoder\\\\EncoderInterface\\:\\:encode\\(\\) has parameter \\$data with no type specified\\.$#"
+			message: "#^Class Waldhacker\\\\Pseudify\\\\Core\\\\Processor\\\\Encoder\\\\Serialized\\\\Node\\\\ObjectNode implements generic interface Iterator but does not specify its types\\: TKey, TValue$#"
 			count: 1
-			path: src/Processor/Encoder/EncoderInterface.php
+			path: src/Processor/Encoder/Serialized/Node/ObjectNode.php
 
 		-
-			message: "#^Method Waldhacker\\\\Pseudify\\\\Core\\\\Processor\\\\Processing\\\\DataProcessing\\:\\:getIdentifier\\(\\) should return string but returns string\\|null\\.$#"
+			message: "#^Method Waldhacker\\\\Pseudify\\\\Core\\\\Processor\\\\Encoder\\\\Serialized\\\\Node\\\\ObjectNode\\:\\:getProperties\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Processor/Processing/DataProcessing.php
+			path: src/Processor/Encoder/Serialized/Node/ObjectNode.php
+
+		-
+			message: "#^Call to an undefined method Waldhacker\\\\Pseudify\\\\Core\\\\LLPhant\\\\Chat\\:\\:generateText\\(\\)\\.$#"
+			count: 1
+			path: src/Processor/Processing/AutoConfiguration/Guesser/ApplicationGuesser.php
+
+		-
+			message: "#^Call to an undefined method Waldhacker\\\\Pseudify\\\\Core\\\\LLPhant\\\\Chat\\:\\:setSystemMessage\\(\\)\\.$#"
+			count: 1
+			path: src/Processor/Processing/AutoConfiguration/Guesser/ApplicationGuesser.php
+
+		-
+			message: "#^Call to an undefined method Waldhacker\\\\Pseudify\\\\Core\\\\LLPhant\\\\Chat\\:\\:generateText\\(\\)\\.$#"
+			count: 1
+			path: src/Processor/Processing/AutoConfiguration/Guesser/ColumnGuesser.php
+
+		-
+			message: "#^Call to an undefined method Waldhacker\\\\Pseudify\\\\Core\\\\LLPhant\\\\Chat\\:\\:setSystemMessage\\(\\)\\.$#"
+			count: 1
+			path: src/Processor/Processing/AutoConfiguration/Guesser/ColumnGuesser.php
+
+		-
+			message: "#^Call to an undefined method Waldhacker\\\\Pseudify\\\\Core\\\\Faker\\\\Faker\\:\\:city\\(\\)\\.$#"
+			count: 1
+			path: src/Processor/Processing/AutoConfiguration/Guesser/MeaningGuesser.php
+
+		-
+			message: "#^Call to an undefined method Waldhacker\\\\Pseudify\\\\Core\\\\Faker\\\\Faker\\:\\:country\\(\\)\\.$#"
+			count: 1
+			path: src/Processor/Processing/AutoConfiguration/Guesser/MeaningGuesser.php
+
+		-
+			message: "#^Call to an undefined method Waldhacker\\\\Pseudify\\\\Core\\\\Faker\\\\Faker\\:\\:email\\(\\)\\.$#"
+			count: 1
+			path: src/Processor/Processing/AutoConfiguration/Guesser/MeaningGuesser.php
+
+		-
+			message: "#^Call to an undefined method Waldhacker\\\\Pseudify\\\\Core\\\\Faker\\\\Faker\\:\\:firstName\\(\\)\\.$#"
+			count: 1
+			path: src/Processor/Processing/AutoConfiguration/Guesser/MeaningGuesser.php
+
+		-
+			message: "#^Call to an undefined method Waldhacker\\\\Pseudify\\\\Core\\\\Faker\\\\Faker\\:\\:lastName\\(\\)\\.$#"
+			count: 1
+			path: src/Processor/Processing/AutoConfiguration/Guesser/MeaningGuesser.php
+
+		-
+			message: "#^Call to an undefined method Waldhacker\\\\Pseudify\\\\Core\\\\Faker\\\\Faker\\:\\:name\\(\\)\\.$#"
+			count: 1
+			path: src/Processor/Processing/AutoConfiguration/Guesser/MeaningGuesser.php
+
+		-
+			message: "#^Call to an undefined method Waldhacker\\\\Pseudify\\\\Core\\\\Faker\\\\Faker\\:\\:userAgent\\(\\)\\.$#"
+			count: 1
+			path: src/Processor/Processing/AutoConfiguration/Guesser/MeaningGuesser.php
+
+		-
+			message: "#^Call to an undefined method Waldhacker\\\\Pseudify\\\\Core\\\\Faker\\\\Faker\\:\\:userName\\(\\)\\.$#"
+			count: 1
+			path: src/Processor/Processing/AutoConfiguration/Guesser/MeaningGuesser.php
+
+		-
+			message: "#^Call to an undefined method Waldhacker\\\\Pseudify\\\\Core\\\\LLPhant\\\\Chat\\:\\:generateText\\(\\)\\.$#"
+			count: 1
+			path: src/Processor/Processing/AutoConfiguration/Guesser/MeaningGuesser.php
+
+		-
+			message: "#^Call to an undefined method Waldhacker\\\\Pseudify\\\\Core\\\\LLPhant\\\\Chat\\:\\:setSystemMessage\\(\\)\\.$#"
+			count: 1
+			path: src/Processor/Processing/AutoConfiguration/Guesser/MeaningGuesser.php
+
+		-
+			message: "#^Method Waldhacker\\\\Pseudify\\\\Core\\\\Processor\\\\Processing\\\\AutoConfiguration\\\\Guesser\\\\MeaningGuesser\\:\\:looksLikeMd5Hash\\(\\) is unused\\.$#"
+			count: 1
+			path: src/Processor/Processing/AutoConfiguration/Guesser/MeaningGuesser.php
+
+		-
+			message: "#^Method Waldhacker\\\\Pseudify\\\\Core\\\\Processor\\\\Processing\\\\AutoConfiguration\\\\Guesser\\\\MeaningGuesser\\:\\:looksLikeSha1Hash\\(\\) is unused\\.$#"
+			count: 1
+			path: src/Processor/Processing/AutoConfiguration/Guesser/MeaningGuesser.php
+
+		-
+			message: "#^Method Waldhacker\\\\Pseudify\\\\Core\\\\Processor\\\\Processing\\\\AutoConfiguration\\\\Guesser\\\\MeaningGuesser\\:\\:looksLikeSha256Hash\\(\\) is unused\\.$#"
+			count: 1
+			path: src/Processor/Processing/AutoConfiguration/Guesser/MeaningGuesser.php
+
+		-
+			message: "#^Call to an undefined method Waldhacker\\\\Pseudify\\\\Core\\\\LLPhant\\\\Chat\\:\\:generateText\\(\\)\\.$#"
+			count: 1
+			path: src/Processor/Processing/AutoConfiguration/Guesser/TableGuesser.php
+
+		-
+			message: "#^Call to an undefined method Waldhacker\\\\Pseudify\\\\Core\\\\LLPhant\\\\Chat\\:\\:setSystemMessage\\(\\)\\.$#"
+			count: 1
+			path: src/Processor/Processing/AutoConfiguration/Guesser/TableGuesser.php
 
 		-
 			message: "#^Call to an undefined method Waldhacker\\\\Pseudify\\\\Core\\\\Faker\\\\Faker\\:\\:ipv4\\(\\)\\.$#"
@@ -49,3 +144,8 @@ parameters:
 			message: "#^Call to an undefined method Waldhacker\\\\Pseudify\\\\Core\\\\Faker\\\\Faker\\:\\:ipv6\\(\\)\\.$#"
 			count: 1
 			path: src/Processor/Processing/Pseudonymize/DataManipulatorPreset.php
+
+		-
+			message: "#^Negated boolean expression is always true\\.$#"
+			count: 1
+			path: src/Processor/PseudonymizeProcessor.php

@@ -1,0 +1,14 @@
+.modal-backdrop {
+  opacity:1 !important;
+  background-color: #FFFFFF !important;
+}
+
+.main-sidebar {
+  z-index: 100000 !important;
+}
+
+.xterm {
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 20px;
+}

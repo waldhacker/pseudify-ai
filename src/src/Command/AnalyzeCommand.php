@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -22,11 +22,10 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use Waldhacker\Pseudify\Core\Database\ConnectionManager;
 use Waldhacker\Pseudify\Core\Processor\AnalyzeProcessor;
-use Waldhacker\Pseudify\Core\Profile\Analyze\ProfileCollection;
+use Waldhacker\Pseudify\Core\Profile\Analyze\ProfileInterface;
+use Waldhacker\Pseudify\Core\Profile\ProfileCollection;
 
 #[AsCommand(
     name: 'pseudify:analyze',
@@ -35,14 +34,14 @@ use Waldhacker\Pseudify\Core\Profile\Analyze\ProfileCollection;
 class AnalyzeCommand extends Command
 {
     public function __construct(
-        private ProfileCollection $profileCollection,
-        private AnalyzeProcessor $processor,
-        private ConnectionManager $connectionManager,
-        private TagAwareCacheInterface $cache,
+        private readonly ProfileCollection $profileCollection,
+        private readonly AnalyzeProcessor $processor,
+        private readonly ConnectionManager $connectionManager,
     ) {
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this
@@ -60,33 +59,37 @@ class AnalyzeCommand extends Command
             );
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->initializeConnection($input);
-        $this->cache->invalidateTags(['analyze_output']);
+        $connectionName = $this->initializeConnection($input);
 
         /** @var array<int, string|int>|string|null $profile */
         $profile = $input->getArgument('profile') ?? '';
-        $profile = is_array($profile) ? (string) $profile[0] : (string) $profile;
+        $profile = is_array($profile) ? (string) (null == $profile[0]) : (string) $profile;
 
-        if (!$this->profileCollection->hasProfile($profile)) {
-            throw new InvalidArgumentException(sprintf('invalid profile "%s". allowed profiles: "%s"', $profile, implode(',', $this->profileCollection->getProfileIdentifiers())), 1619890696);
+        if (!$this->profileCollection->hasProfile(ProfileCollection::SCOPE_ANALYZE, $profile, $connectionName)) {
+            throw new InvalidArgumentException(sprintf('invalid profile "%s". allowed profiles: "%s"', $profile, implode(',', $this->profileCollection->getProfileIdentifiers(ProfileCollection::SCOPE_ANALYZE, $connectionName))), 1_619_890_696);
         }
 
-        $profile = $this->profileCollection->getProfile($profile);
-        $this->processor->setIo(new SymfonyStyle($input, $output))->process($profile);
-        $this->cache->invalidateTags(['analyze_output']);
+        /** @var ProfileInterface $profile */
+        $profile = $this->profileCollection->getProfile(ProfileCollection::SCOPE_ANALYZE, $profile, $connectionName);
+        $this->processor->setIo($input, $output)->process($profile);
 
         return Command::SUCCESS;
     }
 
-    private function initializeConnection(InputInterface $input): void
+    private function initializeConnection(InputInterface $input): ?string
     {
+        $connectionName = null;
         if ($input->hasOption('connection')) {
             /** @var array<int, string|int>|string|null $connectionName */
             $connectionName = $input->getOption('connection') ?? null;
             $connectionName = is_array($connectionName) ? $connectionName[0] : $connectionName;
-            $this->connectionManager->setConnectionName(is_string($connectionName) ? $connectionName : null);
+            $connectionName = is_string($connectionName) ? $connectionName : null;
+            $this->connectionManager->setConnectionName($connectionName);
         }
+
+        return $connectionName;
     }
 }

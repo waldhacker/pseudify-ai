@@ -1,0 +1,27 @@
+# This file starts pseudify with AI support.
+# After starting, you must import the LLM model by executing the command:
+# `docker exec -it pseudify_ollama bash -c 'ollama pull $OLLAMA_MODEL'`
+
+# Run it like: `docker compose -f docker-compose.yml -f docker-compose.llm-addon.yml up -d`
+
+services:
+  pseudify:
+    environment:
+      OLLAMA_API_URL: 'http://ollama:11434/api/'
+      OLLAMA_MODEL: llama3.1
+      OLLAMA_MODEL_CONTEXT_LENGTH: 32768
+
+  ollama:
+    container_name: pseudify_ollama
+    image: ollama/ollama:0.5.4
+    environment:
+      OLLAMA_MODEL: llama3.1
+    volumes:
+      - ./.ollama/:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]

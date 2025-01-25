@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Manual configuration'|trans }}{% endblock %}
+{% block headline %}{{ 'Manual configuration'|trans }}{% endblock %}
+
+{% block body %}
+<div class="row">
+  <div class="col-12">
+    <div class="card card-info">
+      <div class="card-header">
+        <h3 class="card-title">{{ 'Basic configuration'|trans }}</h3>
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        {{ form_start(profileDefinitionForm) }}
+          {{ form_row(profileDefinitionForm.identifier) }}
+          {{ form_row(profileDefinitionForm.description) }}
+          {{ form_row(profileDefinitionForm.applicationName) }}
+          {{ form_row(profileDefinitionForm.applicationDescription) }}
+
+          <fieldset class="mb-3 p-3 border">
+            <label class="form-label">{{ 'Analyze settings'|trans }}</label>
+
+            {{ form_row(profileDefinitionForm.targetDataFrameCuttingLength) }}
+
+            <fieldset class="mb-3 p-3 border">
+              <label for="sourceStrings" class="form-label">{{ 'Search strings'|trans }}</label>
+              {{ form_errors(profileDefinitionForm.sourceStrings) }}
+
+              <ul id="sourceStrings" class="sourceStrings list-group mb-3"
+                data-index="{{ profileDefinitionForm.sourceStrings|length > 0 ? profileDefinitionForm.sourceStrings|last.vars.name + 1 : 0 }}"
+                data-prototype="{{ form_widget(profileDefinitionForm.sourceStrings.vars.prototype)|e('html_attr') }}"
+              >
+                {% for sourceString in profileDefinitionForm.sourceStrings %}
+                  <li class="list-group-item">
+                    <div class="input-group">{{ form_widget(sourceString) }}</div>
+                  </li>
+                {% endfor %}
+              </ul>
+              <button type="button" class="add_item_link btn btn-secondary" data-collection-holder-class="sourceStrings">{{ 'Add search string'|trans }}</button>
+            </fieldset>
+
+            {{ form_row(profileDefinitionForm.excludedTargetColumnTypes) }}
+            {{ form_row(profileDefinitionForm.excludedTargetTables) }}
+          </fieldset>
+        {{ form_end(profileDefinitionForm) }}
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+</div>
+{% endblock %}
+
+{% block footer_javascript %}
+<script>
+  function addDeleteCollectionItemButton(container, item) {
+    const removeFormButton = document.createElement('button');
+    removeFormButton.innerText = '{{ 'Remove'|trans }}';
+    removeFormButton.classList.add('btn', 'btn-outline-danger');
+
+    item.append(removeFormButton);
+
+    removeFormButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      container.remove();
+    });
+  }
+
+  function createCollectionItem(e) {
+    const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
+
+    const item = document.createElement('div');
+    item.classList.add('input-group');
+
+    const container = document.createElement('li');
+    container.classList.add('list-group-item');
+
+    item.innerHTML = collectionHolder
+      .dataset
+      .prototype
+      .replace(
+        /__name__/g,
+        collectionHolder.dataset.index
+      );
+
+    container.appendChild(item);
+    collectionHolder.appendChild(container);
+
+    collectionHolder.dataset.index++;
+
+    addDeleteCollectionItemButton(container, item);
+  }
+
+  document.addEventListener('DOMContentLoaded', (event) => {
+    document.querySelectorAll('.add_item_link').forEach(btn => {
+      btn.addEventListener('click', createCollectionItem)
+    });
+
+    document.querySelectorAll('ul.sourceStrings li').forEach((container) => {
+      const item = container.getElementsByTagName('div')[0];
+      addDeleteCollectionItemButton(container, item);
+    });
+  });
+</script>
+{% endblock %}

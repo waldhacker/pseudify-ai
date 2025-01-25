@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Table configuration'|trans }} - {{ table.identifier }}{% endblock %}
+{% block headline %}{{ 'Table configuration'|trans }} - {{ table.identifier }}{% endblock %}
+
+{% block headline_links %}
+  <a href="{{ path('app_configuration_table') }}">{{ 'Zurück'|trans }}</a>
+{% endblock %}
+
+{% block body %}
+<div class="row">
+  <div class="col-12">
+    <div class="card card-outline card-info">
+      <div class="card-header">
+        <h3 class="card-title">{{ 'Configuration'|trans }}</h3>
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        {{ form(tableConfigurationForm) }}
+      </div>
+      <!-- /.card-body -->
+    </div>
+  </div>  
+</div>
+{% endblock %}

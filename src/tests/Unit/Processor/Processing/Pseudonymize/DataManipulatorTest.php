@@ -11,6 +11,7 @@ use Waldhacker\Pseudify\Core\Faker\Faker;
 use Waldhacker\Pseudify\Core\Processor\Processing\AmbiguousDataProcessingException;
 use Waldhacker\Pseudify\Core\Processor\Processing\DataProcessing;
 use Waldhacker\Pseudify\Core\Processor\Processing\DataProcessingInterface;
+use Waldhacker\Pseudify\Core\Processor\Processing\ExpressionLanguage\ConditionExpressionProvider;
 use Waldhacker\Pseudify\Core\Processor\Processing\Pseudonymize\DataManipulator;
 use Waldhacker\Pseudify\Core\Processor\Processing\Pseudonymize\DataManipulatorContext;
 use Waldhacker\Pseudify\Core\Tests\Unit\Processor\Processing\Fixtures\InvalidDataProcessing;
@@ -39,12 +40,17 @@ class DataManipulatorTest extends TestCase
         $dataProcessing3Prophecy->getIdentifier()->shouldNotBeCalled()->willReturn('id-3');
         $dataProcessing3Prophecy->getProcessor()->shouldNotBeCalled()->willReturn(function () { return; });
 
-        $dataManipulator = new DataManipulator();
+        $conditionExpressionProviderProphecy = $this->prophesize(ConditionExpressionProvider::class);
+        $conditionExpressionProviderProphecy->getFunctions()->shouldBeCalled()->willReturn([]);
+
+        $dataManipulator = new DataManipulator($conditionExpressionProviderProphecy->reveal());
         $dataManipulator->process(
             $dataManipulatorContextProphecy->reveal(),
-            $dataProcessing1Prophecy->reveal(),
-            $dataProcessing2Prophecy->reveal(),
-            $dataProcessing3Prophecy->reveal()
+            [
+                $dataProcessing1Prophecy->reveal(),
+                $dataProcessing2Prophecy->reveal(),
+                $dataProcessing3Prophecy->reveal(),
+            ]
         );
     }
 
@@ -66,11 +72,16 @@ class DataManipulatorTest extends TestCase
         $this->expectException(AmbiguousDataProcessingException::class);
         $this->expectExceptionCode(1620916028);
 
-        $dataManipulator = new DataManipulator();
+        $conditionExpressionProviderProphecy = $this->prophesize(ConditionExpressionProvider::class);
+        $conditionExpressionProviderProphecy->getFunctions()->shouldBeCalled()->willReturn([]);
+
+        $dataManipulator = new DataManipulator($conditionExpressionProviderProphecy->reveal());
         $dataManipulator->process(
             $dataManipulatorContextProphecy->reveal(),
-            $dataProcessing1Prophecy->reveal(),
-            $dataProcessing2Prophecy->reveal()
+            [
+                $dataProcessing1Prophecy->reveal(),
+                $dataProcessing2Prophecy->reveal(),
+            ]
         );
     }
 
@@ -90,14 +101,19 @@ class DataManipulatorTest extends TestCase
             $context->setProcessedData(['foo' => 'zab']);
         }, 'id-3');
 
-        $dataManipulator = new DataManipulator();
+        $conditionExpressionProviderProphecy = $this->prophesize(ConditionExpressionProvider::class);
+        $conditionExpressionProviderProphecy->getFunctions()->shouldBeCalled()->willReturn([]);
+
+        $dataManipulator = new DataManipulator($conditionExpressionProviderProphecy->reveal());
         $this->assertEquals(
             ['foo' => 'zab'],
             $dataManipulator->process(
                 $dataManipulatorContext,
-                $dataProcessing1,
-                $dataProcessing2,
-                $dataProcessing3
+                [
+                    $dataProcessing1,
+                    $dataProcessing2,
+                    $dataProcessing3,
+                ]
             )
         );
     }

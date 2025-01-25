@@ -54,7 +54,7 @@ class ParserTest extends TestCase
 
     public function testParseThrowsExceptionOnInvalidDataIndexCalculation(): void
     {
-        $parser = new class() extends Parser {
+        $parser = new class extends Parser {
             protected function parseInternal(): Node
             {
                 $this->currentIndex = 100;
@@ -394,7 +394,7 @@ class ParserTest extends TestCase
 
         $this->assertEquals(
             $objectNode,
-            $this->parser->parse(serialize(new SerializableInterfaceObjectWithArrayData('foo', 'bar', 'baz')))
+            $this->parser->parse('C:114:"Waldhacker\Pseudify\Core\Tests\Unit\Processor\Encoder\Serialized\Fixtures\SerializableInterfaceObjectWithArrayData":48:{a:3:{i:0;s:3:"foo";i:1;s:3:"bar";i:2;s:3:"baz";}}')
         );
     }
 
@@ -438,7 +438,7 @@ class ParserTest extends TestCase
 
         $this->assertEquals(
             $objectNode,
-            $this->parser->parse(serialize(new SerializableInterfaceObjectWithScalarData('foo')))
+            $this->parser->parse('C:115:"Waldhacker\Pseudify\Core\Tests\Unit\Processor\Encoder\Serialized\Fixtures\SerializableInterfaceObjectWithScalarData":10:{s:3:"foo";}')
         );
     }
 
@@ -498,7 +498,7 @@ class ParserTest extends TestCase
 
         $this->assertEquals(
             $objectNode2,
-            $this->parser->parse(serialize(new SerializableInterfaceObjectWithScalarData(new SerializableInterfaceObjectWithArrayData('foo', 'bar', 'baz'))))
+            $this->parser->parse('C:115:"Waldhacker\Pseudify\Core\Tests\Unit\Processor\Encoder\Serialized\Fixtures\SerializableInterfaceObjectWithScalarData":176:{C:114:"Waldhacker\Pseudify\Core\Tests\Unit\Processor\Encoder\Serialized\Fixtures\SerializableInterfaceObjectWithArrayData":48:{a:3:{i:0;s:3:"foo";i:1;s:3:"bar";i:2;s:3:"baz";}}}')
         );
     }
 

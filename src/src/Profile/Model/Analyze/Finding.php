@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -19,18 +19,18 @@ namespace Waldhacker\Pseudify\Core\Profile\Model\Analyze;
 /**
  * @internal
  */
-class Finding
+class Finding implements \Stringable
 {
     /**
      * @param array<array-key, string> $targetDataFrames
      */
     public function __construct(
-        private SourceTable $sourceTable,
-        private SourceColumn $sourceColumn,
-        private TargetTable $targetTable,
-        private TargetColumn $targetColumn,
-        private string $sourceData,
-        private array $targetDataFrames
+        private readonly SourceTable $sourceTable,
+        private readonly SourceColumn $sourceColumn,
+        private readonly TargetTable $targetTable,
+        private readonly TargetColumn $targetColumn,
+        private readonly string $sourceData,
+        private readonly array $targetDataFrames,
     ) {
     }
 
@@ -71,7 +71,7 @@ class Finding
     }
 
     /**
-     * @return array{source: string, sourceData: string, target: string}
+     * @return array{source: string, sourceData: string, target: string, targetDataFrame: string}
      */
     public function toArray(): array
     {
@@ -87,10 +87,12 @@ class Finding
                 $this->targetTable->getIdentifier(),
                 $this->targetColumn->getIdentifier()
             ),
+            'targetDataFrame' => $this->getTargetDataFrames()[0] ?? '',
         ];
     }
 
-    public function __toString()
+    #[\Override]
+    public function __toString(): string
     {
         return sprintf(
             '%s.%s (%s) -> %s.%s',

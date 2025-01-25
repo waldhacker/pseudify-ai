@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -16,39 +16,83 @@ declare(strict_types=1);
 
 namespace Waldhacker\Pseudify\Core\Processor\Encoder;
 
-class HexEncoder implements EncoderInterface
+use Waldhacker\Pseudify\Core\Gui\Form\ProfileDefinition\Column\Encoder\HexEncoderType;
+
+class HexEncoder extends AbstractEncoder implements EncoderInterface
 {
-    private array $defaultContext = [];
+    /** @var array<string, mixed> */
+    protected array $defaultContext = [
+        self::DATA_PICKER_PATH => null,
+    ];
 
     /**
-     * @api
-     */
-    public function __construct(array $defaultContext = [])
-    {
-        $this->defaultContext = array_merge($this->defaultContext, $defaultContext);
-    }
-
-    /**
-     * @param string $data
+     * @param array<string, mixed> $context
      *
      * @return string|false
      *
      * @api
      */
-    public function decode($data, array $context = [])
+    #[\Override]
+    public function decode(mixed $data, array $context = []): mixed
     {
+        if (!is_string($data)) {
+            return false;
+        }
+
         return @hex2bin($data);
     }
 
     /**
-     * @param string $data
+     * @param array<string, mixed> $context
      *
-     * @return string
+     * @return string|null
      *
      * @api
      */
-    public function encode($data, array $context = [])
+    #[\Override]
+    public function encode(mixed $data, array $context = []): mixed
     {
+        if (!is_string($data)) {
+            return null;
+        }
+
         return @bin2hex($data);
+    }
+
+    /**
+     * @param array<string, mixed> $context
+     *
+     * @api
+     */
+    #[\Override]
+    public function canDecode(mixed $data, array $context = []): bool
+    {
+        try {
+            $decodedData = $this->decode($data, $context);
+            if (is_string($decodedData)) {
+                return true;
+            }
+        } catch (\Throwable) {
+        }
+
+        return false;
+    }
+
+    /**
+     * @api
+     */
+    #[\Override]
+    public function decodesToScalarDataOnly(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @api
+     */
+    #[\Override]
+    public function getContextFormTypeClassName(): ?string
+    {
+        return HexEncoderType::class;
     }
 }

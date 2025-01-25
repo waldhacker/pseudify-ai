@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -16,28 +16,45 @@ declare(strict_types=1);
 
 namespace Waldhacker\Pseudify\Core\Processor\Processing\Analyze;
 
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Waldhacker\Pseudify\Core\Processor\Processing\AmbiguousDataProcessingException;
 use Waldhacker\Pseudify\Core\Processor\Processing\DataProcessingInterface;
+use Waldhacker\Pseudify\Core\Processor\Processing\ExpressionLanguage\ConditionExpressionContextFactory;
+use Waldhacker\Pseudify\Core\Processor\Processing\ExpressionLanguage\ConditionExpressionProvider;
+use Waldhacker\Pseudify\Core\Processor\Processing\GenericDataProcessingInterface;
 
 /**
  * @internal
  */
 class TargetDataDecoder
 {
+    public function __construct(private readonly ConditionExpressionProvider $conditionExpressionProvider)
+    {
+    }
+
     /**
      * @param array<int, DataProcessingInterface> $processings
      *
      * @return array<array-key, int|float|bool|string>
      */
-    public function process(TargetDataDecoderContext $context, ...$processings): array
+    public function process(TargetDataDecoderContext $context, array $processings): array
     {
+        $expressionLanguage = new ExpressionLanguage(providers: [$this->conditionExpressionProvider]);
+
         foreach ($this->getValidProcessings($processings) as $processing) {
+            if (
+                $processing instanceof GenericDataProcessingInterface
+                && $processing->getCondition()
+                && !$expressionLanguage->evaluate($processing->getCondition(), ['context' => ConditionExpressionContextFactory::fromTargetDataDecoderContext($context)])
+            ) {
+                continue;
+            }
+
             $processor = $processing->getProcessor();
             $context = $context->withDecodedData($context->getDecodedData());
             $processor($context);
         }
 
-        /** @var mixed $decodedData */
         $decodedData = $context->getDecodedData();
 
         $collectedData = [];
@@ -51,6 +68,8 @@ class TargetDataDecoder
     }
 
     /**
+     * @param array<array-key, DataProcessingInterface> $allProcessings
+     *
      * @return array<int, DataProcessingInterface>
      */
     private function getValidProcessings(array $allProcessings): array
@@ -63,7 +82,7 @@ class TargetDataDecoder
             }
 
             if (in_array($processing->getIdentifier(), $identifiers, true)) {
-                throw new AmbiguousDataProcessingException(sprintf('the dataProcessing identifier "%s" must be unique.', $processing->getIdentifier()), 1621683731);
+                throw new AmbiguousDataProcessingException(sprintf('the dataProcessing identifier "%s" must be unique.', $processing->getIdentifier()), 1_621_683_731);
             }
             $identifiers[] = $processing->getIdentifier();
             $validProcessings[] = $processing;

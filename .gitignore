@@ -1,8 +1,7 @@
 .build/
-build/development/userdata/*
-!build/development/userdata/.gitkeep
-src/.composer.lock
+.ollama/
 src/bin/*
 !/src/bin/pseudify
-src/public/
-src/vendor/
+src/tests/.test/
+userdata/.env
+userdata/var

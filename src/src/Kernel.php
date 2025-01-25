@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -20,9 +20,10 @@ use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
-use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Waldhacker\Pseudify\Core\DependencyInjection\PseudifyPass;
 use Waldhacker\Pseudify\Core\Faker\FakeDataProviderInterface;
+use Waldhacker\Pseudify\Core\Processor\Encoder\EncoderInterface;
+use Waldhacker\Pseudify\Core\Processor\Processing\ExpressionLanguage\ConditionExpressionProviderInterface;
 use Waldhacker\Pseudify\Core\Profile\Analyze\ProfileInterface as AnalyzeProfileInterface;
 use Waldhacker\Pseudify\Core\Profile\Pseudonymize\ProfileInterface as PseudonymizeProfileInterface;
 
@@ -33,13 +34,7 @@ class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
 
-    public function __construct(string $environment, bool $debug, private ?string $dataDirectory = null)
-    {
-        if ('test' === $environment && !$this->dataDirectory) {
-            $this->dataDirectory = __DIR__.'/../../build/development/userdata';
-        }
-        parent::__construct($environment, $debug);
-    }
+    public const string USER_DATA_PATH = '/opt/pseudify/userdata';
 
     protected function configureContainer(ContainerConfigurator $container): void
     {
@@ -48,8 +43,8 @@ class Kernel extends BaseKernel
         $container->import('../config/{services}.yaml');
         $container->import('../config/{services}_'.(string) $this->environment.'.yaml');
 
-        if ($this->dataDirectory && \is_dir($this->dataDirectory.'/config/')) {
-            $container->import($this->dataDirectory.'/config/*.yaml');
+        if (\is_dir(self::USER_DATA_PATH.'/config/')) {
+            $container->import(self::USER_DATA_PATH.'/config/*.yaml');
         }
 
         if (is_file($path = \dirname(__DIR__).'/config/services.php')) {
@@ -57,29 +52,34 @@ class Kernel extends BaseKernel
         }
     }
 
+    #[\Override]
     protected function build(ContainerBuilder $container): void
     {
+        $container->getParameterBag()->add(['pseudify.data_dir' => self::USER_DATA_PATH]);
+
         $container->registerForAutoconfiguration(AnalyzeProfileInterface::class)
             ->addTag('pseudify.analyze.profile');
         $container->registerForAutoconfiguration(PseudonymizeProfileInterface::class)
             ->addTag('pseudify.pseudonymize.profile');
         $container->registerForAutoconfiguration(FakeDataProviderInterface::class)
             ->addTag('pseudify.faker.provider');
+        $container->registerForAutoconfiguration(ConditionExpressionProviderInterface::class)
+            ->addTag('pseudify.condition_expression_provider');
+        $container->registerForAutoconfiguration(EncoderInterface::class)
+            ->addTag('pseudify.encoder');
 
         $container->addCompilerPass(new PseudifyPass());
     }
 
+    #[\Override]
     public function getCacheDir(): string
     {
-        return $this->dataDirectory ? $this->dataDirectory.'/var/cache/'.(string) $this->environment : parent::getCacheDir();
+        return self::USER_DATA_PATH.'/var/cache/'.(string) $this->environment;
     }
 
+    #[\Override]
     public function getLogDir(): string
     {
-        return $this->dataDirectory ? $this->dataDirectory.'/var/log' : parent::getLogDir();
-    }
-
-    protected function configureRoutes(RoutingConfigurator $routes): void
-    {
+        return self::USER_DATA_PATH.'/var/log';
     }
 }

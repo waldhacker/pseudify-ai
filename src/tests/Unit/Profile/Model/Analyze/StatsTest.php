@@ -70,7 +70,7 @@ class StatsTest extends TestCase
         array $targetTableColumnCount,
         bool $withCustomStringSearch,
         int $expectedTotalProcessings,
-        int $expectedTotalTargetProcessings
+        int $expectedTotalTargetProcessings,
     ): void {
         $stats = new Stats(
             $sourceTableRowCount,
@@ -96,7 +96,7 @@ class StatsTest extends TestCase
         array $targetTableColumnCount,
         bool $withCustomStringSearch,
         int $expectedTotalProcessings,
-        int $expectedTotalTargetProcessings
+        int $expectedTotalTargetProcessings,
     ): void {
         $stats = new Stats(
             $sourceTableRowCount,

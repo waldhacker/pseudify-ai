@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -18,7 +18,7 @@ namespace Waldhacker\Pseudify\Core\Processor\Encoder\Serialized;
 
 abstract class Node
 {
-    protected ?Node $parentNode;
+    protected ?Node $parentNode = null;
 
     /*
      * @api

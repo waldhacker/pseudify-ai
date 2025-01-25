@@ -1,0 +1,15 @@
+# This file is used for development and testing.
+# You don't need this.
+
+# Run it like: `docker compose -f docker-compose.yml -f docker-compose.llm-addon.yml -f docker-compose.dev.yml -f docker-compose.test.yml up -d`
+# Install dev deps with `./build/dev/install.sh`
+# Import data with `./tests/import.sh`
+
+services:
+  pseudify:
+    image: 'ghcr.io/waldhacker/pseudify-ai:latest'
+    volumes:
+      - './src/:/opt/pseudify/core/'
+    environment:
+      APP_ENV: dev
+      COMPOSER_ROOT_VERSION: 2

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /*
  * This file is part of the pseudify database pseudonymizer project
- * - (c) 2022 waldhacker UG (haftungsbeschränkt)
+ * - (c) 2025 waldhacker UG (haftungsbeschränkt)
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -32,7 +32,7 @@ class TargetTable
      *
      * @internal
      */
-    public function __construct(private string $identifier, array $columns = [], array $excludeColumns = [], array $excludeColumnTypes = [])
+    public function __construct(private readonly string $identifier, array $columns = [], array $excludeColumns = [], array $excludeColumnTypes = [])
     {
         $this->addColumns($columns);
         $this->excludeColumns($excludeColumns);
@@ -73,7 +73,7 @@ class TargetTable
     public function getColumn(string $identifier): TargetColumn
     {
         if (!$this->hasColumn($identifier)) {
-            throw new MissingTargetColumnException(sprintf('missing target column "%s" for table "%s"', $identifier, $this->identifier), 1621654997);
+            throw new MissingTargetColumnException(sprintf('missing target column "%s" for table "%s"', $identifier, $this->identifier), 1_621_654_997);
         }
 
         return $this->columns[$identifier];
@@ -146,7 +146,7 @@ class TargetTable
     public function getExcludedColumn(string $identifier): TargetColumn
     {
         if (!$this->isColumnExcluded($identifier)) {
-            throw new MissingExcludedColumnException(sprintf('missing excluded column "%s" for table "%s"', $identifier, $this->identifier), 1621654998);
+            throw new MissingExcludedColumnException(sprintf('missing excluded column "%s" for table "%s"', $identifier, $this->identifier), 1_621_654_998);
         }
 
         return $this->excludedColumns[$identifier];

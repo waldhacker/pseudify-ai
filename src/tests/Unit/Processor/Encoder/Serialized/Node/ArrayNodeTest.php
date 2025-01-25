@@ -263,11 +263,8 @@ class ArrayNodeTest extends TestCase
         );
     }
 
-    public function testReplacePropertyThrowsExceptionIfPropertyDoesNotExists(): void
+    public function testReplacePropertyAddPropertyIfPropertyDoesNotExists(): void
     {
-        $this->expectException(MissingPropertyException::class);
-        $this->expectExceptionCode(1621657002);
-
         $arrayElementValueNode1 = new IntegerNode(1);
         $arrayElementValueNode2 = new IntegerNode(2);
         $arrayElementValueNode3 = new IntegerNode(3);
@@ -287,8 +284,8 @@ class ArrayNodeTest extends TestCase
         $arrayNode->replaceProperty('bar', $arrayElementValueNode3);
 
         $this->assertEquals(
-            null,
-            $arrayNode->getProperty('bar')
+            $arrayElementValueNode3,
+            $arrayNode->getProperty('bar')->getContent()
         );
     }
 }

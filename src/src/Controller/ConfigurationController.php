@@ -376,10 +376,11 @@ class ConfigurationController extends AbstractController
         $guesserContext = $this->guesserContextFactory->fromProfileDefinition($activeProfile, $table, $column);
         try {
             $possibleEncoders = $this->encodingsGuesser->guess([$data], $guesserContext, 1);
-        } catch (\Throwable) {
+        } catch (\Throwable $e) {
             return $this->json([
                 'status' => 'error',
                 'data' => 'Error while guessing',
+                'error' => $e->getMessage(),
             ]);
         }
 
@@ -441,10 +442,11 @@ class ConfigurationController extends AbstractController
         $guesserContext = $this->guesserContextFactory->fromProfileDefinition($activeProfile, $table, $column);
         try {
             $possibleMeanings = $this->meaningGuesser->guess([$decodedColumnData], $guesserContext, 1);
-        } catch (\Throwable) {
+        } catch (\Throwable $e) {
             return $this->json([
                 'status' => 'error',
                 'data' => 'Error while guessing',
+                'error' => $e->getMessage(),
             ]);
         }
 

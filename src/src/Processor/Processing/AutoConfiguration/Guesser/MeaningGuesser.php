@@ -268,7 +268,7 @@ Your Output:
 
         $meanings = [];
         foreach ($dataSet as $index => $data) {
-            $path = $data['path'] ?? '';
+            $path = (string) ($data['path'] ?? '');
             $items = array_unique(array_filter(
                 $data['data'] ?? [],
                 fn (mixed $data): bool => is_string($data) && !empty($data) && !$this->looksLikeBinary($data)
@@ -487,7 +487,7 @@ Your Output:
     /**
      * @param array<array-key, array{original: array<string, mixed>, decoded: mixed, paths: array<string, mixed>}> $dataSet
      *
-     * @return array<int, array{path: string, data: array<array-key, mixed>, meaning: null}>
+     * @return array<int, array{path: int|string, data: array<array-key, mixed>, meaning: null}>
      */
     private function transposeData(array $dataSet): array
     {

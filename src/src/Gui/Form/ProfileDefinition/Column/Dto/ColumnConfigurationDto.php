@@ -24,7 +24,7 @@ class ColumnConfigurationDto implements \ArrayAccess, \Countable
     /**
      * @param array<int, array{identifier: string, name: string, conditions: array<int, array{condition: string}>, encoders: array<int, array{identifier: string, encoder: string, context: array<int, array<string, mixed>>}>, meanings: array<int, array{identifier: string, name: string, conditions: array<int, array{condition: string}>, property: array{path: string|null, scope: string|null, type: string|null, minimumGraphemeLength: int|null, context: array<int, array<string, mixed>>}}>}> $encodings
      */
-    public function __construct(public array $encodings = [], public ?string $columnDescription = '')
+    public function __construct(public array $encodings = [], public ?string $columnDescription = '', public ?bool $emptyTheColumn = false)
     {
     }
 

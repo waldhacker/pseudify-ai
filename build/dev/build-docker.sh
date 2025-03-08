@@ -68,6 +68,7 @@ function build
         --build-arg MSSQL_TOOLS_SIG_URI=$MSSQL_TOOLS_SIG_URI \
         --build-arg BUILD_TAG=$BUILD_TAG \
         -t ${_IMAGE_NAMESPACE}:$BUILD_TAG \
+        -t ${_IMAGE_NAMESPACE}:2.0 \
         -t ${_IMAGE_NAMESPACE}:latest \
         --file "$_ROOT_DIRECTORY/build/Dockerfile" \
         "$_ROOT_DIRECTORY/.build/docker/context"

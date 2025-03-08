@@ -58,4 +58,12 @@ class PseudifyProvider extends Internet implements FakeDataProviderInterface
 
         return $hashedPassword;
     }
+
+    /**
+     * @api
+     */
+    public function emptyString(): string
+    {
+        return '';
+    }
 }

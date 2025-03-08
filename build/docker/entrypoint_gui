@@ -24,17 +24,17 @@ if [ "$HOSTUSER_UID" -gt "0" ]; then
     # unix
     # if a user within the container has already the id HOSTUSER_UID
     if [ "$HOSTUSER_UID" -ne "$OLD_USER_UID" ] && [ ! -z "$MAYBEUSER_UID" ]; then
-        echo "There is already a user with the uid $HOSTUSER_UID in the container!".
-        echo "You need to change your host user id. Sorry!".
-        echo "Tip: Your host user id should be greater than 410 to avoid this error.".
+        echo "There is already a user with the uid $HOSTUSER_UID in the container!"
+        echo "You need to change your host user id. Sorry!"
+        echo "Tip: Your host user id should be greater than 410 to avoid this error."
         exit 1;
     fi
 
     # if a user group within the container has already the id HOSTUSER_GID
     if [ "$HOSTUSER_GID" -ne "$OLD_USER_GID" ] && [ ! -z "$MAYBEUSER_GID" ]; then
-        echo "There is already a user group with the uid $HOSTUSER_GID in the container!".
-        echo "You need to change your host user group id. Sorry!".
-        echo "Tip: Your host user group id should be greater than 410 to avoid this error.".
+        echo "There is already a user group with the uid $HOSTUSER_GID in the container!"
+        echo "You need to change your host user group id. Sorry!"
+        echo "Tip: Your host user group id should be greater than 410 to avoid this error."
         exit 1;
     fi
 
@@ -42,6 +42,7 @@ if [ "$HOSTUSER_UID" -gt "0" ]; then
         usermod -u $HOSTUSER_UID pseudify > /dev/null \
         && groupmod -g $HOSTUSER_GID pseudify > /dev/null \
         && usermod -g $HOSTUSER_GID pseudify > /dev/null \
+        && chown -R -h pseudify /var/lib/nginx > /dev/null \
         && exec supervisord -c /etc/supervisord.conf --nodaemon \
     "
 else

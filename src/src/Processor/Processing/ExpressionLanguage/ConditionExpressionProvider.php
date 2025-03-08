@@ -16,6 +16,8 @@ declare(strict_types=1);
 
 namespace Waldhacker\Pseudify\Core\Processor\Processing\ExpressionLanguage;
 
+use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\RFCValidation;
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -117,6 +119,25 @@ class ConditionExpressionProvider implements ExpressionFunctionProviderInterface
                 names: ['value']
             ),
             $this->alias(
+                evaluator: function (array $arguments, string $path): mixed {
+                    $data = $arguments['context']->decodedData;
+
+                    if (!is_array($data) || empty($path)) {
+                        return false;
+                    }
+
+                    try {
+                        $this->propertyAccessor->getValue($data, Helper::buildPropertyAccessorPath($data, $path));
+                    } catch (\Exception) {
+                        return false;
+                    }
+
+                    return true;
+                },
+                description: 'TRUE if the array key exists. Example: `isset(\'some.path\')`.',
+                names: ['isset']
+            ),
+            $this->alias(
                 evaluator: fn (array $arguments, mixed $value): bool => is_string($value) && false !== filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4),
                 description: 'Check if the value looks like a IPv4 address. The value must be passed as the 1. argument. Use the function `value()` to use the current decoded column data. Example: `isIPv4(value())`',
                 names: ['isIPv4']
@@ -125,6 +146,11 @@ class ConditionExpressionProvider implements ExpressionFunctionProviderInterface
                 evaluator: fn (array $arguments, mixed $value): bool => is_string($value) && false !== filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6),
                 description: 'Check if the value looks like a IPv6 address. The value must be passed as the 1. argument. Use the function `value()` to use the current decoded column data. Example: `isIPv6(value())`',
                 names: ['isIPv6']
+            ),
+            $this->alias(
+                evaluator: fn (array $arguments, mixed $value): bool => is_string($value) && str_contains($value, '@') && (new EmailValidator())->isValid($value, new RFCValidation()),
+                description: 'Check if the value looks like an email address. The value must be passed as the 1. argument. Use the function `value()` to use the current decoded column data. Example: `isEmail(value())`',
+                names: ['isEmail']
             ),
             $this->alias(
                 evaluator: fn (array $arguments, mixed $value): ?UnicodeString => is_string($value) ? $this->normalizeString($value) : null,

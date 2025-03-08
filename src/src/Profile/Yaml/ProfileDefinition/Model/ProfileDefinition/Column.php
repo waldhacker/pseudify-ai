@@ -36,6 +36,8 @@ class Column extends AbstractEntity implements IdentifierAwareInterface
         protected ?string $databaseType = null,
         #[Groups(['prototype', 'userland'])]
         protected string $columnDescription = '',
+        #[Groups(['prototype', 'userland'])]
+        protected bool $emptyTheColumn = false,
     ) {
     }
 
@@ -53,6 +55,18 @@ class Column extends AbstractEntity implements IdentifierAwareInterface
     public function setColumnDescription(string $columnDescription): Column
     {
         $this->columnDescription = $columnDescription;
+
+        return $this;
+    }
+
+    public function getEmptyTheColumn(): bool
+    {
+        return $this->emptyTheColumn;
+    }
+
+    public function setEmptyTheColumn(bool $emptyTheColumn): Column
+    {
+        $this->emptyTheColumn = $emptyTheColumn;
 
         return $this;
     }
@@ -156,7 +170,8 @@ class Column extends AbstractEntity implements IdentifierAwareInterface
             $encodings,
             $meanings,
             $this->databaseType,
-            $this->getColumnDescription(),
+            $column->getColumnDescription(),
+            $column->getEmptyTheColumn(),
         );
     }
 }

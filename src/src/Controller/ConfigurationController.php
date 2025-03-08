@@ -306,6 +306,7 @@ class ConfigurationController extends AbstractController
 
             $column
                 ->setColumnDescription($data->columnDescription ?? '')
+                ->setEmptyTheColumn($data->emptyTheColumn ?? false)
                 ->setEncodings($this->columnConfigurationDtoFactory->dtoToEncodings($data))
                 ->setMeanings($this->columnConfigurationDtoFactory->dtoToMeanings($data))
             ;

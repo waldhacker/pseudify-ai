@@ -59,6 +59,7 @@ class Column
     private array $dataProcessings = [];
     /** @var callable|null */
     private $onBeforeUpdateData;
+    private bool $emptyTheColumn = false;
 
     /**
      * @param array<string, mixed> $encoderContext
@@ -130,6 +131,18 @@ class Column
     public function getIdentifier(): string
     {
         return $this->identifier;
+    }
+
+    public function getEmptyTheColumn(): bool
+    {
+        return $this->emptyTheColumn;
+    }
+
+    public function setEmptyTheColumn(bool $emptyTheColumn): Column
+    {
+        $this->emptyTheColumn = $emptyTheColumn;
+
+        return $this;
     }
 
     /**

@@ -72,11 +72,18 @@ class PseudonymizeProfileFactory extends AbstractProfileFactory
                     ];
                 }
 
+                $column = Column::create($profileDefinitionColumn->getIdentifier());
+
+                if ($profileDefinitionColumn->getEmptyTheColumn()) {
+                    $column->setEmptyTheColumn(true);
+                    $table->addColumn($column);
+                    continue;
+                }
+
                 if (!$profileDefinitionColumn->hasMeanings()) {
                     continue;
                 }
 
-                $column = Column::create($profileDefinitionColumn->getIdentifier());
                 $table->addColumn($column);
 
                 if (!empty($encoderContext)) {

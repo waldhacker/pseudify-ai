@@ -63,7 +63,7 @@ class ColumnConfigurationDtoFactory
             $encodings[] = $this->encodingToArray($encoding, $meaningsByEncoding);
         }
 
-        return new ColumnConfigurationDto($encodings, $column->getColumnDescription());
+        return new ColumnConfigurationDto($encodings, $column->getColumnDescription(), $column->getEmptyTheColumn());
     }
 
     /**

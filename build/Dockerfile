@@ -22,7 +22,7 @@ COPY ./entrypoint_gui /usr/local/bin/entrypoint_gui
 COPY ./supervisor.ini /etc/supervisor.d/supervisor.ini
 COPY ./symfony.nginx.conf /etc/nginx/http.d/default.conf
 COPY ./fpm.conf /usr/local/etc/php-fpm.d/zz_www.conf
-COPY ./php.ini /usr/local/etc/php/conf.d/custom.ini
+COPY ./php.ini /usr/local/etc/php/conf.d/zz_custom.ini
 
 COPY ./core/src/ /opt/pseudify/core/
 COPY ./userdata/ /opt/pseudify/userdata/

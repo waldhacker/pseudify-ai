@@ -1,0 +1,1936 @@
+identifier: typo3-prototype
+description: 'A template that can be used as a basis for TYPO3 projects'
+schema:
+    tables:
+        -
+            identifier: be_groups
+            columns: []
+            excludedTargetColumns:
+                - allowed_languages
+                - availableWidgets
+                - category_perms
+                - custom_options
+                - db_mountpoints
+                - explicit_allowdeny
+                - file_mountpoints
+                - file_permissions
+                - groupMods
+                - mfa_providers
+                - non_exclude_fields
+                - pagetypes_select
+                - subgroup
+                - tables_modify
+                - tables_select
+            excludedTargetColumnTypes: []
+            tableDescription: ''
+        -
+            identifier: be_sessions
+            columns: []
+            excludedTargetColumns:
+                - ses_id
+                - ses_iplock
+            excludedTargetColumnTypes: []
+            tableDescription: ''
+        -
+            identifier: be_users
+            columns:
+                -
+                    identifier: username
+                    encodings:
+                        -
+                            identifier: 8fc201db-67d8-42e9-b8e0-2cb675f98173
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: 0211892d-d105-438f-ba48-335c422444bc
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: a001f5e8-2298-4f25-ba49-ccd3865e2817
+                            property:
+                                path: ''
+                                scope: ''
+                                type: userName
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'userName'
+                            conditions:
+                                - 'use_encoding_conditions:8fc201db-67d8-42e9-b8e0-2cb675f98173'
+                    columnDescription: ''
+                -
+                    identifier: password
+                    encodings:
+                        -
+                            identifier: 9aeca7cf-cec2-41ad-ad34-61f96bce4549
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: 2d2a7de4-8d34-4108-b79b-c417818747df
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: 5ae6a575-f940-4ec7-a721-534f57d3beb1
+                            property:
+                                path: ''
+                                scope: ''
+                                type: argon2idPassword
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'argon2idPassword'
+                            conditions:
+                                - 'use_encoding_conditions:9aeca7cf-cec2-41ad-ad34-61f96bce4549'
+                    columnDescription: ''
+                -
+                    identifier: email
+                    encodings:
+                        -
+                            identifier: 3a8a4eed-c066-4aba-ab10-f93fc8aa08d6
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: 84d2124b-c289-471c-9e87-257cbf0cfb03
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: 820073ad-21be-442a-b68e-efdd35780d0c
+                            property:
+                                path: ''
+                                scope: ''
+                                type: safeEmail
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'safeEmail'
+                            conditions:
+                                - 'use_encoding_conditions:3a8a4eed-c066-4aba-ab10-f93fc8aa08d6'
+                    columnDescription: ''
+                -
+                    identifier: realName
+                    encodings:
+                        -
+                            identifier: c91ae1c7-1b87-430e-be6c-7471b93b111f
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: 0f980b2c-eade-42eb-9426-e53688790edc
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: 9f33a0b7-c34f-42d6-ae3d-846981a544f9
+                            property:
+                                path: ''
+                                scope: ''
+                                type: name
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'name'
+                            conditions:
+                                - 'use_encoding_conditions:c91ae1c7-1b87-430e-be6c-7471b93b111f'
+                    columnDescription: ''
+                -
+                    identifier: uc
+                    encodings:
+                        -
+                            identifier: e6c1a6a4-96dc-43fb-b261-a9afcac1f396
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: 414ec405-5ac8-4ae5-9325-d02f55263a69
+                                    encoder:
+                                        identifier: serialized_encoder
+                                    context:
+                                        data_picker_path: null
+                    meanings:
+                        -
+                            identifier: 7eee8b2c-d534-437d-b0e5-59d6837f2e2d
+                            property:
+                                path: ''
+                                scope: ''
+                                type: emptyString
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'emptyString'
+                            conditions:
+                                - 'use_encoding_conditions:e6c1a6a4-96dc-43fb-b261-a9afcac1f396'
+                    columnDescription: ''
+                -
+                    identifier: password_reset_token
+                    encodings:
+                        -
+                            identifier: 6f87d63e-dc3b-4cf8-90e7-1ce3debf5365
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: 16508b08-fc2b-4afa-a846-7243e8c49573
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: bad826b3-d9eb-444a-9c73-8b917ac77619
+                            property:
+                                path: ''
+                                scope: ''
+                                type: argon2idPassword
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'argon2idPassword'
+                            conditions:
+                                - 'use_encoding_conditions:6f87d63e-dc3b-4cf8-90e7-1ce3debf5365'
+                    columnDescription: ''
+            excludedTargetColumns:
+                - allowed_languages
+                - category_perms
+                - description
+                - db_mountpoints
+                - file_mountpoints
+                - file_permissions
+                - lang
+                - lockToDomain
+                - mfa
+                - TSconfig
+                - userMods
+                - usergroup
+                - usergroup_cached_list
+            excludedTargetColumnTypes: []
+            tableDescription: ''
+        -
+            identifier: fe_groups
+            columns: []
+            excludedTargetColumns:
+                - felogin_redirectPid
+                - subgroup
+                - tx_extbase_type
+            excludedTargetColumnTypes: []
+            tableDescription: ''
+        -
+            identifier: fe_sessions
+            columns: []
+            excludedTargetColumns:
+                - ses_id
+                - ses_iplock
+            excludedTargetColumnTypes: []
+            tableDescription: ''
+        -
+            identifier: fe_users
+            columns:
+                -
+                    identifier: username
+                    encodings:
+                        -
+                            identifier: d899d80c-7ed1-45ae-8cd3-3bdee3156f05
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: 782f5cbd-34bd-4821-804c-03fc0207890f
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: 3d315f21-e6ca-4371-a9ea-a6894e1a4e01
+                            property:
+                                path: ''
+                                scope: ''
+                                type: userName
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'userName'
+                            conditions:
+                                - 'use_encoding_conditions:d899d80c-7ed1-45ae-8cd3-3bdee3156f05'
+                    columnDescription: ''
+                -
+                    identifier: password
+                    encodings:
+                        -
+                            identifier: 719b1681-d2ba-4564-9be0-a9da7c0c080f
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: dabd8774-f1c0-4522-b84d-aca2c36eaf29
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: 58675baa-e3cf-48ce-bf07-f9ff8943ae5c
+                            property:
+                                path: ''
+                                scope: ''
+                                type: argon2idPassword
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'argon2idPassword'
+                            conditions:
+                                - 'use_encoding_conditions:719b1681-d2ba-4564-9be0-a9da7c0c080f'
+                    columnDescription: ''
+                -
+                    identifier: name
+                    encodings:
+                        -
+                            identifier: f71face3-1be5-4e17-9249-2ccc100eaa9d
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: becb21f8-9981-4b77-bb4d-6a771602dd6a
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: c74f9290-0fde-4f89-848b-c0e4c35763f8
+                            property:
+                                path: ''
+                                scope: ''
+                                type: name
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'name'
+                            conditions:
+                                - 'use_encoding_conditions:f71face3-1be5-4e17-9249-2ccc100eaa9d'
+                    columnDescription: ''
+                -
+                    identifier: first_name
+                    encodings:
+                        -
+                            identifier: 808bb7c4-7ca7-4307-acd9-bf081c217d1e
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: f6f4e012-c97c-4fb2-af5e-87cd7fe76804
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: beb04315-1345-49a3-acdc-1432a14fb429
+                            property:
+                                path: ''
+                                scope: ''
+                                type: firstName
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'firstName'
+                            conditions:
+                                - 'use_encoding_conditions:808bb7c4-7ca7-4307-acd9-bf081c217d1e'
+                    columnDescription: ''
+                -
+                    identifier: middle_name
+                    encodings:
+                        -
+                            identifier: 244dce36-b162-4881-b44d-a735cc670b57
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: 35260221-592a-4790-90ac-da8a6e077784
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: 988aaa74-bb78-4e43-a639-f019419391e3
+                            property:
+                                path: ''
+                                scope: ''
+                                type: firstName
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'firstName'
+                            conditions:
+                                - 'use_encoding_conditions:244dce36-b162-4881-b44d-a735cc670b57'
+                    columnDescription: ''
+                -
+                    identifier: last_name
+                    encodings:
+                        -
+                            identifier: 4d49d9a1-b29e-4fea-a07b-db577e63d189
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: c1bccc81-fac0-48d9-8700-5fc1876ad9ad
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: ba5a3211-36e8-4e33-bdf1-410a6bb4a932
+                            property:
+                                path: ''
+                                scope: ''
+                                type: lastName
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'lastName'
+                            conditions:
+                                - 'use_encoding_conditions:4d49d9a1-b29e-4fea-a07b-db577e63d189'
+                    columnDescription: ''
+                -
+                    identifier: address
+                    encodings:
+                        -
+                            identifier: 43df37a1-929a-49d2-a062-9ce1abc2458e
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: eb853af0-c436-4c06-8919-a6cbf51a52ee
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: 461e602d-589f-40b6-9561-4aff18d68ec2
+                            property:
+                                path: ''
+                                scope: ''
+                                type: address
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'address'
+                            conditions:
+                                - 'use_encoding_conditions:43df37a1-929a-49d2-a062-9ce1abc2458e'
+                    columnDescription: ''
+                -
+                    identifier: telephone
+                    encodings:
+                        -
+                            identifier: 6110a900-7766-4ab2-8336-65622f7a931b
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: b38c6ce5-5eff-46ac-9a58-b32527c55827
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: e9d2e533-1096-4e09-84e3-f677e5c84bc2
+                            property:
+                                path: ''
+                                scope: ''
+                                type: phoneNumber
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'phoneNumber'
+                            conditions:
+                                - 'use_encoding_conditions:6110a900-7766-4ab2-8336-65622f7a931b'
+                    columnDescription: ''
+                -
+                    identifier: fax
+                    encodings:
+                        -
+                            identifier: 5986b933-b3ce-4c7b-92b6-40c81bfd1be8
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: 1ed1bd35-661c-41ce-b9ab-29e80272d49c
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: 3a0c79bc-2ce8-47da-b6de-e932e24c4aa8
+                            property:
+                                path: ''
+                                scope: ''
+                                type: phoneNumber
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'phoneNumber'
+                            conditions:
+                                - 'use_encoding_conditions:5986b933-b3ce-4c7b-92b6-40c81bfd1be8'
+                    columnDescription: ''
+                -
+                    identifier: email
+                    encodings:
+                        -
+                            identifier: fb6934b2-a1a0-49e8-9b53-ff5dc519b1c5
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: f6220a89-de5d-46ff-8691-f4d00d899033
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: d1ea0b4f-f436-4ca9-a5cc-4d36a49461c6
+                            property:
+                                path: ''
+                                scope: ''
+                                type: safeEmail
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'safeEmail'
+                            conditions:
+                                - 'use_encoding_conditions:fb6934b2-a1a0-49e8-9b53-ff5dc519b1c5'
+                    columnDescription: ''
+                -
+                    identifier: title
+                    encodings:
+                        -
+                            identifier: 787fa674-a4be-44f6-9e3e-4f93b894de34
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: 8e7f3c3a-e7d5-4949-8383-56675793569d
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: fdc0b489-6830-4c96-adc5-2609c023c0c5
+                            property:
+                                path: ''
+                                scope: ''
+                                type: title
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'title'
+                            conditions:
+                                - 'use_encoding_conditions:787fa674-a4be-44f6-9e3e-4f93b894de34'
+                    columnDescription: ''
+                -
+                    identifier: zip
+                    encodings:
+                        -
+                            identifier: c29c251c-5428-4afa-8593-012c29ebace1
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: f17511ee-08bc-4d77-960d-0f4c2fc410e7
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: 6e55dbf5-ec14-4f94-9f8b-d08365e9cbb7
+                            property:
+                                path: ''
+                                scope: ''
+                                type: postcode
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'postcode'
+                            conditions:
+                                - 'use_encoding_conditions:c29c251c-5428-4afa-8593-012c29ebace1'
+                    columnDescription: ''
+                -
+                    identifier: city
+                    encodings:
+                        -
+                            identifier: de485942-172f-4954-806b-fd45b7910872
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: 05606f77-36fc-4395-a5a9-105ed46ac4fd
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: 5d8bb70f-9e8a-4a64-8fca-d025a759c8d6
+                            property:
+                                path: ''
+                                scope: ''
+                                type: city
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'city'
+                            conditions:
+                                - 'use_encoding_conditions:de485942-172f-4954-806b-fd45b7910872'
+                    columnDescription: ''
+                -
+                    identifier: country
+                    encodings:
+                        -
+                            identifier: 3b909437-0fe8-49cf-beb6-458ba4b6bc2c
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: afc8b9fe-f63e-4d53-8bff-9cc0fe08b6bd
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: d8c545ab-6188-42c8-9924-d9bcf3d780af
+                            property:
+                                path: ''
+                                scope: ''
+                                type: country
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'country'
+                            conditions:
+                                - 'use_encoding_conditions:3b909437-0fe8-49cf-beb6-458ba4b6bc2c'
+                    columnDescription: ''
+                -
+                    identifier: www
+                    encodings:
+                        -
+                            identifier: 3c3ab496-71c3-406d-af79-bdb16c1273c6
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: 6ed9302a-4218-4183-bf84-8fa9a79cd0a3
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: 5161f222-c20c-4f76-aaa4-06370efbe0d4
+                            property:
+                                path: ''
+                                scope: ''
+                                type: url
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'url'
+                            conditions:
+                                - 'use_encoding_conditions:3c3ab496-71c3-406d-af79-bdb16c1273c6'
+                    columnDescription: ''
+                -
+                    identifier: company
+                    encodings:
+                        -
+                            identifier: a8e45a73-6d19-46c0-a5ca-df7be8448af6
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: 8b055f1c-73af-4b1e-89a0-5e1bfebb2685
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: fc3d46e9-ca27-473a-a913-04fb59b52fac
+                            property:
+                                path: ''
+                                scope: ''
+                                type: company
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'company'
+                            conditions:
+                                - 'use_encoding_conditions:a8e45a73-6d19-46c0-a5ca-df7be8448af6'
+                    columnDescription: ''
+                -
+                    identifier: felogin_forgotHash
+                    encodings:
+                        -
+                            identifier: 540276e5-566e-4dad-b9c6-6473fc5b4626
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: f47ce404-d525-43e9-9ffc-fa1097f526dc
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: 4c3edbf7-6f11-426f-8199-d5ea8f767071
+                            property:
+                                path: ''
+                                scope: ''
+                                type: emptyString
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'emptyString'
+                            conditions:
+                                - 'use_encoding_conditions:540276e5-566e-4dad-b9c6-6473fc5b4626'
+                    columnDescription: ''
+            excludedTargetColumns:
+                - description
+                - felogin_redirectPid
+                - image
+                - lockToDomain
+                - mfa
+                - TSconfig
+                - tx_extbase_type
+                - usergroup
+            excludedTargetColumnTypes: []
+            tableDescription: ''
+        -
+            identifier: index_phash
+            columns: []
+            excludedTargetColumns:
+                - static_page_arguments
+                - data_page_mp
+                - gr_list
+                - item_type
+            excludedTargetColumnTypes: []
+            tableDescription: ''
+        -
+            identifier: pages
+            columns: []
+            excludedTargetColumns:
+                - sitemap_priority
+            excludedTargetColumnTypes: []
+            tableDescription: ''
+        -
+            identifier: sys_be_shortcuts
+            columns: []
+            excludedTargetColumns:
+                - arguments
+                - module_name
+                - route
+                - url
+            excludedTargetColumnTypes: []
+            tableDescription: ''
+        -
+            identifier: sys_category
+            columns: []
+            excludedTargetColumns:
+                - l10n_state
+                - l10n_diffsource
+            excludedTargetColumnTypes: []
+            tableDescription: ''
+        -
+            identifier: sys_collection
+            columns: []
+            excludedTargetColumns:
+                - fe_group
+                - l10n_state
+                - l10n_diffsource
+                - type
+                - table_name
+            excludedTargetColumnTypes: []
+            tableDescription: ''
+        -
+            identifier: sys_file
+            columns: []
+            excludedTargetColumns:
+                - extension
+                - folder_hash
+                - identifier_hash
+                - mime_type
+                - sha1
+                - type
+            excludedTargetColumnTypes: []
+            tableDescription: ''
+        -
+            identifier: sys_file_collection
+            columns: []
+            excludedTargetColumns:
+                - l10n_state
+                - l10n_diffsource
+                - type
+            excludedTargetColumnTypes: []
+            tableDescription: ''
+        -
+            identifier: sys_file_metadata
+            columns:
+                -
+                    identifier: creator
+                    encodings:
+                        -
+                            identifier: bf2c4d3b-376a-4bbd-8dbc-dc8f05bdc75d
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: 914b3999-ac9b-4156-83c9-3cfff5237c54
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: 3bfd67f7-d7df-422a-8007-f5770874fcc8
+                            property:
+                                path: ''
+                                scope: ''
+                                type: userName
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'userName'
+                            conditions:
+                                - 'use_encoding_conditions:bf2c4d3b-376a-4bbd-8dbc-dc8f05bdc75d'
+                    columnDescription: ''
+                -
+                    identifier: publisher
+                    encodings:
+                        -
+                            identifier: d18ee732-88e0-4179-a1fc-d1beb202a018
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: 2e9b5d73-16f6-4cdf-809b-1f2763cd804c
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: b7be4323-20ea-4b7a-a145-6beca9e384be
+                            property:
+                                path: ''
+                                scope: ''
+                                type: userName
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'userName'
+                            conditions:
+                                - 'use_encoding_conditions:d18ee732-88e0-4179-a1fc-d1beb202a018'
+                    columnDescription: ''
+                -
+                    identifier: location_country
+                    encodings:
+                        -
+                            identifier: bf55a34f-d2cf-4bf6-89e8-a85c3c1bd3b7
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: a9c55252-d7cd-4670-b63e-882f5d7576d7
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: 967f990b-6e02-4ab0-a583-7be1de0496a1
+                            property:
+                                path: ''
+                                scope: ''
+                                type: country
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'country'
+                            conditions:
+                                - 'use_encoding_conditions:bf55a34f-d2cf-4bf6-89e8-a85c3c1bd3b7'
+                    columnDescription: ''
+                -
+                    identifier: location_region
+                    encodings:
+                        -
+                            identifier: 6cc6dadd-6f2f-4d69-9271-20cff792fcc2
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: 619d7d51-d1eb-4d64-af97-ace145539aed
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: cd2b4074-e717-4eb7-809a-b19066fac36e
+                            property:
+                                path: ''
+                                scope: ''
+                                type: state
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'state'
+                            conditions:
+                                - 'use_encoding_conditions:6cc6dadd-6f2f-4d69-9271-20cff792fcc2'
+                    columnDescription: ''
+                -
+                    identifier: location_city
+                    encodings:
+                        -
+                            identifier: bbc2efad-e3a8-4f34-af3f-707fdb283960
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: a6189219-904a-42e1-a6f9-736f4a64c1f2
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: 44119fd5-4f43-41c0-8def-d767cceeb37c
+                            property:
+                                path: ''
+                                scope: ''
+                                type: city
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'city'
+                            conditions:
+                                - 'use_encoding_conditions:bbc2efad-e3a8-4f34-af3f-707fdb283960'
+                    columnDescription: ''
+                -
+                    identifier: latitude
+                    encodings:
+                        -
+                            identifier: ba4373e2-2e8b-4cdd-b849-aad4710883cc
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: 2830f1ad-e5a2-46f6-8fee-5879e018ae84
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: 4616eb3a-19a5-4808-a2a1-d629f560946d
+                            property:
+                                path: ''
+                                scope: ''
+                                type: latitude
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'latitude'
+                            conditions:
+                                - 'use_encoding_conditions:ba4373e2-2e8b-4cdd-b849-aad4710883cc'
+                    columnDescription: ''
+                -
+                    identifier: longitude
+                    encodings:
+                        -
+                            identifier: a25aeef4-a5d7-4eed-a04b-319dc78085ee
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: 775ff7d1-bb5b-423e-9ea2-7ee218402538
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: 96814307-6e1d-44e5-8454-d56d0e7e9c65
+                            property:
+                                path: ''
+                                scope: ''
+                                type: longitude
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'longitude'
+                            conditions:
+                                - 'use_encoding_conditions:a25aeef4-a5d7-4eed-a04b-319dc78085ee'
+                    columnDescription: ''
+            excludedTargetColumns:
+                - alternative
+                - caption
+                - color_space
+                - creator_tool
+                - description
+                - download_name
+                - fe_groups
+                - keywords
+                - language
+                - l10n_state
+                - l10n_diffsource
+                - note
+                - status
+                - title
+                - unit
+            excludedTargetColumnTypes: []
+            tableDescription: ''
+        -
+            identifier: sys_file_processedfile
+            columns: []
+            excludedTargetColumns:
+                - checksum
+                - configurationsha1
+                - originalfilesha1
+                - task_type
+            excludedTargetColumnTypes: []
+            tableDescription: ''
+        -
+            identifier: sys_file_reference
+            columns: []
+            excludedTargetColumns:
+                - crop
+                - fieldname
+                - l10n_diffsource
+                - l10n_state
+                - link
+                - table_local
+                - tablenames
+            excludedTargetColumnTypes: []
+            tableDescription: ''
+        -
+            identifier: sys_file_storage
+            columns: []
+            excludedTargetColumns:
+                - driver
+                - processingfolder
+            excludedTargetColumnTypes: []
+            tableDescription: ''
+        -
+            identifier: sys_history
+            columns:
+                -
+                    identifier: history_data
+                    encodings:
+                        -
+                            identifier: d0085856-f0b6-4955-911b-68f82e69d6fa
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: 8f424f88-2fb3-462f-817c-955071260cfb
+                                    encoder:
+                                        identifier: json_encoder
+                                    context:
+                                        json_decode_associative: true
+                                        json_decode_options: 0.0
+                                        json_decode_recursion_depth: 512.0
+                                        json_encode_options: 0.0
+                                        data_picker_path: null
+                    meanings:
+                        -
+                            identifier: 6df27a7a-d8a9-4068-9475-7b2182d8e09e
+                            property:
+                                path: oldRecord.username
+                                scope: ''
+                                type: userName
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: userName
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'be_users' && isset('oldRecord.username')"
+                        -
+                            identifier: 70e3ca8b-2cdb-4bcf-aa16-7c61a9da2a65
+                            property:
+                                path: newRecord.username
+                                scope: ''
+                                type: userName
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: userName
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'be_users' && isset('newRecord.username')"
+                        -
+                            identifier: 7bf304e5-b03c-41c6-bab4-7ab179d734d8
+                            property:
+                                path: oldRecord.password
+                                scope: ''
+                                type: argon2idPassword
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: argon2idPassword
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'be_users' && isset('oldRecord.password')"
+                        -
+                            identifier: 53d02cc8-92e5-467f-b03f-68ed5f3b5c90
+                            property:
+                                path: newRecord.password
+                                scope: ''
+                                type: argon2idPassword
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: argon2idPassword
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'be_users' && isset('newRecord.password')"
+                        -
+                            identifier: de239f97-d797-49d1-bb14-1946f329656b
+                            property:
+                                path: oldRecord.email
+                                scope: ''
+                                type: safeEmail
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: safeEmail
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'be_users' && isset('oldRecord.email')"
+                        -
+                            identifier: 49e59feb-a638-4563-a340-e362a357e3b7
+                            property:
+                                path: newRecord.email
+                                scope: ''
+                                type: safeEmail
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: safeEmail
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'be_users' && isset('newRecord.email')"
+                        -
+                            identifier: f9a66348-41a4-40da-a93c-dc2570766aa5
+                            property:
+                                path: oldRecord.realName
+                                scope: ''
+                                type: name
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: name
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'be_users' && isset('oldRecord.realName')"
+                        -
+                            identifier: 0c6087e8-0c38-491c-a81b-4225b4aabad4
+                            property:
+                                path: newRecord.realName
+                                scope: ''
+                                type: name
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: name
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'be_users' && isset('newRecord.realName')"
+                        -
+                            identifier: f0acda97-bb22-4a26-ac1c-5568ad267ba1
+                            property:
+                                path: oldRecord.username
+                                scope: ''
+                                type: userName
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: userName
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('oldRecord.username')"
+                        -
+                            identifier: 961500ce-86af-4ecd-a8c9-8c5a9fd91bca
+                            property:
+                                path: newRecord.username
+                                scope: ''
+                                type: userName
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: userName
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('newRecord.username')"
+                        -
+                            identifier: 1ac447d3-2437-453b-955e-0bad42a0e7a3
+                            property:
+                                path: oldRecord.password
+                                scope: ''
+                                type: argon2iPassword
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: argon2iPassword
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('oldRecord.password')"
+                        -
+                            identifier: 073e0992-4d77-4f69-8367-eaa54c385b72
+                            property:
+                                path: newRecord.password
+                                scope: ''
+                                type: argon2iPassword
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: argon2iPassword
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('newRecord.password')"
+                        -
+                            identifier: 8f51d5b1-cb27-48e0-bc96-60c7e718c438
+                            property:
+                                path: oldRecord.name
+                                scope: ''
+                                type: name
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: name
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('oldRecord.name')"
+                        -
+                            identifier: 15373a60-3273-402c-8eca-5329ed32ce52
+                            property:
+                                path: newRecord.name
+                                scope: ''
+                                type: name
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: name
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('newRecord.name')"
+                        -
+                            identifier: 4a16306a-ee0d-4f21-a151-562620f3fda7
+                            property:
+                                path: oldRecord.first_name
+                                scope: ''
+                                type: firstName
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: firstName
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('oldRecord.first_name')"
+                        -
+                            identifier: 9eb1d41c-96d3-45b3-9be2-c3bef51e1053
+                            property:
+                                path: newRecord.first_name
+                                scope: ''
+                                type: firstName
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: firstName
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('newRecord.first_name')"
+                        -
+                            identifier: 38c649e7-5fd7-4fbd-ab89-947b89a218fd
+                            property:
+                                path: oldRecord.middle_name
+                                scope: ''
+                                type: firstName
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: firstName
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('oldRecord.middle_name')"
+                        -
+                            identifier: d90a8b14-43a2-4bd4-b896-8ed46e453385
+                            property:
+                                path: newRecord.middle_name
+                                scope: ''
+                                type: firstName
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: firstName
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('newRecord.middle_name')"
+                        -
+                            identifier: c3355c3b-d998-4fa9-a66b-c85972b0014f
+                            property:
+                                path: oldRecord.last_name
+                                scope: ''
+                                type: lastName
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: lastName
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('oldRecord.last_name')"
+                        -
+                            identifier: 896c98f7-4300-4d18-ac5e-0764c77ad7cd
+                            property:
+                                path: newRecord.last_name
+                                scope: ''
+                                type: lastName
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: lastName
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('newRecord.last_name')"
+                        -
+                            identifier: 70efa581-807c-4f70-8d04-b7194427c756
+                            property:
+                                path: oldRecord.address
+                                scope: ''
+                                type: address
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: address
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('oldRecord.address')"
+                        -
+                            identifier: 3cfe88cb-3dc7-476f-b10a-87c2801a936f
+                            property:
+                                path: newRecord.address
+                                scope: ''
+                                type: address
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: address
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('newRecord.address')"
+                        -
+                            identifier: 00af4c9f-8d36-46c0-b14e-e2ca06f664df
+                            property:
+                                path: oldRecord.telephone
+                                scope: ''
+                                type: phoneNumber
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: phoneNumber
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('oldRecord.telephone')"
+                        -
+                            identifier: 1755ced0-46f8-4649-9737-0c5b4ba59c8d
+                            property:
+                                path: newRecord.telephone
+                                scope: ''
+                                type: phoneNumber
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: phoneNumber
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('newRecord.telephone')"
+                        -
+                            identifier: 6f8bbd11-1876-4df7-9cc8-0fc26a726231
+                            property:
+                                path: oldRecord.fax
+                                scope: ''
+                                type: phoneNumber
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: phoneNumber
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('oldRecord.fax')"
+                        -
+                            identifier: 96e3f05c-04d2-4688-b57f-06ea73521964
+                            property:
+                                path: newRecord.fax
+                                scope: ''
+                                type: phoneNumber
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: phoneNumber
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('newRecord.fax')"
+                        -
+                            identifier: b8e22cfa-cf69-4f29-b0e6-67e17d9f21ee
+                            property:
+                                path: oldRecord.email
+                                scope: ''
+                                type: safeEmail
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: safeEmail
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('oldRecord.email')"
+                        -
+                            identifier: fa1e196d-6206-4d03-921a-8b70ace8ba67
+                            property:
+                                path: newRecord.email
+                                scope: ''
+                                type: safeEmail
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: safeEmail
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('newRecord.email')"
+                        -
+                            identifier: 99b377ac-f378-48b5-a58e-34889c5f163b
+                            property:
+                                path: oldRecord.title
+                                scope: ''
+                                type: title
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: title
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('oldRecord.title')"
+                        -
+                            identifier: 2feee8d5-d901-44de-8cf3-5e3d19355d87
+                            property:
+                                path: newRecord.title
+                                scope: ''
+                                type: title
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: title
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('newRecord.title')"
+                        -
+                            identifier: 0912fe20-1c79-4d43-994f-a1f4ef2cc4b8
+                            property:
+                                path: oldRecord.zip
+                                scope: ''
+                                type: postcode
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: postcode
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('oldRecord.zip')"
+                        -
+                            identifier: 35d96e5f-34c5-49e9-93b8-a7c935280429
+                            property:
+                                path: newRecord.zip
+                                scope: ''
+                                type: postcode
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: postcode
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('newRecord.zip')"
+                        -
+                            identifier: f7760a15-ad4d-4eca-9ec2-9d1af4ab8e95
+                            property:
+                                path: oldRecord.city
+                                scope: ''
+                                type: city
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: city
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('oldRecord.city')"
+                        -
+                            identifier: a74c657c-c5c2-44be-a428-3fe68eb3d754
+                            property:
+                                path: newRecord.city
+                                scope: ''
+                                type: city
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: city
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('newRecord.city')"
+                        -
+                            identifier: 0ae6eec9-7b1d-4e86-99d8-29ab6862a96d
+                            property:
+                                path: oldRecord.www
+                                scope: ''
+                                type: url
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: url
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('oldRecord.www')"
+                        -
+                            identifier: 7141d37a-ce1a-4ece-a634-94ac0aaf32aa
+                            property:
+                                path: newRecord.www
+                                scope: ''
+                                type: url
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: url
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('newRecord.www')"
+                        -
+                            identifier: cea5f777-f783-4888-918b-ef67dc516da2
+                            property:
+                                path: oldRecord.company
+                                scope: ''
+                                type: company
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: company
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('oldRecord.company')"
+                        -
+                            identifier: 9f14b13d-067d-4c6d-9bef-1c2e4debe09d
+                            property:
+                                path: newRecord.company
+                                scope: ''
+                                type: company
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: company
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'fe_users' && isset('newRecord.company')"
+                        -
+                            identifier: f1f3b86d-1d32-453e-bcb4-cfb975bc9be0
+                            property:
+                                path: oldRecord.latitude
+                                scope: ''
+                                type: latitude
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: latitude
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'sys_file_metadata' && isset('oldRecord.latitude')"
+                        -
+                            identifier: 1a699791-9c2b-4222-b3a4-c6b2ba63e83a
+                            property:
+                                path: newRecord.latitude
+                                scope: ''
+                                type: latitude
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: latitude
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'sys_file_metadata' && isset('newRecord.latitude')"
+                        -
+                            identifier: a623a17b-65a4-4ede-980b-5e8d5920a8c1
+                            property:
+                                path: oldRecord.longitude
+                                scope: ''
+                                type: longitude
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: longitude
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'sys_file_metadata' && isset('oldRecord.longitude')"
+                        -
+                            identifier: 1ad232a8-f5eb-4e07-a6e3-be3982d7a331
+                            property:
+                                path: newRecord.longitude
+                                scope: ''
+                                type: longitude
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: longitude
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'sys_file_metadata' && isset('newRecord.longitude')"
+                        -
+                            identifier: 1914ab7f-86b9-4997-8ab4-689ed0e800e6
+                            property:
+                                path: oldRecord.location_city
+                                scope: ''
+                                type: city
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: city
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'sys_file_metadata' && isset('oldRecord.location_city')"
+                        -
+                            identifier: 0676746e-da17-46e9-b6be-1d2d596ca04d
+                            property:
+                                path: newRecord.location_city
+                                scope: ''
+                                type: city
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: city
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'sys_file_metadata' && isset('newRecord.location_city')"
+                        -
+                            identifier: eaf49bf4-0067-420b-a4b1-f1b639c3aa73
+                            property:
+                                path: oldRecord.creator
+                                scope: ''
+                                type: userName
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: userName
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'sys_file_metadata' && isset('oldRecord.creator')"
+                        -
+                            identifier: 9ad50ddd-001b-4b40-b797-c8d41e5f4b48
+                            property:
+                                path: newRecord.creator
+                                scope: ''
+                                type: userName
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: userName
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'sys_file_metadata' && isset('newRecord.creator')"
+                        -
+                            identifier: 5186aec8-8042-496f-a305-acf1d023ade7
+                            property:
+                                path: oldRecord.publisher
+                                scope: ''
+                                type: userName
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: userName
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'sys_file_metadata' && isset('oldRecord.publisher')"
+                        -
+                            identifier: 5b4fc0fa-56c9-4edc-94e3-63dac4a77f1b
+                            property:
+                                path: newRecord.publisher
+                                scope: ''
+                                type: userName
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: userName
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'sys_file_metadata' && isset('newRecord.publisher')"
+                        -
+                            identifier: 54e0b3a9-e1bf-4166-9a82-2d3e7101628c
+                            property:
+                                path: oldRecord.location_country
+                                scope: ''
+                                type: country
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: country
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'sys_file_metadata' && isset('oldRecord.location_country')"
+                        -
+                            identifier: e49219fa-3378-4a63-95ac-e90466eb7d44
+                            property:
+                                path: newRecord.location_country
+                                scope: ''
+                                type: country
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: country
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'sys_file_metadata' && isset('newRecord.location_country')"
+                        -
+                            identifier: 29709239-b770-410f-a02c-9c982583ca2b
+                            property:
+                                path: oldRecord.location_region
+                                scope: ''
+                                type: state
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: state
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'sys_file_metadata' && isset('oldRecord.location_region')"
+                        -
+                            identifier: b32a519d-5ffe-4482-9141-e0eeee743b62
+                            property:
+                                path: newRecord.location_region
+                                scope: ''
+                                type: state
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: state
+                            conditions:
+                                - 'use_encoding_conditions:d0085856-f0b6-4955-911b-68f82e69d6fa'
+                                - "column('tablename') == 'sys_file_metadata' && isset('newRecord.location_region')"
+                    columnDescription: ''
+            excludedTargetColumns:
+                - correlation_id
+                - tablename
+                - usertype
+            excludedTargetColumnTypes: []
+            tableDescription: ''
+        -
+            identifier: sys_lockedrecords
+            columns:
+                -
+                    identifier: username
+                    encodings:
+                        -
+                            identifier: b12d0805-7e61-4237-a37d-e00b040067a9
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: bce9b0cf-2ce3-4061-be2c-966d93330f90
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: 7d0025ba-8b05-4e9d-920f-f451b2498bb2
+                            property:
+                                path: ''
+                                scope: ''
+                                type: userName
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'userName'
+                            conditions:
+                                - 'use_encoding_conditions:b12d0805-7e61-4237-a37d-e00b040067a9'
+                    columnDescription: ''
+                -
+                    identifier: feuserid
+                    encodings: []
+                    meanings: []
+                    columnDescription: ''
+            excludedTargetColumns:
+                - record_table
+            excludedTargetColumnTypes: []
+            tableDescription: ''
+        -
+            identifier: sys_log
+            columns:
+                -
+                    identifier: IP
+                    encodings:
+                        -
+                            identifier: c36343e8-1a3a-4640-8f76-34e6567fcd30
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: ce8479ab-e277-49a1-b40c-b0d6e3a2977d
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: 1ec203b4-02f1-4475-ac4c-12288ec0516d
+                            property:
+                                path: ''
+                                scope: ''
+                                type: ipv4
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'ipv4'
+                            conditions:
+                                - 'use_encoding_conditions:c36343e8-1a3a-4640-8f76-34e6567fcd30'
+                                - isIPv4(value())
+                        -
+                            identifier: 5ea299be-b4ee-4a7c-8918-8e10623ceeb6
+                            property:
+                                path: ''
+                                scope: ''
+                                type: ipv6
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'ipv6'
+                            conditions:
+                                - 'use_encoding_conditions:c36343e8-1a3a-4640-8f76-34e6567fcd30'
+                                - isIPv6(value())
+                    columnDescription: ''
+                -
+                    identifier: log_data
+                    encodings:
+                        -
+                            identifier: f8c3d285-7f45-4227-b593-02b9859adeef
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: ac85e533-57fd-49b8-b036-5d4a1b67f157
+                                    encoder:
+                                        identifier: serialized_encoder
+                                    context:
+                                        data_picker_path: null
+                    meanings:
+                        -
+                            identifier: ecf22c0a-61dc-4d1b-9990-8338547fd759
+                            property:
+                                path: ''
+                                scope: ''
+                                type: emptyString
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: 'emptyString'
+                            conditions:
+                                - 'use_encoding_conditions:f8c3d285-7f45-4227-b593-02b9859adeef'
+                    columnDescription: ''
+            excludedTargetColumns:
+                - component
+                - NEWid
+                - request_id
+                - tablename
+            excludedTargetColumnTypes: []
+            tableDescription: ''
+        -
+            identifier: sys_refindex
+            columns:
+                -
+                    identifier: ref_string
+                    encodings:
+                        -
+                            identifier: d6e2575b-8d9c-4ce9-8a88-9e5fc8bd3c70
+                            name: ''
+                            conditions: []
+                            encoders:
+                                -
+                                    identifier: 759f6488-d106-4d94-97be-261fa3ca54ff
+                                    encoder:
+                                        identifier: scalar_encoder
+                                    context: []
+                    meanings:
+                        -
+                            identifier: 9e7cf3e5-39a3-4f8a-8bc8-6996e93515ed
+                            property:
+                                path: ''
+                                scope: ''
+                                type: safeEmail
+                                minimumGraphemeLength: 3
+                                context: []
+                            name: safeEmail
+                            conditions:
+                                - 'use_encoding_conditions:d6e2575b-8d9c-4ce9-8a88-9e5fc8bd3c70'
+                                - "isEmail(value())"
+                    columnDescription: ''
+            excludedTargetColumns:
+                - field
+                - flexpointer
+                - hash
+                - ref_table
+                - softref_id
+                - softref_key
+                - tablename
+            excludedTargetColumnTypes: []
+            tableDescription: ''
+        -
+            identifier: sys_registry
+            columns: []
+            excludedTargetColumns:
+                - entry_key
+                - entry_namespace
+            excludedTargetColumnTypes: []
+            tableDescription: ''
+        -
+            identifier: sys_template
+            columns: []
+            excludedTargetColumns:
+                - adminusers
+                - db_mountpoints
+                - edit_notification_defaults
+                - execute_notification_defaults
+                - file_mountpoints
+                - members
+                - publish_notification_defaults
+            excludedTargetColumnTypes: []
+            tableDescription: ''
+        -
+            identifier: sys_workspace
+            columns: []
+            excludedTargetColumns:
+                - adminusers
+                - db_mountpoints
+                - edit_notification_defaults
+                - execute_notification_defaults
+                - file_mountpoints
+                - members
+                - publish_notification_defaults
+            excludedTargetColumnTypes: []
+            tableDescription: ''
+        -
+            identifier: sys_workspace_stage
+            columns: []
+            excludedTargetColumns:
+                - notification_defaults
+                - parenttable
+                - responsible_persons
+                - title
+            excludedTargetColumnTypes: []
+            tableDescription: ''
+        -
+            identifier: tt_content
+            columns: []
+            excludedTargetColumns:
+                - category_field
+                - CType
+                - header_position
+                - fe_group
+                - file_collections
+                - filelink_sorting
+                - filelink_sorting_direction
+                - frame_class
+                - header_layout
+                - header_link
+                - l10n_state
+                - l18n_diffsource
+                - list_type
+                - pages
+                - records
+                - selected_categories
+                - space_after_class
+                - space_before_class
+                - table_class
+                - target
+            excludedTargetColumnTypes: []
+            tableDescription: ''
+        -
+            identifier: tx_linkvalidator_link
+            columns: []
+            excludedTargetColumns:
+                - element_type
+                - field
+                - link_type
+                - table_name
+            excludedTargetColumnTypes: []
+            tableDescription: ''
+        -
+            identifier: tx_scheduler_task
+            columns: []
+            excludedTargetColumns:
+                - lastexecution_context
+            excludedTargetColumnTypes: []
+            tableDescription: ''
+sourceStrings:
+    - 'regex:(?:[0-9]{1,3}\.){3}[0-9]{1,3}'
+    - 'regex:(?:^|(?<=\s))(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))(?=\s|$)'
+excludedTargetTables:
+    - backend_layout
+    - be_dashboards
+    - cache_adminpanel_requestcache
+    - cache_adminpanel_requestcache_tags
+    - cache_extbase_object
+    - cache_extbase_object_tags
+    - cache_hash
+    - cache_hash_tags
+    - cache_imagesizes
+    - cache_imagesizes_tags
+    - cache_pages
+    - cache_pages_tags
+    - cache_pagesection
+    - cache_pagesection_tags
+    - cache_rootline
+    - cache_rootline_tags
+    - cache_treelist
+    - cache_vhs_main
+    - cache_vhs_main_tags
+    - cache_vhs_markdown
+    - cache_vhs_markdown_tags
+    - index_config
+    - index_debug
+    - index_grlist
+    - index_rel
+    - index_section
+    - pages
+    - sys_category_record_mm
+    - sys_collection_entries
+    - sys_language
+    - sys_preview
+    - sys_redirect
+    - tx_extensionmanager_domain_model_extension
+    - tx_extensionmanager_domain_model_repository
+    - tx_impexp_presets
+    - tx_scheduler_task_group
+excludedTargetColumnTypes:
+    - bigint
+    - boolean
+    - date
+    - date_immutable
+    - dateinterval
+    - datetime
+    - datetime_immutable
+    - datetimetz
+    - datetimetz_immutable
+    - float
+    - guid
+    - integer
+    - smallint
+    - time
+    - time_immutable
+targetDataFrameCuttingLength: 10
+applicationName: 'TYPO3 CMS'
+applicationDescription: ''

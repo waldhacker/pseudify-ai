@@ -99,6 +99,23 @@ class PseudonymizeProcessor
 
             $primaryKeyColumnNames = null;
             $updatedDataFromTablesWithoutPrimaryKeys = [];
+
+            foreach ($table->getColumns() as $column) {
+                if (!$column->getEmptyTheColumn()) {
+                    continue;
+                }
+
+                if (null === $page || 1 === $page) {
+                    $columnInfo = $this->columnInfo[$table->getIdentifier()][$column->getIdentifier()];
+                    $defaultValue = $columnInfo->getDefault();
+                    $defaultValue = 'NULL' === $defaultValue ? null : $defaultValue;
+
+                    $this->updateData($table, $column, null, $defaultValue, [], $dryRun, [], true);
+                }
+
+                $table->removeColumn($column->getIdentifier());
+            }
+
             $result = $this->queryData($table, $page, $itemsPerPage);
             while ($row = $result->fetchAssociative()) {
                 if (null === $primaryKeyColumnNames) {
@@ -255,6 +272,7 @@ class PseudonymizeProcessor
         array $row,
         bool $dryRun,
         array $primaryKeyColumnNames,
+        bool $skipAddWhere = false,
     ): int {
         $connection = $this->connectionManager->getConnection();
         $queryBuilder = $connection->createQueryBuilder();
@@ -266,27 +284,29 @@ class PseudonymizeProcessor
             )
         ;
 
-        if (empty($primaryKeyColumnNames)) {
-            $queryBuilder->andWhere(
-                $queryBuilder->expr()->eq(
-                    $connection->quoteIdentifier($column->getIdentifier()),
-                    $queryBuilder->createNamedParameter($originalData, $this->getBindingType($table, $column))
-                )
-            );
-        } else {
-            foreach ($primaryKeyColumnNames as $primaryKeyColumnName) {
-                $primaryKeyValue = $row[$primaryKeyColumnName];
-                $bindingType = $this->getBindingType($table, Column::create($primaryKeyColumnName));
-                if (ParameterType::INTEGER === $bindingType && ctype_digit((string) $primaryKeyValue)) {
-                    $primaryKeyValue = (int) $primaryKeyValue;
-                }
-
+        if (false === $skipAddWhere) {
+            if (empty($primaryKeyColumnNames)) {
                 $queryBuilder->andWhere(
                     $queryBuilder->expr()->eq(
-                        $connection->quoteIdentifier($primaryKeyColumnName),
-                        $queryBuilder->createNamedParameter($primaryKeyValue, $bindingType)
+                        $connection->quoteIdentifier($column->getIdentifier()),
+                        $queryBuilder->createNamedParameter($originalData, $this->getBindingType($table, $column))
                     )
                 );
+            } else {
+                foreach ($primaryKeyColumnNames as $primaryKeyColumnName) {
+                    $primaryKeyValue = $row[$primaryKeyColumnName];
+                    $bindingType = $this->getBindingType($table, Column::create($primaryKeyColumnName));
+                    if (ParameterType::INTEGER === $bindingType && ctype_digit((string) $primaryKeyValue)) {
+                        $primaryKeyValue = (int) $primaryKeyValue;
+                    }
+
+                    $queryBuilder->andWhere(
+                        $queryBuilder->expr()->eq(
+                            $connection->quoteIdentifier($primaryKeyColumnName),
+                            $queryBuilder->createNamedParameter($primaryKeyValue, $bindingType)
+                        )
+                    );
+                }
             }
         }
 

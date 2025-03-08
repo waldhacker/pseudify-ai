@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Waldhacker\Pseudify\Core\Gui\Form\ProfileDefinition;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -45,6 +46,16 @@ class ColumnConfigurationType extends AbstractType
                 'label' => $this->translator->trans('Column description'),
                 'required' => false,
                 'empty_data' => '',
+            ])
+            ->add('emptyTheColumn', CheckboxType::class, [
+                'label' => $this->translator->trans('Empty all column records'),
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-check-input',
+                ],
+                'row_attr' => [
+                    'class' => 'mb-3',
+                ],
             ])
             ->add('encodings', CollectionType::class, [
                 'label' => $this->translator->trans('Encodings'),

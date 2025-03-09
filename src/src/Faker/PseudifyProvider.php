@@ -66,4 +66,14 @@ class PseudifyProvider extends Internet implements FakeDataProviderInterface
     {
         return '';
     }
+
+    /**
+     * @api
+     *
+     * @return array{}
+     */
+    public static function emptyArray(): array
+    {
+        return [];
+    }
 }

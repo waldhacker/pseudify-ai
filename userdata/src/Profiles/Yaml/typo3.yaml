@@ -140,31 +140,10 @@ schema:
                     columnDescription: ''
                 -
                     identifier: uc
-                    encodings:
-                        -
-                            identifier: e6c1a6a4-96dc-43fb-b261-a9afcac1f396
-                            name: ''
-                            conditions: []
-                            encoders:
-                                -
-                                    identifier: 414ec405-5ac8-4ae5-9325-d02f55263a69
-                                    encoder:
-                                        identifier: serialized_encoder
-                                    context:
-                                        data_picker_path: null
-                    meanings:
-                        -
-                            identifier: 7eee8b2c-d534-437d-b0e5-59d6837f2e2d
-                            property:
-                                path: ''
-                                scope: ''
-                                type: emptyString
-                                minimumGraphemeLength: 3
-                                context: []
-                            name: 'emptyString'
-                            conditions:
-                                - 'use_encoding_conditions:e6c1a6a4-96dc-43fb-b261-a9afcac1f396'
+                    encodings: []
+                    meanings: []
                     columnDescription: ''
+                    emptyTheColumn: true
                 -
                     identifier: password_reset_token
                     encodings:

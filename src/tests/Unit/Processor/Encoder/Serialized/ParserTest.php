@@ -92,6 +92,14 @@ class ParserTest extends TestCase
         );
     }
 
+    public function testParseSerializedNegativeIntegerReturnsNegativeIntegerNode(): void
+    {
+        $this->assertEquals(
+            new IntegerNode(-1),
+            $this->parser->parse(serialize(-1))
+        );
+    }
+
     public function testParseSerializedFloatReturnsFloatNode(): void
     {
         $this->assertEquals(

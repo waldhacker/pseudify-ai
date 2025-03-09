@@ -130,10 +130,6 @@ class Parser
     {
         $integer = $this->current();
 
-        if (!ctype_digit($integer)) {
-            throw new InvalidDataException($this->errorMessage('unparsable data "%s"', $this->serializedData), 1735911979);
-        }
-
         while (ctype_digit($this->peek())) {
             $this->advance();
             $integer .= $this->current();

@@ -45,6 +45,7 @@ services:
   Waldhacker\Pseudify\Core\:
     resource: '../src'
     exclude:
+      - '../src/Gui/Menu/DBALQueryBuilderSubscriber.php'
       - '../src/DependencyInjection'
       - '../src/Kernel.php'
       - '../src/Processor/Analyze/FindingDumper/ConsoleDumper.php'

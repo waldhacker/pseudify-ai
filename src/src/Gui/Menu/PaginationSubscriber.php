@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Waldhacker\Pseudify\Core\Gui\Menu;
 
 use Knp\Component\Pager\Event\BeforeEvent;
+use Waldhacker\Pseudify\Core\Database\ConnectionManager;
 
 /**
  * @internal
@@ -24,6 +25,10 @@ use Knp\Component\Pager\Event\BeforeEvent;
 class PaginationSubscriber extends \Knp\Component\Pager\Event\Subscriber\Paginate\PaginationSubscriber
 {
     private bool $isLoaded = false;
+
+    public function __construct(private readonly ConnectionManager $connectionManager)
+    {
+    }
 
     #[\Override]
     public function before(BeforeEvent $event): void
@@ -34,9 +39,9 @@ class PaginationSubscriber extends \Knp\Component\Pager\Event\Subscriber\Paginat
 
         /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher */
         $dispatcher = $event->getEventDispatcher();
-        if (null !== $connection = $event->getConnection()) {
-            $dispatcher->addSubscriber(new DBALQueryBuilderSubscriber($connection));
-        }
+
+        $connection = $this->connectionManager->getConnection();
+        $dispatcher->addSubscriber(new DBALQueryBuilderSubscriber($connection));
 
         $this->isLoaded = true;
     }

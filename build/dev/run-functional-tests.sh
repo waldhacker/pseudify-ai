@@ -8,7 +8,6 @@ _THIS_SCRIPT_REAL_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 mkdir -p "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test"
 rm -rf "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/"
 
-# ---
 
 echo -e '\n[TEST]: mysql:5.5:utf8mb4\n'
 cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/5.5/.env.utf8mb4" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
@@ -105,6 +104,206 @@ cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/8.3/.env.cp1252" "$_THIS_SCRIPT_RE
 docker exec -it pseudify bin/simple-phpunit --testsuite application
 rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
 
+echo -e '\n[TEST]: mysql:8.4:utf8mb4\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/8.4/.env.utf8mb4" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:8.4:utf8\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/8.4/.env.utf8" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:8.4:iso8859\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/8.4/.env.iso8859" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:8.4:cp1252\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/8.4/.env.cp1252" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.0:utf8mb4\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.0/.env.utf8mb4" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.0:utf8\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.0/.env.utf8" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.0:iso8859\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.0/.env.iso8859" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.0:cp1252\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.0/.env.cp1252" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.1:utf8mb4\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.1/.env.utf8mb4" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.1:utf8\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.1/.env.utf8" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.1:iso8859\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.1/.env.iso8859" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.1:cp1252\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.1/.env.cp1252" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.2:utf8mb4\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.2/.env.utf8mb4" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.2:utf8\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.2/.env.utf8" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.2:iso8859\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.2/.env.iso8859" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.2:cp1252\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.2/.env.cp1252" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.3:utf8mb4\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.3/.env.utf8mb4" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.3:utf8\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.3/.env.utf8" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.3:iso8859\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.3/.env.iso8859" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.3:cp1252\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.3/.env.cp1252" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.4:utf8mb4\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.4/.env.utf8mb4" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.4:utf8\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.4/.env.utf8" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.4:iso8859\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.4/.env.iso8859" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.4:cp1252\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.4/.env.cp1252" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.5:utf8mb4\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.5/.env.utf8mb4" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.5:utf8\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.5/.env.utf8" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.5:iso8859\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.5/.env.iso8859" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.5:cp1252\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.5/.env.cp1252" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.6:utf8mb4\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.6/.env.utf8mb4" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.6:utf8\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.6/.env.utf8" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.6:iso8859\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.6/.env.iso8859" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.6:cp1252\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.6/.env.cp1252" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.7:utf8mb4\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.7/.env.utf8mb4" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.7:utf8\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.7/.env.utf8" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.7:iso8859\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.7/.env.iso8859" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:9.7:cp1252\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/9.7/.env.cp1252" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:26.10:utf8mb4\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/26.10/.env.utf8mb4" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:26.10:utf8\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/26.10/.env.utf8" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:26.10:iso8859\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/26.10/.env.iso8859" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mysql:26.10:cp1252\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mysql/26.10/.env.cp1252" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
 # ---
 
 echo -e '\n[TEST]: mariadb:10.2:utf8mb4\n'
@@ -197,6 +396,36 @@ cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mariadb/11.7/.env.utf8mb4" "$_THIS_SCRIP
 docker exec -it pseudify bin/simple-phpunit --testsuite application
 rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
 
+echo -e '\n[TEST]: mariadb:11.8:utf8mb4\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mariadb/11.8/.env.utf8mb4" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mariadb:12.0:utf8mb4\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mariadb/12.0/.env.utf8mb4" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mariadb:12.1:utf8mb4\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mariadb/12.1/.env.utf8mb4" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mariadb:12.2:utf8mb4\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mariadb/12.2/.env.utf8mb4" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mariadb:12.3:utf8mb4\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mariadb/12.3/.env.utf8mb4" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mariadb:13.0:utf8mb4\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mariadb/13.0/.env.utf8mb4" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
 # ---
 
 echo -e '\n[TEST]: postgres:9:utf8\n'
@@ -244,12 +473,12 @@ cp "$_THIS_SCRIPT_REAL_PATH/../../tests/postgres/17/.env.utf8" "$_THIS_SCRIPT_RE
 docker exec -it pseudify bin/simple-phpunit --testsuite application
 rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
 
-# ---
+echo -e '\n[TEST]: postgres:18:utf8\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/postgres/18/.env.utf8" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
 
-#echo -e '\n[TEST]: mssql:2017:utf8\n'
-#cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mssql/2017/.env.utf8" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
-#docker exec -it pseudify bin/simple-phpunit --testsuite application
-#rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+# ---
 
 echo -e '\n[TEST]: mssql:2019:utf8\n'
 cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mssql/2019/.env.utf8" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
@@ -258,6 +487,11 @@ rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
 
 echo -e '\n[TEST]: mssql:2022:utf8\n'
 cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mssql/2022/.env.utf8" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
+docker exec -it pseudify bin/simple-phpunit --testsuite application
+rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
+
+echo -e '\n[TEST]: mssql:2025:utf8\n'
+cp "$_THIS_SCRIPT_REAL_PATH/../../tests/mssql/2025/.env.utf8" "$_THIS_SCRIPT_REAL_PATH/../../src/tests/.test/.env"
 docker exec -it pseudify bin/simple-phpunit --testsuite application
 rm -f "$_THIS_SCRIPT_REAL_PATH/../../userdata/var/log/pseudify_dry_run.log"
 

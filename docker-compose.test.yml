@@ -142,21 +142,60 @@ services:
 
   mariadb_11_7:
     container_name: pseudify_mariadb_11_7
-    image: mariadb:11.7-rc
+    image: mariadb:11.7
     environment:
       MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
     volumes:
       - './tests/mariadb/11.7/:/data/'
 
-  # disabled until https://github.com/microsoft/mssql-docker/issues/868 is fixed
-  # mssql_2017:
-  #  container_name: pseudify_mssql_2017
-  #  image: mcr.microsoft.com/mssql/server:2017-latest
-  #  environment:
-  #    ACCEPT_EULA: Y
-  #    SA_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
-  #  volumes:
-  #    - './tests/mssql/2017/:/data/'
+  mariadb_11_8:
+    container_name: pseudify_mariadb_11_8
+    image: mariadb:11.8
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mariadb/11.8/:/data/'
+
+  mariadb_12_0:
+    container_name: pseudify_mariadb_12_0
+    image: mariadb:12.0
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mariadb/12.0/:/data/'
+
+  mariadb_12_1:
+    container_name: pseudify_mariadb_12_1
+    image: mariadb:12.1
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mariadb/12.1/:/data/'
+
+  mariadb_12_2:
+    container_name: pseudify_mariadb_12_2
+    image: mariadb:12.2
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mariadb/12.2/:/data/'
+
+  mariadb_12_3:
+    container_name: pseudify_mariadb_12_3
+    image: mariadb:12.3
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mariadb/12.3/:/data/'
+
+  mariadb_13_0:
+    container_name: pseudify_mariadb_13_0
+    image: mariadb:13.0
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mariadb/13.0/:/data/'
+
 
   mssql_2019:
     container_name: pseudify_mssql_2019
@@ -176,9 +215,19 @@ services:
     volumes:
       - './tests/mssql/2022/:/data/'
 
+  mssql_2025:
+    container_name: pseudify_mssql_2025
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mssql/2025/:/data/'
+
   mysql_5_5:
     container_name: pseudify_mysql_5_5
     image: mysql:5.5
+    command: ['--innodb_use_native_aio=0']
     environment:
       MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
     volumes:
@@ -187,6 +236,7 @@ services:
   mysql_5_6:
     container_name: pseudify_mysql_5_6
     image: mysql:5.6
+    command: ['--innodb_use_native_aio=0']
     environment:
       MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
     volumes:
@@ -195,6 +245,7 @@ services:
   mysql_5_7:
     container_name: pseudify_mysql_5_7
     image: mysql:5.7
+    command: ['--innodb_use_native_aio=0']
     environment:
       MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
     volumes:
@@ -203,6 +254,7 @@ services:
   mysql_8_0:
     container_name: pseudify_mysql_8_0
     image: mysql:8.0
+    command: ['--innodb_use_native_aio=0']
     environment:
       MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
     volumes:
@@ -211,6 +263,7 @@ services:
   mysql_8_1:
     container_name: pseudify_mysql_8_1
     image: mysql:8.1
+    command: ['--innodb_use_native_aio=0']
     environment:
       MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
     volumes:
@@ -219,6 +272,7 @@ services:
   mysql_8_2:
     container_name: pseudify_mysql_8_2
     image: mysql:8.2
+    command: ['--innodb_use_native_aio=0']
     environment:
       MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
     volumes:
@@ -227,6 +281,7 @@ services:
   mysql_8_3:
     container_name: pseudify_mysql_8_3
     image: mysql:8.3
+    command: ['--innodb_use_native_aio=0']
     environment:
       MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
     volumes:
@@ -235,6 +290,7 @@ services:
   mysql_8_4:
     container_name: pseudify_mysql_8_4
     image: mysql:8.4
+    command: ['--innodb_use_native_aio=0']
     environment:
       MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
     volumes:
@@ -243,6 +299,7 @@ services:
   mysql_9_0:
     container_name: pseudify_mysql_9_0
     image: mysql:9.0
+    command: ['--innodb_use_native_aio=0']
     environment:
       MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
     volumes:
@@ -251,10 +308,74 @@ services:
   mysql_9_1:
     container_name: pseudify_mysql_9_1
     image: mysql:9.1
+    command: ['--innodb_use_native_aio=0']
     environment:
       MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
     volumes:
       - './tests/mysql/9.1/:/data/'
+
+  mysql_9_2:
+    container_name: pseudify_mysql_9_2
+    image: mysql:9.2
+    command: ['--innodb_use_native_aio=0']
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mysql/9.2/:/data/'
+
+  mysql_9_3:
+    container_name: pseudify_mysql_9_3
+    image: mysql:9.3
+    command: ['--innodb_use_native_aio=0']
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mysql/9.3/:/data/'
+
+  mysql_9_4:
+    container_name: pseudify_mysql_9_4
+    image: mysql:9.4
+    command: ['--innodb_use_native_aio=0']
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mysql/9.4/:/data/'
+
+  mysql_9_5:
+    container_name: pseudify_mysql_9_5
+    image: mysql:9.5
+    command: ['--innodb_use_native_aio=0']
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mysql/9.5/:/data/'
+
+  mysql_9_6:
+    container_name: pseudify_mysql_9_6
+    image: mysql:9.6
+    command: ['--innodb_use_native_aio=0']
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mysql/9.6/:/data/'
+
+  mysql_9_7:
+    container_name: pseudify_mysql_9_7
+    image: mysql:9.7
+    command: ['--innodb_use_native_aio=0']
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mysql/9.7/:/data/'
+
+  mysql_26_10:
+    container_name: pseudify_mysql_26_10
+    image: mysql:26.10
+    command: ['--innodb_use_native_aio=0']
+    environment:
+      MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/mysql/26.10/:/data/'
 
   postgres_9:
     container_name: pseudify_postgres_9
@@ -327,3 +448,11 @@ services:
       POSTGRES_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
     volumes:
       - './tests/postgres/17/:/data/'
+
+  postgres_18:
+    container_name: pseudify_postgres_18
+    image: postgres:18
+    environment:
+      POSTGRES_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
+    volumes:
+      - './tests/postgres/18/:/data/'

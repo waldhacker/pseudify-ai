@@ -106,13 +106,7 @@ trait ConcurrentExecutionTrait
                 if (!$runningProcess->isRunning()) {
                     $exitCode = $runningProcess->getExitCode();
                     if (null !== $exitCode && 0 !== $exitCode) {
-                        throw new \RuntimeException(sprintf(
-                            'Concurrent process failed (exit %d): %s%s%s',
-                            $exitCode,
-                            implode(' ', $runningProcess->getCommandLine() ? [$runningProcess->getCommandLine()] : []),
-                            PHP_EOL,
-                            trim($runningProcess->getErrorOutput().$runningProcess->getOutput())
-                        ));
+                        throw new \RuntimeException(sprintf('Concurrent process failed (exit %d): %s%s%s', $exitCode, implode(' ', $runningProcess->getCommandLine() ? [$runningProcess->getCommandLine()] : []), PHP_EOL, trim($runningProcess->getErrorOutput().$runningProcess->getOutput())));
                     }
                     unset($runningProcesses[$processIndex]);
                 }
@@ -142,7 +136,9 @@ trait ConcurrentExecutionTrait
     private function buildInheritedProcessEnvironment(): array
     {
         $env = [];
-        foreach (array_merge($_SERVER, $_ENV) as $key => $value) {
+        /** @var array<array-key, mixed> $processEnvironmentSource */
+        $processEnvironmentSource = array_merge($_SERVER, $_ENV);
+        foreach ($processEnvironmentSource as $key => $value) {
             if (!\is_string($key) || !\is_scalar($value)) {
                 continue;
             }

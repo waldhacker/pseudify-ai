@@ -8,7 +8,6 @@ declare(strict_types=1);
  * Usage: php claim_race_worker.php <claimDirectory> <domainHash> <candidate>
  * Prints acquired=1 on success, acquired=0 when the claim is already taken.
  */
-
 $autoloadCandidates = [
     dirname(__DIR__, 3).'/vendor/autoload.php',
     dirname(__DIR__, 2).'/vendor/autoload.php',

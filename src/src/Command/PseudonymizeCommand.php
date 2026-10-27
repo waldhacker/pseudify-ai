@@ -222,8 +222,9 @@ class PseudonymizeCommand extends Command
             $this->purgeOnSignal();
             exit(130);
         };
-        pcntl_signal(\SIGINT, $handler);
-        pcntl_signal(\SIGTERM, $handler);
+        // Numeric signals: Psalm has no pcntl stubs; 2=SIGINT, 15=SIGTERM on Linux.
+        pcntl_signal(2, $handler);
+        pcntl_signal(15, $handler);
     }
 
     private function initializeConnection(InputInterface $input): ?string

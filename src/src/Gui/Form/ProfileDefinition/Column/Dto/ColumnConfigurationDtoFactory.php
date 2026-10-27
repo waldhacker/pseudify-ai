@@ -134,7 +134,7 @@ class ColumnConfigurationDtoFactory
                         $meaning['property']['type'] ?? '',
                         (int) ($meaning['property']['minimumGraphemeLength'] ?? 3),
                         $context,
-                        isset($meaning['property']['unique']) ? (bool) $meaning['property']['unique'] : null,
+                        $meaning['property']['unique'] ?? null,
                     ),
                     $meaning['name'] ?? '',
                     array_merge(

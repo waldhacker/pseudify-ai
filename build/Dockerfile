@@ -2,6 +2,8 @@ ARG PHP_VERSION=8.3.36
 
 FROM php:$PHP_VERSION-fpm-alpine
 
+# Set automatically by Buildx (amd64/arm64). Microsoft Alpine ODBC APKs are amd64-only.
+ARG TARGETARCH
 ARG BUILD_TAG
 ARG MSODBC_SQL_APK_URI
 ARG MSSQL_TOOLS_APK_URI
@@ -74,26 +76,24 @@ RUN \
     && sed -i -e 's/user nginx;/user pseudify;/g' /etc/nginx/nginx.conf \
     \
     \
-    && cd /tmp \
-    \
-    && curl -o msodbcsql.apk $MSODBC_SQL_APK_URI \
-    && curl -o mssql_tools.apk $MSSQL_TOOLS_APK_URI \
-    \
-    && curl -o msodbcsql.sig $MSODBC_SQL_SIG_URI \
-    && curl -o mssql_tools.sig $MSSQL_TOOLS_SIG_URI \
-    \
-    && curl https://packages.microsoft.com/keys/microsoft.asc  | gpg --import - \
-    && gpg --verify msodbcsql.sig msodbcsql.apk \
-    && gpg --verify mssql_tools.sig mssql_tools.apk \
-    \
-    && apk add --allow-untrusted msodbcsql.apk \
-    && apk add --allow-untrusted mssql_tools.apk \
-    \
-    && pecl install pdo_sqlsrv \
-    && docker-php-ext-enable pdo_sqlsrv.so \
-    \
-    && pecl install sqlsrv \
-    && docker-php-ext-enable sqlsrv.so \
+    && if [ "$TARGETARCH" = "amd64" ]; then \
+        cd /tmp \
+        && curl -o msodbcsql.apk $MSODBC_SQL_APK_URI \
+        && curl -o mssql_tools.apk $MSSQL_TOOLS_APK_URI \
+        && curl -o msodbcsql.sig $MSODBC_SQL_SIG_URI \
+        && curl -o mssql_tools.sig $MSSQL_TOOLS_SIG_URI \
+        && curl https://packages.microsoft.com/keys/microsoft.asc | gpg --import - \
+        && gpg --verify msodbcsql.sig msodbcsql.apk \
+        && gpg --verify mssql_tools.sig mssql_tools.apk \
+        && apk add --allow-untrusted msodbcsql.apk \
+        && apk add --allow-untrusted mssql_tools.apk \
+        && pecl install pdo_sqlsrv \
+        && docker-php-ext-enable pdo_sqlsrv.so \
+        && pecl install sqlsrv \
+        && docker-php-ext-enable sqlsrv.so \
+    ; else \
+        echo "Skipping Microsoft ODBC/sqlsrv on TARGETARCH=$TARGETARCH (amd64 APKs only)" \
+    ; fi \
     \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
@@ -130,7 +130,6 @@ RUN \
     && rm -rf /tmp/* \
     && rm -rf /usr/local/bin/docker-php-* \
     && rm -rf /usr/src/* \
-    && rm -rf /var/cache/apk/* \
     && rm -rf /var/cache/distfiles/* \
     \
     && apk del --no-network \
@@ -147,17 +146,19 @@ RUN \
         libjpeg-turbo-dev \
         libpng-dev \
         libzip-dev \
-        llvm22 \
         make \
         pkgconf \
         postgresql-dev \
         re2c \
         unixodbc-dev \
+    && llvm_pkgs="$(apk info 2>/dev/null | grep -E '^llvm[0-9]+$' || true)" \
+    && if [ -n "$llvm_pkgs" ]; then apk del --no-network $llvm_pkgs; fi \
     && apk add --no-cache \
         freetype \
         libjpeg-turbo \
         libpng \
-        libzip
+        libzip \
+    && rm -rf /var/cache/apk/*
 
 WORKDIR /opt/pseudify/core
 

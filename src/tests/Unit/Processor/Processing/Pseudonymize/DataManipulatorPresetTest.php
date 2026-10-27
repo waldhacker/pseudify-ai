@@ -13,10 +13,11 @@ class DataManipulatorPresetTest extends TestCase
 {
     public function testScalardataManipulatorReturnsDefaultScopedFakeData(): void
     {
-        $fakerMock = $this->createPartialMock(Faker::class, ['withScope', 'withSource', '__call']);
+        $fakerMock = $this->createPartialMock(Faker::class, ['withScope', 'withSource', 'withUnique', '__call']);
 
         $fakerMock->expects($this->once())->method('withScope')->with(Faker::DEFAULT_SCOPE)->will($this->returnSelf());
         $fakerMock->expects($this->once())->method('withSource')->with(null)->will($this->returnSelf());
+        $fakerMock->expects($this->once())->method('withUnique')->with(false)->will($this->returnSelf());
         $fakerMock->expects($this->once())->method('__call')->with('username', [])->will($this->returnValue('foo'));
 
         $dataProcessing = DataManipulatorPreset::scalarData(fakerFormatter: 'username');
@@ -33,10 +34,11 @@ class DataManipulatorPresetTest extends TestCase
     public function testScalardataManipulatorReturnsCustomScopedFakeData(): void
     {
         $scope = 'fe-user';
-        $fakerMock = $this->createPartialMock(Faker::class, ['withScope', 'withSource', '__call']);
+        $fakerMock = $this->createPartialMock(Faker::class, ['withScope', 'withSource', 'withUnique', '__call']);
 
         $fakerMock->expects($this->once())->method('withScope')->with($scope)->will($this->returnSelf());
         $fakerMock->expects($this->once())->method('withSource')->with(null)->will($this->returnSelf());
+        $fakerMock->expects($this->once())->method('withUnique')->with(false)->will($this->returnSelf());
         $fakerMock->expects($this->once())->method('__call')->with('username', [])->will($this->returnValue('foo'));
 
         $dataProcessing = DataManipulatorPreset::scalarData(scope: $scope, fakerFormatter: 'username');
@@ -54,10 +56,11 @@ class DataManipulatorPresetTest extends TestCase
     {
         $scope = 'fe-user';
         $fakerArguments = [1, 3, true];
-        $fakerMock = $this->createPartialMock(Faker::class, ['withScope', 'withSource', '__call']);
+        $fakerMock = $this->createPartialMock(Faker::class, ['withScope', 'withSource', 'withUnique', '__call']);
 
         $fakerMock->expects($this->once())->method('withScope')->with($scope)->will($this->returnSelf());
         $fakerMock->expects($this->once())->method('withSource')->with(null)->will($this->returnSelf());
+        $fakerMock->expects($this->once())->method('withUnique')->with(false)->will($this->returnSelf());
         $fakerMock->expects($this->once())->method('__call')->with('username', $fakerArguments)->will($this->returnValue('foo'));
 
         $dataProcessing = DataManipulatorPreset::scalarData(scope: $scope, fakerFormatter: 'username', fakerArguments: $fakerArguments);

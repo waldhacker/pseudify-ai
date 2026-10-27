@@ -26,5 +26,22 @@ if (!file_exists(Kernel::USER_DATA_PATH . '/.env')) {
     throw new \RuntimeException('The userdata directory does not contain an .env file. Please create it first.', 1737031938);
 }
 
+// Process-inherited OS env (e.g. PSEUDIFY_DATABASE_* for --parallel workers)
+// is authoritative. CLI may leave $_ENV empty (variables_order without "E")
+// or stale relative to getenv(); sync so Dotenv/Symfony see the same values.
+foreach (getenv() ?: [] as $name => $value) {
+    if (!\is_string($name) || !\is_string($value)) {
+        continue;
+    }
+    $_ENV[$name] = $value;
+    $_SERVER[$name] = $value;
+}
+
+// Parent PHPUnit/bootEnv may pass SYMFONY_DOTENV_VARS listing DB keys.
+// Dotenv then treats those keys as "owned" and overwrites them from
+// userdata/.env — drop the marker so inherited Process values win.
+unset($_ENV['SYMFONY_DOTENV_VARS'], $_SERVER['SYMFONY_DOTENV_VARS']);
+putenv('SYMFONY_DOTENV_VARS');
+
 (new Dotenv())->loadEnv(path: Kernel::USER_DATA_PATH . '/.env', defaultEnv: 'prod');
 (new Application(new Kernel($_SERVER['APP_ENV'], (bool) ($_SERVER['APP_DEBUG'] ?? false))))->run(new ArgvInput());

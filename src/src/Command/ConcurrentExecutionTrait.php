@@ -73,7 +73,12 @@ trait ConcurrentExecutionTrait
                 );
 
                 // $this->logger->debug(PHP_EOL.'Run '.implode(' ', $fullCommand));
-                $process = Process::fromShellCommandline(command: implode(' ', $fullCommand), cwd: $cwd, env: $env, timeout: null);
+                $process = Process::fromShellCommandline(
+                    command: implode(' ', $fullCommand),
+                    cwd: $cwd,
+                    env: $env ?? $this->buildInheritedProcessEnvironment(),
+                    timeout: null
+                );
                 $process->setTty(null === $onStdOut ? ($useTty ?? Process::isTtySupported()) : false)->start();
                 $runningProcesses[] = $process;
             }
@@ -99,6 +104,16 @@ trait ConcurrentExecutionTrait
                 }
 
                 if (!$runningProcess->isRunning()) {
+                    $exitCode = $runningProcess->getExitCode();
+                    if (null !== $exitCode && 0 !== $exitCode) {
+                        throw new \RuntimeException(sprintf(
+                            'Concurrent process failed (exit %d): %s%s%s',
+                            $exitCode,
+                            implode(' ', $runningProcess->getCommandLine() ? [$runningProcess->getCommandLine()] : []),
+                            PHP_EOL,
+                            trim($runningProcess->getErrorOutput().$runningProcess->getOutput())
+                        ));
+                    }
                     unset($runningProcesses[$processIndex]);
                 }
             }
@@ -119,5 +134,33 @@ trait ConcurrentExecutionTrait
                 $nextTick = microtime(true) + $tickInterval;
             }
         }
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function buildInheritedProcessEnvironment(): array
+    {
+        $env = [];
+        foreach (array_merge($_SERVER, $_ENV) as $key => $value) {
+            if (!\is_string($key) || !\is_scalar($value)) {
+                continue;
+            }
+            // Dropping SYMFONY_DOTENV_VARS prevents child bin/pseudify Dotenv
+            // from treating inherited keys as overwriteable dotenv-owned vars.
+            if ('SYMFONY_DOTENV_VARS' === $key) {
+                continue;
+            }
+            $env[$key] = (string) $value;
+        }
+
+        foreach (['PATH', 'HOME', 'USER', 'LANG', 'TERM'] as $key) {
+            $value = getenv($key);
+            if (false !== $value && !isset($env[$key])) {
+                $env[$key] = $value;
+            }
+        }
+
+        return $env;
     }
 }

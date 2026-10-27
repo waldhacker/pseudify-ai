@@ -19,5 +19,3 @@ framework:
       pools:
           analyzer_cache_pool:
               adapter: cache.adapter.array
-          faker_cache_pool:
-              adapter: cache.adapter.array

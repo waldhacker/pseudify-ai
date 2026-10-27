@@ -139,6 +139,7 @@ class ColumnProcessor
             $scopedFaker = $this->faker
                 ->withScope($meaningProperty->getScope() ?? Faker::DEFAULT_SCOPE)
                 ->withSource($dataToFake)
+                ->withUnique($meaningProperty->isUnique())
             ;
 
             $callable = [$scopedFaker, $meaningProperty->getType()];

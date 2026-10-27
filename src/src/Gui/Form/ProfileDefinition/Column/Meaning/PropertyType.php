@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Waldhacker\Pseudify\Core\Gui\Form\ProfileDefinition\Column\Meaning;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -86,6 +87,20 @@ class PropertyType extends AbstractType
                     'class' => 'form-control form-control-sm selectpicker',
                     'data-live-search' => 'true',
                     'size' => 10,
+                ],
+            ])
+            ->add('unique', CheckboxType::class, [
+                'label' => $this->translator->trans('Unique values'),
+                'help' => $this->translator->trans('Ensure generated fake values are unique within this formatter and scope (needed for UNIQUE DB columns).'),
+                'required' => false,
+                'row_attr' => [
+                    'class' => 'mb-3 form-check',
+                ],
+                'attr' => [
+                    'class' => 'form-check-input',
+                ],
+                'label_attr' => [
+                    'class' => 'form-check-label',
                 ],
             ])
         ;

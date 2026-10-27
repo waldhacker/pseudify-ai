@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS `wh_user`;
 DROP TABLE IF EXISTS `wh_user_session`;
 DROP TABLE IF EXISTS `wh_meta_data`;
 DROP TABLE IF EXISTS `wh_log`;
+DROP TABLE IF EXISTS `wh_unique_email_issue`;
 
 CREATE TABLE `wh_user` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -73,3 +74,15 @@ INSERT INTO `wh_log` (`id`, `log_type`, `log_data`, `log_data_plaintext`, `log_m
 INSERT INTO `wh_log` (`id`, `log_type`, `log_data`, `log_data_plaintext`, `log_message`, `ip`) VALUES(4, 'bar', '613a323a7b693a303b733a31343a223234332e3230322e3234312e3637223b733a343a2275736572223b4f3a383a22737464436c617373223a353a7b733a383a22757365724e616d65223b733a31313a2267656f726769616e613539223b733a383a226c6173744e616d65223b733a353a22426c6f636b223b733a353a22656d61696c223b733a31393a226e6f6c616e3131406578616d706c652e6e6574223b733a323a226964223b693a323b733a343a2275736572223b523a333b7d7d', 'a:2:{i:0;s:14:\"243.202.241.67\";s:4:\"user\";O:8:\"stdClass\":5:{s:8:\"userName\";s:11:\"georgiana59\";s:8:\"lastName\";s:5:\"Block\";s:5:\"email\";s:19:\"nolan11@example.net\";s:2:\"id\";i:2;s:4:\"user\";R:3;}}', '{\"message\":\"bar text \\\"Block\\\", another \\\"georgiana59\\\"\"}', '243.202.241.67');
 INSERT INTO `wh_log` (`id`, `log_type`, `log_data`, `log_data_plaintext`, `log_message`, `ip`) VALUES(5, 'bar', '613a323a7b693a303b733a31353a223133322e3138382e3234312e313535223b733a343a2275736572223b4f3a383a22737464436c617373223a353a7b733a383a22757365724e616d65223b733a373a22637972696c3036223b733a383a226c6173744e616d65223b733a383a22486f6d656e69636b223b733a353a22656d61696c223b733a32313a22636c696e746f6e3434406578616d706c652e6e6574223b733a323a226964223b693a39313b733a343a2275736572223b523a333b7d7d', 'a:2:{i:0;s:15:\"132.188.241.155\";s:4:\"user\";O:8:\"stdClass\":5:{s:8:\"userName\";s:7:\"cyril06\";s:8:\"lastName\";s:8:\"Homenick\";s:5:\"email\";s:21:\"clinton44@example.net\";s:2:\"id\";i:91;s:4:\"user\";R:3;}}', '{\"message\":\"bar text \\\"Homenick\\\", another \\\"cyril06\\\"\"}', '132.188.241.155');
 INSERT INTO `wh_log` (`id`, `log_type`, `log_data`, `log_data_plaintext`, `log_message`, `ip`) VALUES(6, '', '', '', '', '');
+
+CREATE TABLE `wh_unique_email_issue` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `wh_unique_email_issue_email_unique` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `wh_unique_email_issue` (`id`, `email`) VALUES(1, 'alice.one@example.com');
+INSERT INTO `wh_unique_email_issue` (`id`, `email`) VALUES(2, 'bob.two@example.com');
+INSERT INTO `wh_unique_email_issue` (`id`, `email`) VALUES(3, 'carol.three@example.com');
+INSERT INTO `wh_unique_email_issue` (`id`, `email`) VALUES(4, 'dave.four@example.com');

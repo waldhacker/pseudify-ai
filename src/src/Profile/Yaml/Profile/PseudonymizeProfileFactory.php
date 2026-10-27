@@ -109,7 +109,8 @@ class PseudonymizeProfileFactory extends AbstractProfileFactory
                         fakerFormatter: $fakerFormatter,
                         scope: $profileDefinitionMeaning->getProperty()->getScope(),
                         fakerArguments: $profileDefinitionMeaning->getProperty()->getContext(),
-                        writeToPath: $profileDefinitionMeaning->getProperty()->getPath()
+                        writeToPath: $profileDefinitionMeaning->getProperty()->getPath(),
+                        unique: $profileDefinitionMeaning->getProperty()->isUnique(),
                     ));
                 }
             }

@@ -37,9 +37,10 @@ class DataManipulatorPreset
         ?array $fakerArguments = [],
         ?string $writeToPath = null,
         ?array $conditions = null,
+        bool $unique = false,
     ): GenericDataProcessingInterface {
         return new GenericDataProcessing(
-            static function (DataManipulatorContext $context) use ($writeToPath, $scope, $fakerFormatter, $fakerArguments): void {
+            static function (DataManipulatorContext $context) use ($writeToPath, $scope, $fakerFormatter, $fakerArguments, $unique): void {
                 $processedData = $context->getProcessedData();
                 $dataToFake = $processedData;
 
@@ -55,7 +56,7 @@ class DataManipulatorPreset
                 $scopedFaker = $context->fake(
                     scope: $scope ?? Faker::DEFAULT_SCOPE,
                     source: $dataToFake
-                );
+                )->withUnique($unique);
                 /** @var callable $callable */
                 $callable = [$scopedFaker, $fakerFormatter];
                 $fakedData = call_user_func($callable, ...($fakerArguments ?? []));
@@ -74,6 +75,7 @@ class DataManipulatorPreset
                 GenericDataProcessingInterface::CONTEXT_CONTEXT => $fakerArguments,
                 GenericDataProcessingInterface::CONTEXT_SCOPE => $scope,
                 GenericDataProcessingInterface::CONTEXT_PATH => $writeToPath,
+                GenericDataProcessingInterface::CONTEXT_UNIQUE => $unique,
             ]
         );
     }

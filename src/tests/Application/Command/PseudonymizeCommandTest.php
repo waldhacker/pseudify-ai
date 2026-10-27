@@ -78,6 +78,11 @@ class PseudonymizeCommandTest extends KernelTestCase
         $dotenv = new Dotenv();
         $dotenv->loadEnv(__DIR__.'/../../.test/.env');
 
+        $dryRunLog = __DIR__.'/../../../../userdata/var/log/pseudify_dry_run.log';
+        if (is_file($dryRunLog)) {
+            unlink($dryRunLog);
+        }
+
         $kernel = self::bootKernel(['environment' => 'test']);
         $application = new Application($kernel);
 
@@ -85,7 +90,7 @@ class PseudonymizeCommandTest extends KernelTestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute(['profile' => 'test', '--dry-run' => true], ['decorated' => false]);
 
-        $contents = file(__DIR__.'/../../../../userdata/var/log/pseudify_dry_run.log');
+        $contents = file($dryRunLog);
 
         foreach ($contents as $index => $sql) {
             foreach ($expected[$index] as $expectedString) {

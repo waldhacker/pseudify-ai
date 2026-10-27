@@ -22,14 +22,14 @@ namespace Waldhacker\Pseudify\Core\Gui\Form\ProfileDefinition\Column\Dto;
 class ColumnConfigurationDto implements \ArrayAccess, \Countable
 {
     /**
-     * @param array<int, array{identifier: string, name: string, conditions: array<int, array{condition: string}>, encoders: array<int, array{identifier: string, encoder: string, context: array<int, array<string, mixed>>}>, meanings: array<int, array{identifier: string, name: string, conditions: array<int, array{condition: string}>, property: array{path: string|null, scope: string|null, type: string|null, minimumGraphemeLength: int|null, context: array<int, array<string, mixed>>}}>}> $encodings
+     * @param array<int, array{identifier: string, name: string, conditions: array<int, array{condition: string}>, encoders: array<int, array{identifier: string, encoder: string, context: array<int, array<string, mixed>>}>, meanings: array<int, array{identifier: string, name: string, conditions: array<int, array{condition: string}>, property: array{path: string|null, scope: string|null, type: string|null, minimumGraphemeLength: int|null, unique: bool|null, context: array<int, array<string, mixed>>}}>}> $encodings
      */
     public function __construct(public array $encodings = [], public ?string $columnDescription = '', public ?bool $emptyTheColumn = false)
     {
     }
 
     /**
-     * @param array{identifier: string, name: string, conditions: array<int, array{condition: string}>, encoders: array<int, array{identifier: string, encoder: string, context: array<int, array<string, mixed>>}>, meanings: array<int, array{identifier: string, name: string, conditions: array<int, array{condition: string}>, property: array{path: string|null, scope: string|null, type: string|null, minimumGraphemeLength: int|null, context: array<int, array<string, mixed>>}}>} $value
+     * @param array{identifier: string, name: string, conditions: array<int, array{condition: string}>, encoders: array<int, array{identifier: string, encoder: string, context: array<int, array<string, mixed>>}>, meanings: array<int, array{identifier: string, name: string, conditions: array<int, array{condition: string}>, property: array{path: string|null, scope: string|null, type: string|null, minimumGraphemeLength: int|null, unique: bool|null, context: array<int, array<string, mixed>>}}>} $value
      */
     #[\Override]
     public function offsetSet(mixed $offset, mixed $value): void
@@ -54,7 +54,7 @@ class ColumnConfigurationDto implements \ArrayAccess, \Countable
     }
 
     /**
-     * @return array{identifier: string, name: string, conditions: array<int, array{condition: string}>, encoders: array<int, array{identifier: string, encoder: string, context: array<int, array<string, mixed>>}>, meanings: array<int, array{identifier: string, name: string, conditions: array<int, array{condition: string}>, property: array{path: string|null, scope: string|null, type: string|null, minimumGraphemeLength: int|null, context: array<int, array<string, mixed>>}}>}|null
+     * @return array{identifier: string, name: string, conditions: array<int, array{condition: string}>, encoders: array<int, array{identifier: string, encoder: string, context: array<int, array<string, mixed>>}>, meanings: array<int, array{identifier: string, name: string, conditions: array<int, array{condition: string}>, property: array{path: string|null, scope: string|null, type: string|null, minimumGraphemeLength: int|null, unique: bool|null, context: array<int, array<string, mixed>>}}>}|null
      */
     #[\Override]
     public function offsetGet(mixed $offset): mixed

@@ -26,6 +26,7 @@ interface GenericDataProcessingInterface extends DataProcessingInterface
     final public const string CONTEXT_SCOPE = 'scope';
     final public const string CONTEXT_PATH = 'path';
     final public const string CONTEXT_MINIMUM_GRAPHEME_LENGTH = 'minimumGraphemeLength';
+    final public const string CONTEXT_UNIQUE = 'unique';
 
     /**
      * @internal

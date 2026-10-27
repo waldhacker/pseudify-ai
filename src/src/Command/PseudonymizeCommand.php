@@ -25,8 +25,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use Waldhacker\Pseudify\Core\Database\ConnectionManager;
+use Waldhacker\Pseudify\Core\Faker\PseudonymizeRuntimeCachePurger;
 use Waldhacker\Pseudify\Core\Processor\PseudonymizeProcessor;
 use Waldhacker\Pseudify\Core\Profile\Model\Pseudonymize\Table;
 use Waldhacker\Pseudify\Core\Profile\Model\Pseudonymize\TableDefinition;
@@ -47,8 +47,9 @@ class PseudonymizeCommand extends Command
         private readonly PseudonymizeProcessor $processor,
         private readonly TableDefinitionAutoConfiguration $tableDefinitionAutoConfiguration,
         private readonly ConnectionManager $connectionManager,
-        private readonly TagAwareCacheInterface $cache,
+        private readonly PseudonymizeRuntimeCachePurger $runtimeCachePurger,
         private readonly LoggerInterface $logger,
+        private readonly string $projectDir,
     ) {
         parent::__construct();
     }
@@ -103,7 +104,12 @@ class PseudonymizeCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $connectionName = $this->initializeConnection($input);
-        $this->cache->invalidateTags(['pseudonymize_fakedata']);
+        $this->runtimeCachePurger->purge();
+        $this->runtimeCachePurger->ensurePrivateDirectories();
+        $this->installSignalHandlers();
+        register_shutdown_function(function (): void {
+            $this->runtimeCachePurger->purge();
+        });
 
         try {
             /** @var array<int, string|int>|string|null $profile */
@@ -150,7 +156,7 @@ class PseudonymizeCommand extends Command
                     $this->executeConcurrent(
                         input: $input,
                         output: $output,
-                        command: 'bin/pseudify',
+                        command: $this->projectDir.'/bin/pseudify',
                         arguments: [
                             'pseudify:pseudonymize:table:concurrent',
                             '--request-id',
@@ -168,6 +174,8 @@ class PseudonymizeCommand extends Command
                             '--initial',
                             $dryRun ? '--dry-run' : '',
                         ],
+                        cwd: $this->projectDir,
+                        useTty: false,
                         onTick: fn () => $progressBar?->display()
                     );
 
@@ -193,10 +201,29 @@ class PseudonymizeCommand extends Command
             $progressBar?->finish();
             $io->newLine();
         } finally {
-            $this->cache->invalidateTags(['pseudonymize_fakedata']);
+            $this->runtimeCachePurger->purge();
         }
 
         return Command::SUCCESS;
+    }
+
+    private function purgeOnSignal(): void
+    {
+        $this->runtimeCachePurger->purge();
+    }
+
+    private function installSignalHandlers(): void
+    {
+        if (!\extension_loaded('pcntl') || !\function_exists('pcntl_signal')) {
+            return;
+        }
+
+        $handler = function (): void {
+            $this->purgeOnSignal();
+            exit(130);
+        };
+        pcntl_signal(\SIGINT, $handler);
+        pcntl_signal(\SIGTERM, $handler);
     }
 
     private function initializeConnection(InputInterface $input): ?string

@@ -72,3 +72,18 @@ INSERT INTO [wh_log] ([id], [log_type], [log_data], [log_data_plaintext], [log_m
 GO
 
 EXIT
+
+IF OBJECT_ID('wh_unique_email_issue', 'U') IS NOT NULL DROP TABLE wh_unique_email_issue;
+
+CREATE TABLE wh_unique_email_issue (
+  id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+  email NVARCHAR(255) NOT NULL,
+  CONSTRAINT wh_unique_email_issue_email_unique UNIQUE (email)
+);
+
+SET IDENTITY_INSERT wh_unique_email_issue ON;
+INSERT INTO wh_unique_email_issue (id, email) VALUES(1, 'alice.one@example.com');
+INSERT INTO wh_unique_email_issue (id, email) VALUES(2, 'bob.two@example.com');
+INSERT INTO wh_unique_email_issue (id, email) VALUES(3, 'carol.three@example.com');
+INSERT INTO wh_unique_email_issue (id, email) VALUES(4, 'dave.four@example.com');
+SET IDENTITY_INSERT wh_unique_email_issue OFF;

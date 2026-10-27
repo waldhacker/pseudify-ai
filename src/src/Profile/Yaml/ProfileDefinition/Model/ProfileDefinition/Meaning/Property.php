@@ -36,6 +36,8 @@ class Property extends AbstractEntity
         /** @var array<array-key, mixed> $context */
         #[Groups(['prototype', 'userland'])]
         protected array $context = [],
+        #[Groups(['prototype', 'userland'])]
+        protected ?bool $unique = null,
     ) {
     }
 
@@ -77,6 +79,16 @@ class Property extends AbstractEntity
         return $this;
     }
 
+    public function isUnique(): bool
+    {
+        return true === $this->unique;
+    }
+
+    public function getUnique(): ?bool
+    {
+        return $this->unique;
+    }
+
     public function merge(self $encoder): Property
     {
         return new self(
@@ -84,7 +96,8 @@ class Property extends AbstractEntity
             $encoder->getScope(),
             $encoder->getType(),
             $encoder->getMinimumGraphemeLength(),
-            $encoder->getContext()
+            $encoder->getContext(),
+            $encoder->getUnique(),
         );
     }
 }

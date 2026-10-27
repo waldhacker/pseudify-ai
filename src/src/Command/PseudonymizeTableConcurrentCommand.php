@@ -43,6 +43,7 @@ class PseudonymizeTableConcurrentCommand extends Command
         private readonly ConnectionManager $connectionManager,
         private readonly Repository $repository,
         private readonly LoggerInterface $logger,
+        private readonly string $projectDir,
     ) {
         parent::__construct();
     }
@@ -160,7 +161,7 @@ class PseudonymizeTableConcurrentCommand extends Command
             $this->executeConcurrent(
                 input: $input,
                 output: $output,
-                command: 'bin/pseudify',
+                command: $this->projectDir.'/bin/pseudify',
                 arguments: [
                     'pseudify:pseudonymize:table:concurrent',
                     '--request-id',
@@ -181,6 +182,8 @@ class PseudonymizeTableConcurrentCommand extends Command
                 ],
                 identifierPool: range(1, $pageCount),
                 concurrency: $concurrency,
+                cwd: $this->projectDir,
+                useTty: false,
             );
 
             return Command::SUCCESS;

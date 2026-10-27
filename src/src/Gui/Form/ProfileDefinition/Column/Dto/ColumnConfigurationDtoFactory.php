@@ -133,7 +133,8 @@ class ColumnConfigurationDtoFactory
                         $meaning['property']['scope'] ?? '',
                         $meaning['property']['type'] ?? '',
                         (int) ($meaning['property']['minimumGraphemeLength'] ?? 3),
-                        $context
+                        $context,
+                        isset($meaning['property']['unique']) ? (bool) $meaning['property']['unique'] : null,
                     ),
                     $meaning['name'] ?? '',
                     array_merge(
@@ -153,7 +154,7 @@ class ColumnConfigurationDtoFactory
     /**
      * @param array<string, array<array-key, Meaning>> $meaningsByEncoding
      *
-     * @return array{identifier: string, name: string, conditions: array<int, array{condition: string}>, encoders: array<int, array{identifier: string, encoder: string, context: array<int, array<string, mixed>>}>, meanings: array<int, array{identifier: string, name: string, conditions: array<int, array{condition: string}>, property: array{path: string|null, scope: string|null, type: string|null, minimumGraphemeLength: int|null, context: array<int, array<string, mixed>>}}>}
+     * @return array{identifier: string, name: string, conditions: array<int, array{condition: string}>, encoders: array<int, array{identifier: string, encoder: string, context: array<int, array<string, mixed>>}>, meanings: array<int, array{identifier: string, name: string, conditions: array<int, array{condition: string}>, property: array{path: string|null, scope: string|null, type: string|null, minimumGraphemeLength: int|null, unique: bool|null, context: array<int, array<string, mixed>>}}>}
      */
     private function encodingToArray(Encoding $encoding, array $meaningsByEncoding): array
     {
@@ -197,7 +198,7 @@ class ColumnConfigurationDtoFactory
     }
 
     /**
-     * @return array{identifier: string, name: string, conditions: array<int, array{condition: string}>, property: array{path: string|null, scope: string|null, type: string|null, minimumGraphemeLength: int|null, context: array<int, array<string, mixed>>}}
+     * @return array{identifier: string, name: string, conditions: array<int, array{condition: string}>, property: array{path: string|null, scope: string|null, type: string|null, minimumGraphemeLength: int|null, unique: bool|null, context: array<int, array<string, mixed>>}}
      */
     private function meaningToArray(Meaning $meaning): array
     {
@@ -228,6 +229,7 @@ class ColumnConfigurationDtoFactory
                 'scope' => $meaning->getProperty()->getScope(),
                 'type' => $meaning->getProperty()->getType(),
                 'minimumGraphemeLength' => $meaning->getProperty()->getMinimumGraphemeLength(),
+                'unique' => $meaning->getProperty()->getUnique(),
                 'context' => [$context],
             ],
         ];

@@ -89,11 +89,39 @@ services:
       $apiUrl: '%ollama_api_url%'
       $modelContextLength: '%ollama_model_context_length%'
 
+  faker_cache_pool:
+    class: Symfony\Component\Cache\Adapter\FilesystemTagAwareAdapter
+    arguments:
+      $namespace: 'fakedata'
+      $defaultLifetime: 0
+      $directory: '%pseudify.data_dir%/var/cache/pseudonymize_fakedata'
+
+  Waldhacker\Pseudify\Core\Faker\UniqueValueClaimStore:
+    arguments:
+      $claimDirectory: '%pseudify.data_dir%/var/cache/pseudonymize_unique'
+
+  Waldhacker\Pseudify\Core\Faker\PseudonymizeRuntimeCachePurger:
+    arguments:
+      $cache: '@faker_cache_pool'
+      $fakeDataDirectory: '%pseudify.data_dir%/var/cache/pseudonymize_fakedata'
+      $claimStore: '@Waldhacker\Pseudify\Core\Faker\UniqueValueClaimStore'
+
   Waldhacker\Pseudify\Core\Faker\Faker:
     arguments:
+      $cache: '@faker_cache_pool'
+      $claimStore: '@Waldhacker\Pseudify\Core\Faker\UniqueValueClaimStore'
       $source: ~
       $scope: ~
       $faker: '@Faker\Generator'
+
+  Waldhacker\Pseudify\Core\Command\PseudonymizeCommand:
+    arguments:
+      $runtimeCachePurger: '@Waldhacker\Pseudify\Core\Faker\PseudonymizeRuntimeCachePurger'
+      $projectDir: '%kernel.project_dir%'
+
+  Waldhacker\Pseudify\Core\Command\PseudonymizeTableConcurrentCommand:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
 
   Waldhacker\Pseudify\Core\Faker\FormatterInformation:
     arguments:

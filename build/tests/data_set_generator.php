@@ -294,7 +294,7 @@ foreach ($tableRecords as $table => $records) {
 }
 
 echo PHP_EOL.PHP_EOL.'mssql'.PHP_EOL.PHP_EOL;
-$connection = DriverManager::getConnection(['driver' => 'pdo_sqlsrv', 'serverVersion' => '2017']);
+$connection = DriverManager::getConnection(['driver' => 'pdo_sqlsrv', 'serverVersion' => '2025']);
 foreach ($tableRecords as $table => $records) {
     foreach ($records as $record) {
         $queryBuilder = new QueryBuilder($connection);

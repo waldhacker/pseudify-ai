@@ -1,4 +1,4 @@
-ARG PHP_VERSION=8.3
+ARG PHP_VERSION=8.3.36
 
 FROM php:$PHP_VERSION-fpm-alpine
 
@@ -15,7 +15,7 @@ ENV APP_HOME=/opt/pseudify/core/
 ENV APP_ENV=prod
 ENV APP_DEBUG=true
 
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 COPY ./entrypoint /usr/local/bin/entrypoint
 COPY ./entrypoint_gui /usr/local/bin/entrypoint_gui
@@ -38,11 +38,15 @@ RUN \
         dpkg-dev \
         dpkg \
         file \
+        freetype-dev \
         g++ \
         gcc \
         git \
         gnupg \
         libc-dev \
+        libjpeg-turbo-dev \
+        libpng-dev \
+        libzip-dev \
         make \
         mariadb-client \
         mysql-client \
@@ -91,11 +95,14 @@ RUN \
     && pecl install sqlsrv \
     && docker-php-ext-enable sqlsrv.so \
     \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
+        gd \
         mysqli \
         opcache \
         pdo_mysql \
         pdo_pgsql \
+        zip \
     \
     \
     && mkdir -p /opt/pseudify/userdata_template/var/ \
@@ -131,17 +138,26 @@ RUN \
         dpkg-dev \
         dpkg \
         file \
+        freetype-dev \
         g++ \
         gcc \
         git \
         gnupg \
         libc-dev \
-        llvm18 \
+        libjpeg-turbo-dev \
+        libpng-dev \
+        libzip-dev \
+        llvm22 \
         make \
         pkgconf \
         postgresql-dev \
         re2c \
-        unixodbc-dev
+        unixodbc-dev \
+    && apk add --no-cache \
+        freetype \
+        libjpeg-turbo \
+        libpng \
+        libzip
 
 WORKDIR /opt/pseudify/core
 

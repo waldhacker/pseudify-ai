@@ -5,7 +5,7 @@ name: Build and release
 on: [ create ]
 
 env:
-  PHP_VERSION: 8.3
+  PHP_VERSION: 8.3.36
   MSODBC_SQL_APK_URI: https://download.microsoft.com/download/7/6/d/76de322a-d860-4894-9945-f0cc5d6a45f8/msodbcsql18_18.4.1.1-1_amd64.apk
   MSSQL_TOOLS_APK_URI: https://download.microsoft.com/download/7/6/d/76de322a-d860-4894-9945-f0cc5d6a45f8/mssql-tools18_18.4.1.1-1_amd64.apk
   MSODBC_SQL_SIG_URI: https://download.microsoft.com/download/7/6/d/76de322a-d860-4894-9945-f0cc5d6a45f8/msodbcsql18_18.4.1.1-1_amd64.sig

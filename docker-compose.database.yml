@@ -4,8 +4,8 @@
 # Run it like: `docker compose -f docker-compose.yml -f docker-compose.llm-addon.yml -f docker-compose.database.yml up -d`
 
 services:
-  mariadb_10_5:
-    image: mariadb:10.5
+  mariadb_10_11:
+    image: mariadb:10.11
     environment:
       MYSQL_ROOT_PASSWORD: 'P53ud1fy(!)w4ldh4ck3r'
     volumes:

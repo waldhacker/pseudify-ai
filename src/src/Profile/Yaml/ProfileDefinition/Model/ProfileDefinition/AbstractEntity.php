@@ -70,7 +70,7 @@ abstract class AbstractEntity
 
         $getter = 'get'.ucfirst($collectionName);
         foreach ($entityToMerge->$getter() as $collectionEntityToMerge) {
-            if (!($collectionEntityToMerge instanceof IdentifierAwareInterface)) {
+            if (!$collectionEntityToMerge instanceof IdentifierAwareInterface) {
                 continue;
             }
 

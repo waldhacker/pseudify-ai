@@ -27,15 +27,15 @@ class TargetDataDecoderTest extends TestCase
 
         $dataProcessing1Prophecy = $this->prophesize(DataProcessingInterface::class);
         $dataProcessing1Prophecy->getIdentifier()->shouldBeCalled()->willReturn('id-1');
-        $dataProcessing1Prophecy->getProcessor()->shouldBeCalled()->willReturn(function () { return; });
+        $dataProcessing1Prophecy->getProcessor()->shouldBeCalled()->willReturn(function () {  });
 
         $dataProcessing2Prophecy = $this->prophesize(DataProcessingInterface::class);
         $dataProcessing2Prophecy->getIdentifier()->shouldBeCalled()->willReturn('id-2');
-        $dataProcessing2Prophecy->getProcessor()->shouldBeCalled()->willReturn(function () { return; });
+        $dataProcessing2Prophecy->getProcessor()->shouldBeCalled()->willReturn(function () {  });
 
         $dataProcessing3Prophecy = $this->prophesize(InvalidDataProcessing::class);
         $dataProcessing3Prophecy->getIdentifier()->shouldNotBeCalled()->willReturn('id-3');
-        $dataProcessing3Prophecy->getProcessor()->shouldNotBeCalled()->willReturn(function () { return; });
+        $dataProcessing3Prophecy->getProcessor()->shouldNotBeCalled()->willReturn(function () {  });
 
         $conditionExpressionProviderProphecy = $this->prophesize(ConditionExpressionProvider::class);
         $conditionExpressionProviderProphecy->getFunctions()->shouldBeCalled()->willReturn([]);
@@ -59,11 +59,11 @@ class TargetDataDecoderTest extends TestCase
 
         $dataProcessing1Prophecy = $this->prophesize(DataProcessingInterface::class);
         $dataProcessing1Prophecy->getIdentifier()->willReturn('id-1');
-        $dataProcessing1Prophecy->getProcessor()->willReturn(function () { return; });
+        $dataProcessing1Prophecy->getProcessor()->willReturn(function () {  });
 
         $dataProcessing2Prophecy = $this->prophesize(DataProcessingInterface::class);
         $dataProcessing2Prophecy->getIdentifier()->willReturn('id-1');
-        $dataProcessing2Prophecy->getProcessor()->willReturn(function () { return; });
+        $dataProcessing2Prophecy->getProcessor()->willReturn(function () {  });
 
         $this->expectException(AmbiguousDataProcessingException::class);
         $this->expectExceptionCode(1621683731);

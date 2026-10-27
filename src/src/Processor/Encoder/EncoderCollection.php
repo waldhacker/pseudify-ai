@@ -30,7 +30,7 @@ class EncoderCollection
     public function __construct(iterable $encoders = [])
     {
         foreach ($encoders as $encoder) {
-            if (!($encoder instanceof EncoderInterface)) {
+            if (!$encoder instanceof EncoderInterface) {
                 continue;
             }
 

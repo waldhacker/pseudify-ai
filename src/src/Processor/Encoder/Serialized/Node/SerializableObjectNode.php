@@ -45,7 +45,7 @@ class SerializableObjectNode extends Node
      */
     public function setContent(mixed $content): SerializableObjectNode
     {
-        if (!($content instanceof Node)) {
+        if (!$content instanceof Node) {
             $content = (new Parser())->parse(serialize($content));
         }
 

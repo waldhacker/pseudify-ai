@@ -149,7 +149,7 @@ class ObjectNode extends Node implements \ArrayAccess, \Iterator
             throw new InvalidDataException('Only existing object properties can be written', 1_706_562_198);
         }
 
-        if (!($value instanceof Node)) {
+        if (!$value instanceof Node) {
             $value = (new Parser())->parse(serialize($value));
         }
 

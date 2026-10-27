@@ -11,7 +11,7 @@ class DataProcessingTest extends TestCase
 {
     public function testGetIdentifierReturnsIdentifier(): void
     {
-        $dataProcessing = new DataProcessing(function () { return; }, 'id-1');
+        $dataProcessing = new DataProcessing(function () {  }, 'id-1');
         $this->assertEquals(
             'id-1',
             $dataProcessing->getIdentifier()
@@ -20,7 +20,7 @@ class DataProcessingTest extends TestCase
 
     public function testGetProcessorReturnsCallable(): void
     {
-        $dataProcessing = new DataProcessing(function () { return; }, 'id-1');
+        $dataProcessing = new DataProcessing(function () {  }, 'id-1');
         $this->assertIsCallable(
             $dataProcessing->getProcessor()
         );

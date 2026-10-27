@@ -128,7 +128,7 @@ class ArrayNode extends Node implements \ArrayAccess, \Iterator
     #[\Override]
     public function offsetSet($offset, $value): void
     {
-        if (!($value instanceof Node)) {
+        if (!$value instanceof Node) {
             $value = (new Parser())->parse(serialize($value));
         }
 

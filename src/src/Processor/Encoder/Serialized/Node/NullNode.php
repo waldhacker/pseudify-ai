@@ -36,7 +36,6 @@ class NullNode extends Node
      */
     public function getContent(): void
     {
-        return;
     }
 
     /*
@@ -45,6 +44,5 @@ class NullNode extends Node
      */
     public function getValue(): void
     {
-        return;
     }
 }

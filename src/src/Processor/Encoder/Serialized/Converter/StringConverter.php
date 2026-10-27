@@ -140,16 +140,16 @@ class StringConverter
                 $node->getPropertyName(),
                 $this->convert($node->getContent())
             );
-        } else {
-            // public member
-            // s:6:"member";i:5;
-            return sprintf(
-                's:%s:"%s";%s',
-                strlen($node->getPropertyName()),
-                $node->getPropertyName(),
-                $this->convert($node->getContent())
-            );
         }
+
+        // public member
+        // s:6:"member";i:5;
+        return sprintf(
+            's:%s:"%s";%s',
+            strlen($node->getPropertyName()),
+            $node->getPropertyName(),
+            $this->convert($node->getContent())
+        );
     }
 
     private function convertSerializableObject(SerializableObjectNode $node): string

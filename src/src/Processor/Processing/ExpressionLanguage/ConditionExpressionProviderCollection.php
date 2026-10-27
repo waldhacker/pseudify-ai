@@ -32,13 +32,13 @@ class ConditionExpressionProviderCollection
     public function __construct(iterable $conditionExpressionProviders = [])
     {
         foreach ($conditionExpressionProviders as $conditionExpressionProvider) {
-            if (!($conditionExpressionProvider instanceof ConditionExpressionProviderInterface)) {
+            if (!$conditionExpressionProvider instanceof ConditionExpressionProviderInterface) {
                 continue;
             }
 
             foreach ($conditionExpressionProvider->getFunctions() as $expressionFunction) {
                 $function = $expressionFunction[ConditionExpressionProviderInterface::EXPRESSION_FUNCTION] ?? null;
-                if (!($function instanceof ExpressionFunction)) {
+                if (!$function instanceof ExpressionFunction) {
                     continue;
                 }
                 $expressionFunction[ConditionExpressionProviderInterface::EXPRESSION_DESCRIPTION] ??= '';

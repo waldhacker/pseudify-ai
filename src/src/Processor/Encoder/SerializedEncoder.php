@@ -70,7 +70,7 @@ class SerializedEncoder extends AbstractEncoder implements EncoderInterface
     #[\Override]
     public function encode(mixed $data, array $context = []): mixed
     {
-        if (!($data instanceof Node)) {
+        if (!$data instanceof Node) {
             return null;
         }
 

@@ -153,7 +153,7 @@ class ConditionalEncoder extends AbstractEncoder implements EncoderInterface
             if (empty($condition[self::CONDITIONS_CONDITION])) {
                 continue;
             }
-            if (!(($condition[self::CONDITIONS_ENCODER] ?? null) instanceof EncoderInterface)) {
+            if (!($condition[self::CONDITIONS_ENCODER] ?? null) instanceof EncoderInterface) {
                 continue;
             }
             if (!isset($condition[self::CONDITIONS_CONTEXT]) || !is_array($condition[self::CONDITIONS_CONTEXT])) {
@@ -163,7 +163,7 @@ class ConditionalEncoder extends AbstractEncoder implements EncoderInterface
         }
 
         foreach (($context[self::EXPRESSION_FUNCTION_PROVIDERS] ?? []) as $provider) {
-            if (!($provider instanceof ExpressionFunctionProviderInterface)) {
+            if (!$provider instanceof ExpressionFunctionProviderInterface) {
                 continue;
             }
             $newContext[self::EXPRESSION_FUNCTION_PROVIDERS][] = $provider;
